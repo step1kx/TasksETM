@@ -66,8 +66,8 @@
                             VerticalAlignment="Top"
                            Width="200"
                            Margin="15,30,0,40">
-                    <Button x:Name="HipLoginButton"
-                           Content="Вход для ГИПов"
+                    <Button x:Name="DeptLoginButton"
+                           Content="Вход для отделов"
                            Height="40"
                            Margin="0,0,0,10"
                            Background="#3A3A55"
@@ -75,7 +75,7 @@
                            BorderThickness="0"
                            Style="{StaticResource CustomButtonStyle}"
                            Cursor="Hand"
-                           Click="HipLoginButton_Click">
+                           Click="DeptLoginButton_Click">
                         <Button.Effect>
                             <DropShadowEffect ShadowDepth="2"
                                 Color="Black"
@@ -83,15 +83,15 @@
                                 />
                         </Button.Effect>
                     </Button>
-                    <Button x:Name="DeptLoginButton"
-                           Content="Вход для отделов"
+                    <Button x:Name="HipLoginButton"
+                           Content="Вход для Гипов"
                            Height="40"
                            Background="#3A3A55"
                            Foreground="Wheat"
                            BorderThickness="0"
                            Style="{StaticResource CustomButtonStyle}"
                            Cursor="Hand"
-                           Click="DeptLoginButton_Click">
+                           Click="HipLoginButton_Click">
                         <Button.Effect>
                             <DropShadowEffect ShadowDepth="2"
                                             Color="Black"
@@ -115,8 +115,7 @@
                                         BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="LoginPanel">
-                        <!-- HIPs Login Panel -->
-                        <Grid x:Name="HipLoginGrid" Visibility="Visible">
+                        <Grid x:Name="HipLoginGrid"  Visibility="Collapsed">
                             <TextBlock Text="Вход для ГИПов"
                                       FontSize="20"
                                       Foreground="Wheat"
@@ -160,27 +159,27 @@
                                     BorderThickness="0"
                                     Style="{StaticResource CustomButtonStyle}"
                                     Cursor="Hand"
-                                    Click="ToTaskLoginButton_Click"/>
+                                    Click="ToChooseProjectButton_Click"/>
                         </Grid>
 
                         <!-- Departments Login Panel -->
-                        <Grid x:Name="DeptLoginGrid" Visibility="Collapsed">
+                        <Grid x:Name="DeptLoginGrid" Visibility="Visible">
                             <TextBlock Text="Вход для отделов"
                                       FontSize="20"
                                       Foreground="Wheat"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Top"
-                                      Margin="0,30,0,0"/>
+                                      Margin="0,20,0,0"/>
                             <TextBlock Text="Логин"
                                       FontSize="16"
                                       Foreground="Wheat"
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Top"
-                                      Margin="50,80,0,0"/>
+                                      Margin="50,70,0,0"/>
                             <TextBox Width="200"
                                     Height="25"
                                     VerticalAlignment="Top"
-                                    Margin="0,110,0,0"
+                                    Margin="0,100,0,0"
                                     Background="#3A3A55"
                                     Foreground="Wheat"
                                     BorderBrush="#4A4A65"/>
@@ -189,11 +188,11 @@
                                       Foreground="Wheat"
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Top"
-                                      Margin="50,160,0,0"/>
+                                      Margin="50,150,0,0"/>
                             <PasswordBox Width="200"
                                         Height="25"
                                         VerticalAlignment="Top"
-                                        Margin="0,190,0,0"
+                                        Margin="0,180,0,0"
                                         Background="#3A3A55"
                                         Foreground="Wheat"
                                         BorderBrush="#4A4A65"/>
@@ -208,7 +207,7 @@
                                    BorderThickness="0"
                                    Style="{StaticResource CustomButtonStyle}"
                                    Cursor="Hand"
-                                   Click="ToTaskLoginButton_Click"/>
+                                   Click="ToChooseProjectButton_Click"/>
                         </Grid>
                     </Grid>
                 </Border>

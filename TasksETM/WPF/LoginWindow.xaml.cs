@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TasksETM.WPF;
 
 namespace IssuingTasksETM.WPF
 {
@@ -84,8 +85,18 @@ namespace IssuingTasksETM.WPF
 
         private void ToTaskLoginButton_Click(Object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("КРУТО!");
-            return;
+            TaskWindow taskWindow = new TaskWindow();
+            taskWindow.Show(); 
+
+            this.Close();
+        }
+
+        private void ToChooseProjectButton_Click(Object sender, RoutedEventArgs e)
+        {
+            ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow();
+            chooseProjectWindow.Show();
+
+            this.Close();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
