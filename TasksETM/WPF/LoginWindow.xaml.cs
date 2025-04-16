@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -33,10 +34,11 @@ namespace IssuingTasksETM.WPF
             try
             {
                 MessageBox.Show("Попытка подключения...");
+                await Task.Delay(2000);
                 if (_dbConnection.Connected())
                 {
                     MessageBox.Show("Все хорошо. Подключаемся...");
-                    await Task.Delay(5000);
+                    await Task.Delay(3000);
                     MessageBox.Show("Подключение установлено!");
                 }
                 else
@@ -50,6 +52,47 @@ namespace IssuingTasksETM.WPF
             }
         }
 
-        
+        private void HipLoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fadeOut = (Storyboard)FindResource("FadeOutAnimation");
+            var fadeIn = (Storyboard)FindResource("FadeInAnimation");
+
+            fadeOut.Completed += (s, args) =>
+            {
+                DeptLoginGrid.Visibility = Visibility.Collapsed;
+                HipLoginGrid.Visibility = Visibility.Visible;
+                fadeIn.Begin(HipLoginGrid);
+            };
+
+            fadeOut.Begin(DeptLoginGrid);
+        }
+
+        private void DeptLoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fadeOut = (Storyboard)FindResource("FadeOutAnimation");
+            var fadeIn = (Storyboard)FindResource("FadeInAnimation");
+
+            fadeOut.Completed += (s, args) =>
+            {
+                HipLoginGrid.Visibility = Visibility.Collapsed;
+                DeptLoginGrid.Visibility = Visibility.Visible;
+                fadeIn.Begin(DeptLoginGrid);
+            };
+
+            fadeOut.Begin(HipLoginGrid);
+        }
+
+        private void ToTaskLoginButton_Click(Object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("КРУТО!");
+            return;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+
     }
 }

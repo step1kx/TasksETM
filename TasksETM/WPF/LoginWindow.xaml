@@ -5,8 +5,214 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IssuingTasksETM.WPF"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Button x:Name="ConnectButton" Width="200" Height="50" Content="Проверка подключения к БД" Click="CheckConnection"></Button>
-    </Grid>
+        Title="LoginWindow" 
+        Height="450" 
+        Width="800" 
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border Background="#272537"
+            CornerRadius="20">
+        <Grid>
+            <Grid Height="50" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ETM"
+                          FontSize="22"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          Foreground="Wheat"
+                          Margin="10,0,0,0"/>
+
+                <TextBlock Text="Добро пожаловать в программу выдачи заданий!"
+                          Grid.Column="1"
+                          Foreground="Wheat"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          FontSize="22"
+                          Margin="0,0,50,0"/>
+                <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
+                Style="{StaticResource CustomButtonStyle}"
+                Background="#3A3A55"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center" 
+                FontWeight="Bold" 
+                Width="30" 
+                Height="30"
+                Foreground="Wheat"
+                FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+            </Grid>
+
+            <Grid Margin="0,60,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Top"
+                           Width="200"
+                           Margin="15,30,0,40">
+                    <Button x:Name="HipLoginButton"
+                           Content="Вход для ГИПов"
+                           Height="40"
+                           Margin="0,0,0,10"
+                           Background="#3A3A55"
+                           Foreground="Wheat"
+                           BorderThickness="0"
+                           Style="{StaticResource CustomButtonStyle}"
+                           Cursor="Hand"
+                           Click="HipLoginButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                                Color="Black"
+                                    Opacity="0.3"
+                                />
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="DeptLoginButton"
+                           Content="Вход для отделов"
+                           Height="40"
+                           Background="#3A3A55"
+                           Foreground="Wheat"
+                           BorderThickness="0"
+                           Style="{StaticResource CustomButtonStyle}"
+                           Cursor="Hand"
+                           Click="DeptLoginButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                                            Color="Black"
+                                            Opacity="0.3"
+                                            />
+                        </Button.Effect>
+                    </Button>
+                </StackPanel>
+
+                <!-- Login Panel -->
+                <Border Grid.Column="1"
+                       CornerRadius="20"
+                       Height="300"
+                       Width="300"
+                       Background="#272537"
+                       Margin="0,0,50,30">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="5"
+                                        Color="Black"
+                                        Opacity="0.5"
+                                        BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid x:Name="LoginPanel">
+                        <!-- HIPs Login Panel -->
+                        <Grid x:Name="HipLoginGrid" Visibility="Visible">
+                            <TextBlock Text="Вход для ГИПов"
+                                      FontSize="20"
+                                      Foreground="Wheat"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Top"
+                                      Margin="0,20,0,0"/>
+                            <TextBlock Text="Логин"
+                                      FontSize="16"
+                                      Foreground="Wheat"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
+                                      Margin="50,70,0,0"/>
+                            <TextBox Width="200"
+                                    Height="25"
+                                    VerticalAlignment="Top"
+                                    Margin="0,100,0,0"
+                                    Background="#3A3A55"
+                                    Foreground="Wheat"
+                                    BorderBrush="#4A4A65"/>
+                            <TextBlock Text="Пароль"
+                                      FontSize="16"
+                                      Foreground="Wheat"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
+                                      Margin="50,150,0,0"/>
+                            <PasswordBox Width="200"
+                                        Height="25"
+                                        VerticalAlignment="Top"
+                                        Margin="0,180,0,0"
+                                        Background="#3A3A55"
+                                        Foreground="Wheat"
+                                        BorderBrush="#4A4A65"/>
+                            <Button
+                                    Width="150px"
+                                    Height="25px"
+                                    Content="Вход"
+                                    VerticalAlignment="Bottom"
+                                    Margin="30px"
+                                    Background="#3A3A55"
+                                    Foreground="Wheat"
+                                    BorderThickness="0"
+                                    Style="{StaticResource CustomButtonStyle}"
+                                    Cursor="Hand"
+                                    Click="ToTaskLoginButton_Click"/>
+                        </Grid>
+
+                        <!-- Departments Login Panel -->
+                        <Grid x:Name="DeptLoginGrid" Visibility="Collapsed">
+                            <TextBlock Text="Вход для отделов"
+                                      FontSize="20"
+                                      Foreground="Wheat"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Top"
+                                      Margin="0,30,0,0"/>
+                            <TextBlock Text="Логин"
+                                      FontSize="16"
+                                      Foreground="Wheat"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
+                                      Margin="50,80,0,0"/>
+                            <TextBox Width="200"
+                                    Height="25"
+                                    VerticalAlignment="Top"
+                                    Margin="0,110,0,0"
+                                    Background="#3A3A55"
+                                    Foreground="Wheat"
+                                    BorderBrush="#4A4A65"/>
+                            <TextBlock Text="Пароль"
+                                      FontSize="16"
+                                      Foreground="Wheat"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
+                                      Margin="50,160,0,0"/>
+                            <PasswordBox Width="200"
+                                        Height="25"
+                                        VerticalAlignment="Top"
+                                        Margin="0,190,0,0"
+                                        Background="#3A3A55"
+                                        Foreground="Wheat"
+                                        BorderBrush="#4A4A65"/>
+                            <Button
+                                   Width="150px"
+                                   Height="25px"
+                                   Content="Вход"
+                                   VerticalAlignment="Bottom"
+                                   Margin="30px"
+                                   Background="#3A3A55"
+                                   Foreground="Wheat"
+                                   BorderThickness="0"
+                                   Style="{StaticResource CustomButtonStyle}"
+                                   Cursor="Hand"
+                                   Click="ToTaskLoginButton_Click"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>
