@@ -113,7 +113,7 @@ namespace IssuingTasksETM.WPF
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                this.DragMove();
+                this.DragMove(); 
             }
         }
 
