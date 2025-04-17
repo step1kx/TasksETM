@@ -36,13 +36,7 @@
               Foreground="Wheat"
               Margin="10,0,0,0"/>
 
-                <TextBlock Text="Выбор проекта"
-              Grid.Column="1"
-              Foreground="Wheat"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              FontSize="22"
-              Margin="0,0,80,0"/>
+                
                 <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
                     Style="{StaticResource CustomButtonStyle}"
                     Background="#3A3A55"
@@ -89,7 +83,7 @@
                        
                     <Button
                    Width="150px"
-                   Height="25px"
+                   Height="30px"
                    Content="Перейти к заданиям"
                    VerticalAlignment="Bottom"
                    Margin="30px"

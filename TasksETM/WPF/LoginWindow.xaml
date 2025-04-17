@@ -8,6 +8,7 @@
         Title="LoginWindow" 
         Height="450" 
         Width="800" 
+        
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -170,27 +171,35 @@
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Top"
                                       Margin="0,20,0,0"/>
-                            <TextBlock Text="Логин"
+                            <TextBlock
+                                      Text="Логин"
                                       FontSize="16"
                                       Foreground="Wheat"
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Top"
-                                      Margin="50,70,0,0"/>
-                            <TextBox Width="200"
-                                    Height="25"
+                                      Margin="50,70,0,0"
+                                      />
+                            <TextBox
+                                    x:Name="LoginTextBox"
+                                    Width="200"
+                                    Height="20"
                                     VerticalAlignment="Top"
                                     Margin="0,100,0,0"
                                     Background="#3A3A55"
                                     Foreground="Wheat"
                                     BorderBrush="#4A4A65"/>
-                            <TextBlock Text="Пароль"
+                            <TextBlock 
+                                      
+                                      Text="Пароль"
                                       FontSize="16"
                                       Foreground="Wheat"
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Top"
                                       Margin="50,150,0,0"/>
-                            <PasswordBox Width="200"
-                                        Height="25"
+                            <PasswordBox
+                                        x:Name="PasswordBox"
+                                        Width="200"
+                                        Height="20"
                                         VerticalAlignment="Top"
                                         Margin="0,180,0,0"
                                         Background="#3A3A55"

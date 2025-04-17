@@ -9,7 +9,7 @@ namespace IssuingTasksETM.Models
 {
     public class DatabaseConnection : IDatabaseConnection
     {
-        public static string connString = "Server=192.168.0.171; Port=5432 ; User Id = User ; Password = 123; Database = postgres";
+        public static string connString = "Server=192.168.0.171; Port=5432 ; User Id=User ; Password=123; Database=postgres";
         private NpgsqlConnection connection;
         public bool Connected()
         {
@@ -75,6 +75,37 @@ namespace IssuingTasksETM.Models
             }
         }
 
-        
+        public bool LoginDepartment(string departmentName, string password)
+        {
+            if (!IsConnected())
+            {
+                if (!Connected())
+                {
+                    MessageBox.Show("Нет подключения к базе данных!");
+                    return false;
+                }
+            }
+
+            try
+            {
+                string query = "SELECT COUNT(*) FROM public.\"Users\" WHERE \"departmentName\" = @departmentName AND \"password\" = @password";
+                using (NpgsqlCommand cmd = new NpgsqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@departmentName", departmentName);
+                    cmd.Parameters.AddWithValue("@password", password);
+
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    return count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка входа: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
     }
 }

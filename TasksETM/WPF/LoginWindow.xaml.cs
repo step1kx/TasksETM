@@ -1,4 +1,5 @@
 ﻿using IssuingTasksETM.Interfaces;
+using IssuingTasksETM.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -28,29 +29,6 @@ namespace IssuingTasksETM.WPF
         {
             InitializeComponent();
             _dbConnection = dbConnection;
-        }
-
-        public async void CheckConnection(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                MessageBox.Show("Попытка подключения...");
-                await Task.Delay(2000);
-                if (_dbConnection.Connected())
-                {
-                    MessageBox.Show("Все хорошо. Подключаемся...");
-                    await Task.Delay(3000);
-                    MessageBox.Show("Подключение установлено!");
-                }
-                else
-                {
-                    MessageBox.Show("Не удалось установить подключение к базе данных. Повторите попытку.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка: {ex.Message}");
-            }
         }
 
         private void HipLoginButton_Click(object sender, RoutedEventArgs e)
@@ -91,17 +69,52 @@ namespace IssuingTasksETM.WPF
             this.Close();
         }
 
-        private void ToChooseProjectButton_Click(Object sender, RoutedEventArgs e)
+        private void ToChooseProjectButton_Click(object sender, RoutedEventArgs e)
         {
-            ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow();
-            chooseProjectWindow.Show();
+            string login = LoginTextBox.Text.Trim();
+            string password = PasswordBox.Password;
 
-            this.Close();
+            if (string.IsNullOrEmpty(login))
+            {
+                MessageBox.Show("Пожалуйста, введите логин.", "Пустое поле", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Пожалуйста, введите пароль.", "Пустое поле", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var db = new DatabaseConnection();
+            bool success = db.LoginDepartment(login, password);
+
+            if (success)
+            {
+                MessageBox.Show("Успешный вход!", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
+                ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow();
+                chooseProjectWindow.Show();
+
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Неверный логин или пароль", "Ошибка входа", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void MovingWin(object sender, EventArgs e)
+        {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
 
 
