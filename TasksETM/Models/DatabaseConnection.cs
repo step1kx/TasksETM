@@ -126,7 +126,7 @@ namespace IssuingTasksETM.Models
 
                 foreach (DataRow row in result.Rows)
                 {
-                    comboBox.Items.Add(row["\"ProjectName\""].ToString());
+                    comboBox.Items.Add(row["ProjectName"].ToString());
                 }
 
                 if (comboBox.Items.Count > 0)

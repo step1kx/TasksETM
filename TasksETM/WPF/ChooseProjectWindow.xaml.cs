@@ -35,10 +35,7 @@ namespace TasksETM.WPF
 
         private void FillComboBox()
         {
-            if (_dbConnection.FillProjects(ProjectsComboBox))
-            {
-                MessageBox.Show("ComboBox успешно заполнился");           
-            }
+            _dbConnection.FillProjects(ProjectsComboBox);
         }
 
         private void ChooseProjects(object sender, RoutedEventArgs e)
