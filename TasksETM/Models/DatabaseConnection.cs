@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace IssuingTasksETM.Models
 {
@@ -101,6 +102,43 @@ namespace IssuingTasksETM.Models
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка входа: {ex.Message}");
+                return false;
+            }
+        }
+
+        public bool FillProjects(ComboBox comboBox)
+        {
+            if (!IsConnected())
+            {
+                if (!Connected())
+                {
+                    MessageBox.Show("Нет подключения к базе данных!");
+                    return false;
+                }
+            }
+
+            try
+            {
+                string query = "SELECT \"ProjectName\" FROM public.\"Projects\" ORDER BY \"ProjectName\"";
+                DataTable result = ExecuteQuery(query);
+
+                comboBox.Items.Clear();
+
+                foreach (DataRow row in result.Rows)
+                {
+                    comboBox.Items.Add(row["\"ProjectName\""].ToString());
+                }
+
+                if (comboBox.Items.Count > 0)
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при заполнении проектов: {ex.Message}");
                 return false;
             }
         }

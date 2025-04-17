@@ -1,5 +1,10 @@
-﻿using System;
+﻿using IssuingTasksETM.Interfaces;
+using IssuingTasksETM.Models;
+using IssuingTasksETM.WPF;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +24,29 @@ namespace TasksETM.WPF
     /// </summary>
     public partial class ChooseProjectWindow : Window
     {
-        public ChooseProjectWindow()
+        private readonly IDatabaseConnection _dbConnection;
+
+        public ChooseProjectWindow(IDatabaseConnection dbConnection = null)
         {
             InitializeComponent();
+            _dbConnection = dbConnection ?? new DatabaseConnection();
+            FillComboBox();
+        }
+
+        private void FillComboBox()
+        {
+            if (_dbConnection.FillProjects(ProjectsComboBox))
+            {
+                MessageBox.Show("ComboBox успешно заполнился");           
+            }
+        }
+
+        private void ChooseProjects(object sender, RoutedEventArgs e)
+        {
+            if (ProjectsComboBox.SelectedItem != null)
+            {
+                string selectedProject = ProjectsComboBox.SelectedItem.ToString();
+            }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -29,9 +54,15 @@ namespace TasksETM.WPF
             Close();
         }
 
-        private void ZaglushkaButton_Click(Object sender, RoutedEventArgs e)
+        private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("круто!");
+            LoginWindow loginWindow = new LoginWindow(_dbConnection);
+            loginWindow.Show();
+            Close();
+        }
+
+        private void ZaglushkaButton_Click(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

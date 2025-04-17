@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Windows.Controls;
 
 
 namespace IssuingTasksETM.Interfaces
@@ -9,5 +10,6 @@ namespace IssuingTasksETM.Interfaces
         bool Disconnected();
         bool IsConnected();
         DataTable ExecuteQuery(string query);
+        public bool FillProjects(ComboBox comboBox);
     }
 }

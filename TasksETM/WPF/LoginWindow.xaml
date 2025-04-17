@@ -8,7 +8,7 @@
         Title="LoginWindow" 
         Height="450" 
         Width="800" 
-        
+        MouseDown="MovingWin"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="NoResize"

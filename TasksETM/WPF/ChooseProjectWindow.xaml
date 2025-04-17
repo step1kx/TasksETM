@@ -47,6 +47,15 @@
                     Height="30"
                     Foreground="Wheat"
                     FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+                <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
+                    Style="{StaticResource CustomButtonStyle}"
+                    Background="#3A3A55"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center" 
+                    Width="70" 
+                    Height="30"
+                    Foreground="Wheat"
+                    FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
             </Grid>
             <Border Grid.Column="1"
                     CornerRadius="20"
@@ -74,6 +83,7 @@
                       VerticalAlignment="Center"
                       Margin="50,0,0,70"/>
                         <ComboBox Width="200"
+                        x:Name="ProjectsComboBox"
                     Height="25"
                     VerticalAlignment="Center"
                     Margin="0,0,0,0"

@@ -25,10 +25,10 @@ namespace IssuingTasksETM.WPF
     public partial class LoginWindow : Window
     {
         private readonly IDatabaseConnection _dbConnection;
-        public LoginWindow(IDatabaseConnection dbConnection)
+        public LoginWindow(IDatabaseConnection dbConnection = null)
         {
             InitializeComponent();
-            _dbConnection = dbConnection;
+            _dbConnection = dbConnection ?? new DatabaseConnection();
         }
 
         private void HipLoginButton_Click(object sender, RoutedEventArgs e)
@@ -92,9 +92,8 @@ namespace IssuingTasksETM.WPF
             if (success)
             {
                 MessageBox.Show("Успешный вход!", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
-                ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow();
+                ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection);
                 chooseProjectWindow.Show();
-
                 this.Close();
             }
             else
@@ -109,7 +108,7 @@ namespace IssuingTasksETM.WPF
             Close();
         }
 
-        private void MovingWin(object sender, EventArgs e)
+        public void MovingWin(object sender, EventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
