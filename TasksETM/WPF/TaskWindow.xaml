@@ -5,8 +5,192 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IssuingTasksETM.WPF"
         mc:Ignorable="d"
-        Title="TaskWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="TaskWindow" 
+        Height="700" Width="1500"
+        MouseDown="MovingWin"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Background="#272537"
+        CornerRadius="20">
+        <Grid>
+            <Grid Height="50" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ETM"
+                      FontSize="22"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Foreground="Wheat"
+                      Margin="10,0,0,0"/>
+
+                <TextBlock x:Name="TitleBlock"
+                      Grid.Column="1"
+                      Foreground="Wheat"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      FontSize="22"
+                      Margin="0,0,50,0"/>
+                <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
+            Style="{StaticResource CustomButtonStyle}"
+            Background="#3A3A55"
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Center" 
+            FontWeight="Bold" 
+            Width="30" 
+            Height="30"
+            Foreground="Wheat"
+            FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+                <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
+                Style="{StaticResource CustomButtonStyle}"
+                Background="#3A3A55"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center" 
+            Width="70" 
+            Height="30"
+            Foreground="Wheat"
+            FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
+            </Grid>
+                <Grid Margin="0,60,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Vertical"
+                                VerticalAlignment="Center"
+                                Width="200"
+                                Margin="15,30,0,40">
+                        <Button x:Name="DeptLoginButton"
+                                Content="Создание заданий"
+                                Height="40"
+                                Margin="0,0,0,10"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="CreateWindow_Click">
+                            <Button.Effect>
+                                <DropShadowEffect ShadowDepth="2"
+                    Color="Black"
+                        Opacity="0.3"
+                    />
+                            </Button.Effect>
+                        </Button>
+                        <Button x:Name="HipLoginButton"
+                                Content="Фильтрация заданий"
+                                Height="40"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="FilterWindow_Click">
+                            <Button.Effect>
+                                <DropShadowEffect ShadowDepth="2"
+                                Color="Black"
+                                Opacity="0.3"
+                                />
+                            </Button.Effect>
+                        </Button>
+                    </StackPanel>
+                <Border Grid.Column="1"
+                    CornerRadius="40"
+                    Background="#272537"
+                    Margin="20,0,0,10">
+                    <DataGrid  SelectionMode="Single" 
+                           Grid.Column="1" 
+                           SelectionUnit="Cell" 
+                           x:Name="tasksDataGrid"  
+                           AutoGenerateColumns="False"  
+                           HeadersVisibility="Column" 
+                           FontFamily="Arial Black" 
+                           CanUserReorderColumns="False" 
+                           Margin="0,0,10,0"
+                           Background="#272537"
+                           Foreground="Wheat"
+                           SelectionChanged="tasksDataGrid_SelectionChanged"
+                           Style="{StaticResource CustomDataGridStyle}">
+                        <DataGrid.Columns >
+                            <DataGridTextColumn   IsReadOnly="True" Header="№" Binding="{Binding Path=TaskNumber}" Width="40"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Раздел от" Binding="{Binding  FromSection}" Width="80"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Раздел кому" Binding="{Binding  ToSection}" Width="90"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Кто выдал" Binding="{Binding  TaskIssuer}" Width="90"/>
+                            <DataGridTemplateColumn IsReadOnly="False" Header="Принял"  Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox 
+                                    
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center" 
+                                    IsThreeState="True"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn   IsReadOnly="True" Header="Кто принял" Binding="{Binding WhoTaken}" Width="100"/>
+                            <DataGridTemplateColumn IsReadOnly="False" Header="Готово"  Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding TaskCompleted}"
+                            
+                            VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn   IsReadOnly="True" Header="Кто отработал" Binding="{Binding TaskHandler}" Width="100"/>
+                            <DataGridTemplateColumn IsReadOnly="False" Header="Согл"  Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding TaskApproval}"
+                                
+                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn  IsReadOnly="False" Header="Кто согласовал" Binding="{Binding  WhoApproval}" Width="150"/>
+
+                            <DataGridTemplateColumn Header="Скриншот экрана"  IsReadOnly="True" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn  IsReadOnly="True" Header="Вид" Binding="{Binding TaskView}" Width="250"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="105"/>
+                            <DataGridTemplateColumn Header="Почему не принял" Width="130">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding TaskExplanation, UpdateSourceTrigger=LostFocus}" 
+                                    />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Описание задания" Binding="{Binding  TaskDescription}" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextWrapping" Value="Wrap"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

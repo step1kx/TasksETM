@@ -103,7 +103,7 @@
                    BorderThickness="0"
                    Style="{StaticResource CustomButtonStyle}"
                    Cursor="Hand"
-                   Click="ZaglushkaButton_Click"/>
+                   Click="ToChoosenProject_Click"/>
                 </Grid>
             </Border>
         </Grid>

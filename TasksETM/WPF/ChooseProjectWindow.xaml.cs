@@ -38,13 +38,18 @@ namespace TasksETM.WPF
             _dbConnection.FillProjects(ProjectsComboBox);
         }
 
-        private void ChooseProjects(object sender, RoutedEventArgs e)
+        private void ToChoosenProject_Click(object sender, RoutedEventArgs e)
         {
             if (ProjectsComboBox.SelectedItem != null)
             {
                 string selectedProject = ProjectsComboBox.SelectedItem.ToString();
+
+                var taskWindow = new TaskWindow(selectedProject);
+                taskWindow.Show();
+                Close();
             }
         }
+
 
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -59,9 +64,7 @@ namespace TasksETM.WPF
             Close();
         }
 
-        private void ZaglushkaButton_Click(object sender, RoutedEventArgs e)
-        {
-        }
+        
 
         private void ProjectsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

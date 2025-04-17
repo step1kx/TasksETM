@@ -67,13 +67,7 @@ namespace IssuingTasksETM.WPF
             fadeOut.Begin(HipLoginGrid);
         }
 
-        private void ToTaskLoginButton_Click(Object sender, RoutedEventArgs e)
-        {
-            TaskWindow taskWindow = new TaskWindow();
-            taskWindow.Show(); 
-
-            this.Close();
-        }
+        
 
         private void ToChooseProjectButton_Click(object sender, RoutedEventArgs e)
         {
