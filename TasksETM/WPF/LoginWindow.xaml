@@ -186,8 +186,9 @@
                                     VerticalAlignment="Top"
                                     Margin="0,100,0,0"
                                     Background="#4A4A65"
-                                    Foreground="Black"
-                                    BorderBrush="#4A4A65"/>
+                                    Foreground="Wheat"
+                                    BorderBrush="#4A4A65"
+                                Style="{StaticResource CustomComboBoxStyle}"/>
                             <TextBlock 
                                       
                                       Text="Пароль"

@@ -88,8 +88,9 @@
                     VerticalAlignment="Center"
                     Margin="0,0,0,0"
                     Background="#3A3A55"
-                    Foreground="Black"
-                    BorderBrush="#4A4A65"/>
+                    Foreground="Wheat"
+                    BorderBrush="#4A4A65" SelectionChanged="ProjectsComboBox_SelectionChanged"
+                                  Style="{StaticResource CustomComboBoxStyle}"/>
                        
                     <Button
                    Width="150px"

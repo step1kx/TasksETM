@@ -97,7 +97,6 @@ namespace IssuingTasksETM.WPF
 
             if (success)
             {
-                MessageBox.Show("Успешный вход!", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
                 ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection);
                 chooseProjectWindow.Show();
                 this.Close();
