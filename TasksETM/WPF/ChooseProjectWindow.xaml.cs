@@ -46,6 +46,7 @@ namespace TasksETM.WPF
             }
         }
 
+
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             Close();

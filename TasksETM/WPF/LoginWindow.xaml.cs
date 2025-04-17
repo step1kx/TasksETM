@@ -29,6 +29,12 @@ namespace IssuingTasksETM.WPF
         {
             InitializeComponent();
             _dbConnection = dbConnection ?? new DatabaseConnection();
+            FillComboBox();
+        }
+
+        private void FillComboBox()
+        {
+            _dbConnection.FillDepartmentName(LoginComboBox);
         }
 
         private void HipLoginButton_Click(object sender, RoutedEventArgs e)
@@ -71,7 +77,7 @@ namespace IssuingTasksETM.WPF
 
         private void ToChooseProjectButton_Click(object sender, RoutedEventArgs e)
         {
-            string login = LoginTextBox.Text.Trim();
+            string login = LoginComboBox.Text.Trim();
             string password = PasswordBox.Password;
 
             if (string.IsNullOrEmpty(login))
