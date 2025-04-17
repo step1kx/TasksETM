@@ -179,15 +179,16 @@
                                       VerticalAlignment="Top"
                                       Margin="50,70,0,0"
                                       />
-                            <TextBox
-                                    x:Name="LoginTextBox"
+                            <ComboBox
+                                    x:Name="LoginComboBox"
                                     Width="200"
-                                    Height="20"
+                                    Height="25px"
                                     VerticalAlignment="Top"
                                     Margin="0,100,0,0"
-                                    Background="#3A3A55"
+                                    Background="#4A4A65"
                                     Foreground="Wheat"
-                                    BorderBrush="#4A4A65"/>
+                                    BorderBrush="#4A4A65"
+                                Style="{StaticResource CustomComboBoxStyle}"/>
                             <TextBlock 
                                       
                                       Text="Пароль"

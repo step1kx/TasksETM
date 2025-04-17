@@ -46,6 +46,7 @@ namespace TasksETM.WPF
             }
         }
 
+
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -60,6 +61,11 @@ namespace TasksETM.WPF
 
         private void ZaglushkaButton_Click(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void ProjectsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

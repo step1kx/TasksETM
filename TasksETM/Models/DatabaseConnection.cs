@@ -2,7 +2,6 @@
 using Npgsql;
 using System;
 using System.Data;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,8 +9,9 @@ namespace IssuingTasksETM.Models
 {
     public class DatabaseConnection : IDatabaseConnection
     {
-        public static string connString = "Server=192.168.0.171; Port=5432 ; User Id=User ; Password=123; Database=postgres";
+        public static string connString = "Server=192.168.0.171; Port=5432; User Id=User; Password=123; Database=postgres";
         private NpgsqlConnection connection;
+
         public bool Connected()
         {
             try
@@ -20,7 +20,7 @@ namespace IssuingTasksETM.Models
                 connection.Open();
                 return true;
             }
-            catch (NpgsqlException exp) 
+            catch (NpgsqlException exp)
             {
                 MessageBox.Show($"Ошибка в подключении к базе данных:\n{exp.Message}");
                 return false;
@@ -31,7 +31,7 @@ namespace IssuingTasksETM.Models
         {
             try
             {
-                if (connection != null && connection.State == System.Data.ConnectionState.Open)
+                if (connection != null && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
                     connection.Dispose();
@@ -48,18 +48,29 @@ namespace IssuingTasksETM.Models
 
         public bool IsConnected()
         {
-            return connection != null && connection.State == System.Data.ConnectionState.Open;
+            return connection != null && connection.State == ConnectionState.Open;
         }
 
-        public DataTable ExecuteQuery(string query)
+        public bool CheckerDBConn()
         {
             if (!IsConnected())
             {
                 if (!Connected())
                 {
-                    MessageBox.Show("Нет активного подключения к базе данных!");
+                    MessageBox.Show("Нет подключения к базе данных!");
+                    return false;
                 }
             }
+            return true;
+        }
+
+        public DataTable ExecuteQuery(string query)
+        {
+            if (!CheckerDBConn())
+            {
+                throw new Exception("Нет активного подключения к базе данных!");
+            }
+
             DataTable result = new DataTable();
             try
             {
@@ -72,19 +83,15 @@ namespace IssuingTasksETM.Models
             }
             catch (NpgsqlException exp)
             {
-               throw new Exception($"Ошибка выполнения запроса: {exp.Message}");
+                throw new Exception($"Ошибка выполнения запроса: {exp.Message}");
             }
         }
 
         public bool LoginDepartment(string departmentName, string password)
         {
-            if (!IsConnected())
+            if (!CheckerDBConn())
             {
-                if (!Connected())
-                {
-                    MessageBox.Show("Нет подключения к базе данных!");
-                    return false;
-                }
+                return false;
             }
 
             try
@@ -108,13 +115,9 @@ namespace IssuingTasksETM.Models
 
         public bool FillProjects(ComboBox comboBox)
         {
-            if (!IsConnected())
+            if (!CheckerDBConn())
             {
-                if (!Connected())
-                {
-                    MessageBox.Show("Нет подключения к базе данных!");
-                    return false;
-                }
+                return false;
             }
 
             try
@@ -143,7 +146,37 @@ namespace IssuingTasksETM.Models
             }
         }
 
+        public bool FillDepartmentName(ComboBox comboBox)
+        {
+            if (!CheckerDBConn())
+            {
+                return false;
+            }
 
+            try
+            {
+                string query = "SELECT \"departmentName\" FROM public.\"Users\" ORDER BY \"departmentName\"";
+                DataTable result = ExecuteQuery(query);
 
+                comboBox.Items.Clear();
+
+                foreach (DataRow row in result.Rows)
+                {
+                    comboBox.Items.Add(row["departmentName"].ToString());
+                }
+
+                if (comboBox.Items.Count > 0)
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при заполнении имен отделов: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
