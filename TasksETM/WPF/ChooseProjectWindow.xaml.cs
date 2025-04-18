@@ -44,7 +44,7 @@ namespace TasksETM.WPF
             {
                 string selectedProject = ProjectsComboBox.SelectedItem.ToString();
 
-                var taskWindow = new TaskWindow(selectedProject);
+                var taskWindow = new TaskWindow(selectedProject, _dbConnection);
                 taskWindow.Show();
                 Close();
             }

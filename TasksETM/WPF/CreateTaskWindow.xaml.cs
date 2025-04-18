@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IssuingTasksETM.Interfaces;
+using IssuingTasksETM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TasksETM.Models;
 using TasksETM.WPF;
 
 namespace IssuingTasksETM.WPF
@@ -22,11 +25,43 @@ namespace IssuingTasksETM.WPF
     public partial class CreateTaskWindow : Window
     {
         private readonly TaskWindow _taskWindow;
-        public CreateTaskWindow(string selectedProject)
+        private readonly IDatabaseConnection _dbConnection;
+
+        public static string loggedInUser = UserSession.Login;
+        public CreateTaskWindow(string selectedProject, IDatabaseConnection dbConnection)
         {
             InitializeComponent();
-            _taskWindow = new TaskWindow(selectedProject);
+            _taskWindow = new TaskWindow(selectedProject, dbConnection);
+            _dbConnection = new DatabaseConnection();
+            FillComboBox();
         }
+
+        private void FillComboBox()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(loggedInUser))
+                {
+                    MessageBox.Show("Логин не был инициализирован.");
+                    return;
+                }
+
+                ToDepartComboBox.Text = loggedInUser;  // Устанавливаем логин в TextBox
+
+                if (_dbConnection == null)
+                {
+                    MessageBox.Show("Соединение с базой данных не инициализировано.");
+                    return;
+                }
+
+                _dbConnection.FillDepartmentName(ToDepartComboBox);  // Заполняем ComboBox с данными
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Чето не пошло: {ex.Message}");
+            }
+        }
+
 
         private void TaskInfoShowButton_Click(object sender, RoutedEventArgs e)
         {

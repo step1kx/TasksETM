@@ -154,26 +154,32 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Margin="50,70,0,0"/>
-                            <ComboBox Width="200"
+                            <ComboBox 
+                                x:Name="FromDepartComboBox"
+                            Width="200"
                             Height="25"
                             VerticalAlignment="Top"
                             Margin="0,100,0,0"
                             Background="#3A3A55"
                             Foreground="Wheat"
-                            BorderBrush="#4A4A65" />
+                            BorderBrush="#4A4A65" 
+                            Style="{StaticResource CustomComboBoxStyle}"/>
                             <TextBlock Text="Кому задание"
                               FontSize="16"
                               Foreground="Wheat"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
                               Margin="50,150,0,0"/>
-                            <ComboBox Width="200"
+                            <ComboBox
+                                x:Name="ToDepartComboBox"
+                                Width="200"
                                 Height="25"
                                 VerticalAlignment="Top"
                                 Margin="0,180,0,0"
                                 Background="#3A3A55"
                                 Foreground="Wheat"
-                                BorderBrush="#4A4A65"/>
+                                BorderBrush="#4A4A65"
+                                Style="{StaticResource CustomComboBoxStyle}"/>
                             <TextBlock Text="Крайний срок выполнения"
                                 FontSize="16"
                                 Foreground="Wheat"

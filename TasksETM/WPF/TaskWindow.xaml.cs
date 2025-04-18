@@ -1,4 +1,5 @@
-﻿using IssuingTasksETM.Models;
+﻿using IssuingTasksETM.Interfaces;
+using IssuingTasksETM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +26,16 @@ namespace IssuingTasksETM.WPF
     {
         private readonly string _selectedProject;
         private readonly TaskManager _taskManager;
+        private readonly IDatabaseConnection _dbConnection;
 
-        public TaskWindow(string selectedProject)
+
+        public TaskWindow(string selectedProject, IDatabaseConnection dbConnection)
         {
             InitializeComponent();
             _selectedProject = selectedProject;
+            _dbConnection = dbConnection;
             _taskManager = new TaskManager(DatabaseConnection.connString);
+            
 
             this.TitleBlock.Text = $"Задание смежным разделам по объекту: {selectedProject}";
 
@@ -59,7 +64,7 @@ namespace IssuingTasksETM.WPF
 
         private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {
-            var createTaskWindow = new CreateTaskWindow(_selectedProject);
+            var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection);
             createTaskWindow.Show();
             Close();
         }
@@ -86,6 +91,7 @@ namespace IssuingTasksETM.WPF
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            DialogResult = false;
             Close();
         }
 

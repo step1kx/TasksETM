@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TasksETM.Models;
 using TasksETM.WPF;
 
 namespace IssuingTasksETM.WPF
@@ -91,6 +92,8 @@ namespace IssuingTasksETM.WPF
 
             if (success)
             {
+                UserSession.Login = login;
+
                 ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection);
                 chooseProjectWindow.Show();
                 this.Close();
