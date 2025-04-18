@@ -57,7 +57,7 @@ namespace IssuingTasksETM.WPF
 
 
 
-        private void CreateWindow_Click(object sender, RoutedEventArgs e)
+        private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {
 
         }

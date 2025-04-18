@@ -5,8 +5,241 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IssuingTasksETM.WPF"
         mc:Ignorable="d"
-        Title="CreateTaskWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="CreateTaskWindow" 
+        Height="500" 
+        Width="800"
+            MouseDown="MovingWin"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    ResizeMode="NoResize"
+    Background="Transparent"
+    AllowsTransparency="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border Background="#272537"
+        CornerRadius="20">
+        <Grid>
+            <Grid Height="50" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ETM"
+                      FontSize="22"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Foreground="Wheat"
+                      Margin="10,0,0,0"/>
+
+                <TextBlock Text="Окно создания заданий"
+                      Grid.Column="1"
+                      Foreground="Wheat"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      FontSize="22"
+                      Margin="0,0,50,0"/>
+                <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
+            Style="{StaticResource CustomButtonStyle}"
+            Background="#3A3A55"
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Center" 
+            FontWeight="Bold" 
+            Width="30" 
+            Height="30"
+            Foreground="Wheat"
+            FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+            </Grid>
+
+            <Grid Margin="0,60,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical"
+                              VerticalAlignment="Center"
+                             Width="200"
+                             Margin="15,30,0,40">
+                    <Button x:Name="BaseInfoButton"
+                             Content="Кому, от кого, дата выполнения"
+                             Height="40"
+                             Margin="0,0,0,10"
+                             Background="#3A3A55"
+                             Foreground="Wheat"
+                             BorderThickness="0"
+                             Style="{StaticResource CustomButtonStyle}"
+                             Cursor="Hand"
+                             Click="BaseInfoShowButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                                  Color="Black"
+                                      Opacity="0.3"
+                                  />
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="HipLoginButton"
+                             Content="Описание, вид, скриншот"
+                             Height="40"
+                             Background="#3A3A55"
+                             Foreground="Wheat"
+                             BorderThickness="0"
+                             Style="{StaticResource CustomButtonStyle}"
+                             Cursor="Hand"
+                             Click="TaskInfoShowButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                            Color="Black"
+                            Opacity="0.3"
+                            />
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="CreateTaskButton"
+                         Content="Создать задание"
+                         Height="40"
+                         Background="#3A3A55"
+                         Foreground="Wheat"
+                         BorderThickness="0"
+                         Margin="0,70,0,0"
+                         Style="{StaticResource CustomButtonStyle}"
+                         Cursor="Hand"
+                            Click="HipLoginButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                            Color="Black"
+                            Opacity="0.3"
+                            />
+                        </Button.Effect>
+                    </Button>
+                </StackPanel>
+                <Border 
+                     Grid.Column="1"
+                    CornerRadius="20"
+                    Height="350"
+                    Width="300"
+                    Background="#272537"
+                    Margin="25,30,25,60">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="5"
+                    Color="Black"
+                    Opacity="0.5"
+                    BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid x:Name="TasksPanel">
+                        <Grid x:Name="BaseInfoGrid" Visibility="Collapsed" >
+                            <TextBlock Text="Общая информация"
+                            FontSize="20"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Margin="0,20,0,0"/>
+                            <TextBlock Text="От кого задание"
+                            FontSize="16"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="50,70,0,0"/>
+                            <ComboBox Width="200"
+                            Height="25"
+                            VerticalAlignment="Top"
+                            Margin="0,100,0,0"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65" SelectionChanged="ComboBox_SelectionChanged"/>
+                            <TextBlock Text="Кому задание"
+                              FontSize="16"
+                              Foreground="Wheat"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="50,150,0,0"/>
+                            <ComboBox Width="200"
+                                Height="25"
+                                VerticalAlignment="Top"
+                                Margin="0,180,0,0"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderBrush="#4A4A65"/>
+                            <TextBlock Text="Крайний срок выполнения"
+                                FontSize="16"
+                                Foreground="Wheat"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Margin="0,230,0,0"/>
+                            <TextBox
+                            Width="200px"
+                            Height="25px"
+                            Margin="50,272,50,0"
+                            VerticalAlignment="Top"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65"
+                            Cursor="Hand"
+                            />
+                        </Grid>
+
+
+                        <Grid x:Name="TasksInfoGrid" Visibility="Visible">
+                            <TextBlock Text="Задание"
+                            FontSize="20"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Margin="0,20,0,0"/>
+                            <TextBlock Text="Вид"
+                            FontSize="16"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="50,60,0,0"/>
+                            <TextBox Width="200"
+                            Height="25"
+                            VerticalAlignment="Top"
+                            Margin="0,90,0,0"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65"/>
+                            <TextBlock Text="Скриншот"
+                              FontSize="16"
+                              Foreground="Wheat"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="50,130,0,0"/>
+                            <Button Width="200"
+                                Height="25"
+                                VerticalAlignment="Top"
+                                Margin="0,160,0,0"
+                                Background="#3A3A55"
+                                Content="Загрузить скриншот"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="ToChooseProjectButton_Click"/>
+                            <TextBlock Text="Описание"
+                            FontSize="16"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="49,200,0,0"/>
+                            <TextBox
+                            Width="200px"
+                            Height="100"
+                            
+                            VerticalAlignment="Bottom"
+                            Margin="55,0,45,22"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65" Background="#FF3A3A55"
+                            />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>
