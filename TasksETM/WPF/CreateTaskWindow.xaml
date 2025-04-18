@@ -55,6 +55,15 @@
             Height="30"
             Foreground="Wheat"
             FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+                <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
+                Style="{StaticResource CustomButtonStyle}"
+                Background="#3A3A55"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center" 
+            Width="70" 
+            Height="30"
+            Foreground="Wheat"
+            FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
             </Grid>
 
             <Grid Margin="0,60,0,0">
@@ -109,7 +118,7 @@
                          Margin="0,70,0,0"
                          Style="{StaticResource CustomButtonStyle}"
                          Cursor="Hand"
-                            Click="HipLoginButton_Click">
+                            Click="CreateTaskButton_Click">
                         <Button.Effect>
                             <DropShadowEffect ShadowDepth="2"
                             Color="Black"
@@ -132,7 +141,7 @@
                     BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="TasksPanel">
-                        <Grid x:Name="BaseInfoGrid" Visibility="Collapsed" >
+                        <Grid x:Name="BaseInfoGrid" Visibility="Visible" >
                             <TextBlock Text="Общая информация"
                             FontSize="20"
                             Foreground="Wheat"
@@ -151,7 +160,7 @@
                             Margin="0,100,0,0"
                             Background="#3A3A55"
                             Foreground="Wheat"
-                            BorderBrush="#4A4A65" SelectionChanged="ComboBox_SelectionChanged"/>
+                            BorderBrush="#4A4A65" />
                             <TextBlock Text="Кому задание"
                               FontSize="16"
                               Foreground="Wheat"
@@ -170,7 +179,7 @@
                                 Foreground="Wheat"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
-                                Margin="0,230,0,0"/>
+                                Margin="0,235,0,0"/>
                             <TextBox
                             Width="200px"
                             Height="25px"
@@ -184,7 +193,7 @@
                         </Grid>
 
 
-                        <Grid x:Name="TasksInfoGrid" Visibility="Visible">
+                        <Grid x:Name="TasksInfoGrid" Visibility="Collapsed">
                             <TextBlock Text="Задание"
                             FontSize="20"
                             Foreground="Wheat"
@@ -220,7 +229,7 @@
                                 BorderThickness="0"
                                 Style="{StaticResource CustomButtonStyle}"
                                 Cursor="Hand"
-                                Click="ToChooseProjectButton_Click"/>
+                                Click="LoadScreenshotButton_Click"/>
                             <TextBlock Text="Описание"
                             FontSize="16"
                             Foreground="Wheat"

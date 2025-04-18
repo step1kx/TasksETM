@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TasksETM.WPF;
 
 namespace IssuingTasksETM.WPF
 {
@@ -20,9 +21,11 @@ namespace IssuingTasksETM.WPF
     /// </summary>
     public partial class CreateTaskWindow : Window
     {
-        public CreateTaskWindow()
+        private readonly TaskWindow _taskWindow;
+        public CreateTaskWindow(string selectedProject)
         {
             InitializeComponent();
+            _taskWindow = new TaskWindow(selectedProject);
         }
 
         private void TaskInfoShowButton_Click(object sender, RoutedEventArgs e)
@@ -63,9 +66,25 @@ namespace IssuingTasksETM.WPF
             }
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LoadScreenshotButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void CreateTaskButton_Click(object sender, RoutedEventArgs e) 
+        {
+
+        }
+
+        private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
+        {
+            _taskWindow.Show();
+            Close();
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

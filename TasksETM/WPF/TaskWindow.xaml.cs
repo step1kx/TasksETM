@@ -59,7 +59,9 @@ namespace IssuingTasksETM.WPF
 
         private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {
-
+            var createTaskWindow = new CreateTaskWindow(_selectedProject);
+            createTaskWindow.Show();
+            Close();
         }
 
         private void FilterWindow_Click(object sender, RoutedEventArgs e)

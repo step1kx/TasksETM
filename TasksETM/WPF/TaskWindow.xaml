@@ -82,7 +82,7 @@
                                 BorderThickness="0"
                                 Style="{StaticResource CustomButtonStyle}"
                                 Cursor="Hand"
-                                Click="CreateWindow_Click">
+                                Click="CreateTaskWindow_Click">
                             <Button.Effect>
                                 <DropShadowEffect ShadowDepth="2"
                     Color="Black"
@@ -128,16 +128,41 @@
                             <DataGridTextColumn   IsReadOnly="True" Header="№" Binding="{Binding Path=TaskNumber}" Width="20"/>
                             <DataGridTextColumn  IsReadOnly="True" Header="От" Binding="{Binding  FromDepart}" Width="60"/>
                             <DataGridTextColumn  IsReadOnly="True" Header="Кому" Binding="{Binding  ToDepart}" Width="60"/>
-                            <DataGridTemplateColumn IsReadOnly="False" Header="Принял"  Width="60" >
+                            <DataGridTemplateColumn IsReadOnly="False" Header="Принял" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox 
-                                            VerticalAlignment="Center" 
-                                            HorizontalAlignment="Center" 
-                                            IsThreeState="True"/>
+                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <!-- Чекбокс и подпись для АР -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsAR}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="АР" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для ВК -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsVK}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="ВК" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для ОВ -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsOV}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="ОВ" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для СС -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsSS}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="СС" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для ЕС -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsES}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="ЕС" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+
+
                             <DataGridTemplateColumn IsReadOnly="False" Header="Готово"  Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
