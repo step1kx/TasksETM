@@ -125,43 +125,27 @@
                            SelectionChanged="tasksDataGrid_SelectionChanged"
                            Style="{StaticResource CustomDataGridStyle}">
                         <DataGrid.Columns >
-                            <DataGridTextColumn   IsReadOnly="True" Header="№" Binding="{Binding Path=TaskNumber}" Width="40"/>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Раздел от" Binding="{Binding  FromSection}" Width="80"/>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Раздел кому" Binding="{Binding  ToSection}" Width="90"/>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Кто выдал" Binding="{Binding  TaskIssuer}" Width="90"/>
-                            <DataGridTemplateColumn IsReadOnly="False" Header="Принял"  Width="60">
+                            <DataGridTextColumn   IsReadOnly="True" Header="№" Binding="{Binding Path=TaskNumber}" Width="20"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="От" Binding="{Binding  FromDepart}" Width="60"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Кому" Binding="{Binding  ToDepart}" Width="60"/>
+                            <DataGridTemplateColumn IsReadOnly="False" Header="Принял"  Width="60" >
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox 
-                                    
-                                    VerticalAlignment="Center" 
-                                    HorizontalAlignment="Center" 
-                                    IsThreeState="True"/>
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center" 
+                                            IsThreeState="True"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn   IsReadOnly="True" Header="Кто принял" Binding="{Binding WhoTaken}" Width="100"/>
                             <DataGridTemplateColumn IsReadOnly="False" Header="Готово"  Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox IsChecked="{Binding TaskCompleted}"
-                            
-                            VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn   IsReadOnly="True" Header="Кто отработал" Binding="{Binding TaskHandler}" Width="100"/>
-                            <DataGridTemplateColumn IsReadOnly="False" Header="Согл"  Width="50">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <CheckBox IsChecked="{Binding TaskApproval}"
-                                
-                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn  IsReadOnly="False" Header="Кто согласовал" Binding="{Binding  WhoApproval}" Width="150"/>
-
                             <DataGridTemplateColumn Header="Скриншот экрана"  IsReadOnly="True" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -169,24 +153,17 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
                             <DataGridTextColumn  IsReadOnly="True" Header="Вид" Binding="{Binding TaskView}" Width="250"/>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="105"/>
-                            <DataGridTemplateColumn Header="Почему не принял" Width="130">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBox Text="{Binding TaskExplanation, UpdateSourceTrigger=LostFocus}" 
-                                    />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Описание задания" Binding="{Binding  TaskDescription}" Width="*">
+                            <DataGridTextColumn  IsReadOnly="True" Header="Описание задания" Binding="{Binding  TaskDescription}" Width="350">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="TextWrapping" Value="Wrap"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="105"/>
+                            <DataGridTextColumn IsReadOnly="True" Header="Крайний срок" Binding="{Binding TaskDeadline}" Width="*"/>
+
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

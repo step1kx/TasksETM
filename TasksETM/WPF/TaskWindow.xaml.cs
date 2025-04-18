@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IssuingTasksETM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TasksETM.Interfaces;
+using TasksETM.Service;
 using TasksETM.WPF;
 
 namespace IssuingTasksETM.WPF
@@ -21,14 +24,38 @@ namespace IssuingTasksETM.WPF
     public partial class TaskWindow : Window
     {
         private readonly string _selectedProject;
+        private readonly TaskManager _taskManager;
 
         public TaskWindow(string selectedProject)
         {
             InitializeComponent();
             _selectedProject = selectedProject;
+            _taskManager = new TaskManager(DatabaseConnection.connString);
 
             this.TitleBlock.Text = $"Задание смежным разделам по объекту: {selectedProject}";
+
+            Loaded += TaskWindow_Loaded;
         }
+
+        private void TaskWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadAsync(); 
+        }
+
+        public async void LoadAsync()
+        {
+            try
+            {
+                var table = await _taskManager.GetTasksByProjectAsync(_selectedProject);
+                tasksDataGrid.ItemsSource = table.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
+            }
+        }
+
+
 
         private void CreateWindow_Click(object sender, RoutedEventArgs e)
         {
