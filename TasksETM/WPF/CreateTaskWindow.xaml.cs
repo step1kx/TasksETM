@@ -1,10 +1,12 @@
 ﻿using IssuingTasksETM.Interfaces;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using TasksETM.Interfaces;
 using TasksETM.Models;
 using TasksETM.Service;
+using TasksETM.Service.Tasks;
 
 namespace IssuingTasksETM.WPF
 {
@@ -14,9 +16,10 @@ namespace IssuingTasksETM.WPF
     public partial class CreateTaskWindow : Window
     {
         private string ImagePath { get; set; }
+        private readonly string _selectedProject;
         private readonly TaskWindow _taskWindow;
         private readonly IDatabaseConnection _dbConnection;
-        private readonly ImageService _imageManager;
+        private readonly ImageService _imageService;
         private readonly IDepartmentService _departmentService;
         private readonly IProjectService _projectService;
         private readonly IAuthService _authService;
@@ -26,15 +29,17 @@ namespace IssuingTasksETM.WPF
             IDatabaseConnection dbConnection, 
             IDepartmentService departmentService, 
             IProjectService projectService,
-            IAuthService authService)
+            IAuthService authService
+            )
         {
             InitializeComponent();
+            _selectedProject = selectedProject;
             _taskWindow = new TaskWindow(selectedProject, dbConnection, departmentService, projectService, authService);
             _dbConnection = new DatabaseConnection();
             _departmentService = new DepartmentService();
             _projectService = new ProjectService();
             _authService = new AuthService(DatabaseConnection.connString);
-            _imageManager = new ImageService();
+            _imageService = new ImageService();
             FillComboBoxAsync();
         }
 
@@ -133,7 +138,7 @@ namespace IssuingTasksETM.WPF
                     var image = Clipboard.GetImage();
                     if (image != null)
                     {
-                        ImagePath = _imageManager.SaveImageToTempFile(image);
+                        ImagePath = _imageService.SaveImageToTempFile(image);
                         ImageInfoTextBlock.Text = $"{System.IO.Path.GetFileName(ImagePath)} ({System.IO.Path.GetExtension(ImagePath)})";
                     }
                 }
@@ -163,24 +168,42 @@ namespace IssuingTasksETM.WPF
 
         }
 
-        private void CreateTaskButton_Click(object sender, RoutedEventArgs e) 
+        private async void CreateTaskButton_Click(object sender, RoutedEventArgs e)
         {
-
-            if (string.IsNullOrEmpty(TaskViewTextBox.Text) || string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
+            // Создаем объект TaskModel
+            var taskModel = new TaskModel
             {
-                MessageBox.Show("Просмотрите все пункты. Какие-то поля остались пустыми!");
+                FromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty,
+                ToDepart = ToDepartComboBox.SelectedItem?.ToString() ?? string.Empty,
+                TaskDescription = TaskDescriptionTextBox.Text, 
+                TaskView = TaskViewTextBox.Text,
+                ScreenshotPath = _imageService.ConvertImageToBytes(ImagePath), 
+                TaskDate = DateTime.Now,
+                TaskDeadline = DateTime.TryParse(TaskDeadLineTextBox.Text, out var deadline) ? deadline : DateTime.Now 
+            };
+
+            if (string.IsNullOrEmpty(taskModel.FromDepart) || string.IsNullOrEmpty(taskModel.ToDepart) || string.IsNullOrEmpty(taskModel.TaskDescription))
+            {
+                MessageBox.Show("Пожалуйста, выберите отделы 'От кого' и 'Кому'.");
+                return;
             }
 
-
-            try
+            if (string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
             {
-
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show($"Словили ошибку при создании задания: {ex.Message}");
+                MessageBox.Show("Пожалуйста, укажите крайний срок выполнения.");
+                return;
             }
 
+            if (taskModel.TaskDeadline.Date < DateTime.Now.Date)
+            {
+                MessageBox.Show("Крайний срок выполнения не может быть раньше текущей даты. Пожалуйста, выберите дату, начиная с сегодняшнего дня.");
+                return;
+            }
+
+            var createTaskService = new CreateTasksService(_selectedProject); 
+            await createTaskService.CreateTaskAsync(taskModel);
+
+            MessageBox.Show("Задача успешно создана!");
         }
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)

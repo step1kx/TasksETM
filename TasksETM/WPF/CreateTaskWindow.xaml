@@ -258,6 +258,7 @@
                                        
                             Margin="49,200,0,0"/>
                             <TextBox
+                                x:Name="TaskDescriptionTextBox" 
                             Width="200px"
                             Height="100"
                             TextWrapping="Wrap"
