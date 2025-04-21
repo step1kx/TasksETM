@@ -5,7 +5,7 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace IssuingTasksETM.Models
+namespace TasksETM.Service
 {
     public class DatabaseConnection : IDatabaseConnection
     {

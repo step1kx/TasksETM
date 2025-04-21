@@ -141,7 +141,7 @@
                     BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="TasksPanel">
-                        <Grid x:Name="BaseInfoGrid" Visibility="Visible" >
+                        <Grid x:Name="BaseInfoGrid" Visibility="Collapsed" >
                             <TextBlock Text="Общая информация"
                             FontSize="20"
                             Foreground="Wheat"
@@ -195,11 +195,12 @@
                             Foreground="Wheat"
                             BorderBrush="#4A4A65"
                             Cursor="Hand"
+                            x:Name="TaskDeadLineTextBox"
                             />
                         </Grid>
 
 
-                        <Grid x:Name="TasksInfoGrid" Visibility="Collapsed">
+                        <Grid x:Name="TasksInfoGrid" Visibility="Visible">
                             <TextBlock Text="Задание"
                             FontSize="20"
                             Foreground="Wheat"
@@ -218,34 +219,48 @@
                             Margin="0,90,0,0"
                             Background="#3A3A55"
                             Foreground="Wheat"
-                            BorderBrush="#4A4A65"/>
+                            BorderBrush="#4A4A65"
+                            x:Name="TaskViewTextBox"/>
                             <TextBlock Text="Скриншот"
+                              x:Name="ImageInfoTextBlock"
                               FontSize="16"
                               Foreground="Wheat"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
                               Margin="50,130,0,0"/>
-                            <Button Width="200"
+                            <Button Width="120"
                                 Height="25"
                                 VerticalAlignment="Top"
-                                Margin="0,160,0,0"
+                                Margin="0,160,80,0"
                                 Background="#3A3A55"
                                 Content="Загрузить скриншот"
                                 Foreground="Wheat"
                                 BorderThickness="0"
                                 Style="{StaticResource CustomButtonStyle}"
                                 Cursor="Hand"
-                                Click="LoadScreenshotButton_Click"/>
+                                Click=" PasteImageFromClipboard_Click"/>
+                            <Button Width="70"
+                                Height="25"
+                                VerticalAlignment="Top"
+                                Margin="130,160,0,0"
+                                Background="#3A3A55"
+                                Content="Удалить"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="RemoveImage_Click"/>
                             <TextBlock Text="Описание"
                             FontSize="16"
                             Foreground="Wheat"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
+                                       
                             Margin="49,200,0,0"/>
                             <TextBox
                             Width="200px"
                             Height="100"
-                            
+                            TextWrapping="Wrap"
                             VerticalAlignment="Bottom"
                             Margin="55,0,45,22"
                             Foreground="Wheat"

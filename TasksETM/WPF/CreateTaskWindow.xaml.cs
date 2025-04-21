@@ -1,21 +1,9 @@
 ﻿using IssuingTasksETM.Interfaces;
-using IssuingTasksETM.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TasksETM.Models;
-using TasksETM.WPF;
+using TasksETM.Service;
 
 namespace IssuingTasksETM.WPF
 {
@@ -24,8 +12,10 @@ namespace IssuingTasksETM.WPF
     /// </summary>
     public partial class CreateTaskWindow : Window
     {
+        private string ImagePath { get; set; }
         private readonly TaskWindow _taskWindow;
         private readonly IDatabaseConnection _dbConnection;
+        private readonly ImageManager _imageManager;
 
         public static string loggedInUser = UserSession.Login;
         public CreateTaskWindow(string selectedProject, IDatabaseConnection dbConnection)
@@ -33,6 +23,7 @@ namespace IssuingTasksETM.WPF
             InitializeComponent();
             _taskWindow = new TaskWindow(selectedProject, dbConnection);
             _dbConnection = new DatabaseConnection();
+            _imageManager = new ImageManager();
             FillComboBox();
         }
 
@@ -46,7 +37,10 @@ namespace IssuingTasksETM.WPF
                     return;
                 }
 
-                ToDepartComboBox.Text = loggedInUser;  // Устанавливаем логин в TextBox
+                MessageBox.Show($"Имя пользователя: {loggedInUser}");
+
+                FromDepartComboBox.Items.Add(loggedInUser); 
+                FromDepartComboBox.SelectedItem = loggedInUser; 
 
                 if (_dbConnection == null)
                 {
@@ -54,7 +48,7 @@ namespace IssuingTasksETM.WPF
                     return;
                 }
 
-                _dbConnection.FillDepartmentName(ToDepartComboBox);  // Заполняем ComboBox с данными
+                _dbConnection.FillDepartmentName(ToDepartComboBox);  
             }
             catch (Exception ex)
             {
@@ -101,13 +95,62 @@ namespace IssuingTasksETM.WPF
             }
         }
 
-        private void LoadScreenshotButton_Click(object sender, RoutedEventArgs e)
+        private void PasteImageFromClipboard_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (Clipboard.ContainsImage())
+                {
+                    var image = Clipboard.GetImage();
+                    if (image != null)
+                    {
+                        ImagePath = _imageManager.SaveImageToTempFile(image);
+                        ImageInfoTextBlock.Text = $"{System.IO.Path.GetFileName(ImagePath)} ({System.IO.Path.GetExtension(ImagePath)})";
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Буфер обмена не содержит изображения.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при вставке изображения: {ex.Message}");
+            }
+        }
+
+        private void RemoveImage_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImagePath == null)
+            {
+                ImageInfoTextBlock.Text = null;
+                MessageBox.Show("Изображение еще не добавлено");
+            }
+            else
+            {
+                ImagePath = null;
+                ImageInfoTextBlock.Text = "Изображение удалено";
+            }
 
         }
 
         private void CreateTaskButton_Click(object sender, RoutedEventArgs e) 
         {
+
+            if (string.IsNullOrEmpty(TaskViewTextBox.Text) || string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
+            {
+                MessageBox.Show("Просмотрите все пункты. Какие-то поля остались пустыми!");
+            }
+
+
+            try
+            {
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Словили ошибку при создании задания: {ex.Message}");
+            }
 
         }
 

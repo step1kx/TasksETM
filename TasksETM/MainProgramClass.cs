@@ -1,11 +1,6 @@
-﻿using IssuingTasksETM.Models;
-using IssuingTasksETM.WPF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IssuingTasksETM.WPF;
 using System.Windows;
+using TasksETM.Service;
 
 namespace TasksETM
 {

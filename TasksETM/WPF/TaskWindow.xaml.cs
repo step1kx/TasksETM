@@ -1,5 +1,4 @@
 ﻿using IssuingTasksETM.Interfaces;
-using IssuingTasksETM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +70,9 @@ namespace IssuingTasksETM.WPF
 
         private void FilterWindow_Click(object sender, RoutedEventArgs e)
         {
-
+            var filterTaskWindow = new FilterWindow();
+            filterTaskWindow.Show();
+            Close();
         }
 
         public void MovingWin(object sender, EventArgs e)
@@ -89,9 +90,30 @@ namespace IssuingTasksETM.WPF
             Close();
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private async void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            var loadingWindow = new Window
+            {
+                Width = 300,
+                Height = 100,
+                WindowStyle = WindowStyle.None,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                Content = new StackPanel
+                {
+                    Children =
+            {
+                new TextBlock { Text = "Завершаем работу..." },
+                new ProgressBar { IsIndeterminate = true }
+            }
+                }
+            };
+
+            loadingWindow.Show();
+
+            await Task.Delay(2000);
+
             DialogResult = false;
+            loadingWindow.Close();
             Close();
         }
 
