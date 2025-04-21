@@ -6,6 +6,7 @@ using System.Windows.Media.Animation;
 using TasksETM.Models;
 using TasksETM.WPF;
 using TasksETM.Service;
+using TasksETM.Interfaces;
 
 namespace IssuingTasksETM.WPF
 {
@@ -14,18 +15,50 @@ namespace IssuingTasksETM.WPF
     /// </summary>
     public partial class LoginWindow : Window
     {
+        private readonly IAuthService _authService;
+        private readonly IProjectService _projectService;
+        private readonly IDepartmentService _departmentService;
         private readonly IDatabaseConnection _dbConnection;
-        public LoginWindow(IDatabaseConnection dbConnection = null)
+
+        public LoginWindow(
+            IDatabaseConnection dbConnection,
+            IDepartmentService departmentService,
+            IProjectService projectService,
+            IAuthService authService)
         {
             InitializeComponent();
+
             _dbConnection = dbConnection ?? new DatabaseConnection();
-            FillComboBox();
+            _departmentService = departmentService;
+            _projectService = projectService;
+            _authService = authService;
+            FillComboBoxAsync();
         }
 
-        private void FillComboBox()
+        private async void FillComboBoxAsync()
         {
-            _dbConnection.FillDepartmentName(LoginComboBox);
+            try
+            {
+                var departments = await _departmentService.GetDepartmentNamesAsync();
+
+                Dispatcher.Invoke(() =>
+                {
+                    LoginComboBox.Items.Clear();
+                    foreach (var dep in departments)
+                    {
+                        LoginComboBox.Items.Add(dep);
+                    }
+
+                    if (LoginComboBox.Items.Count > 0)
+                        LoginComboBox.SelectedIndex = 0;
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке логинов: {ex.Message}");
+            }
         }
+
 
         private void HipLoginButton_Click(object sender, RoutedEventArgs e)
         {
@@ -57,9 +90,9 @@ namespace IssuingTasksETM.WPF
             fadeOut.Begin(HipLoginGrid);
         }
 
-        
 
-        private void ToChooseProjectButton_Click(object sender, RoutedEventArgs e)
+
+        private async void ToChooseProjectButton_Click(object sender, RoutedEventArgs e)
         {
             string login = LoginComboBox.Text.Trim();
             string password = PasswordBox.Password;
@@ -76,22 +109,29 @@ namespace IssuingTasksETM.WPF
                 return;
             }
 
-            var db = new DatabaseConnection();
-            bool success = db.LoginDepartment(login, password);
-
-            if (success)
+            try
             {
-                UserSession.Login = login;
+                bool success = await _authService.LoginAsync(login, password);
 
-                ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection);
-                chooseProjectWindow.Show();
-                this.Close();
+                if (success)
+                {
+                    UserSession.Login = login;
+
+                    var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService);
+                    chooseProjectWindow.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Неверный логин или пароль", "Ошибка входа", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Неверный логин или пароль", "Ошибка входа", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка при авторизации: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

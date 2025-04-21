@@ -11,7 +11,11 @@ namespace TasksETM
         {
             var app = new Application();
             var dbConnection = new DatabaseConnection();
-            var window = new LoginWindow(dbConnection);
+            var departmentService = new DepartmentService();
+            var projectService = new ProjectService();
+            var authService = new AuthService(DatabaseConnection.connString);
+
+            var window = new LoginWindow(dbConnection, departmentService, projectService, authService);
             app.MainWindow = window;
             app.Run(window);
         }

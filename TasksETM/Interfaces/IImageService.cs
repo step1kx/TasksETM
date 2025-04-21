@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TasksETM.Interfaces
 {
-    public interface IImageManager
+    public interface IImageService
     {
         public string SaveImageToTempFile(System.Windows.Media.Imaging.BitmapSource image);
         public byte[] ConvertImageToBytes(string imagePath);

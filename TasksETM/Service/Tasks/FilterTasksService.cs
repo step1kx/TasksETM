@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TasksETM.Interfaces.ITasks;
 
-namespace TasksETM.Interfaces
+namespace TasksETM.Service.Tasks
 {
-    public interface IFilterTasksManager
+    public class FilterTasksService : IFilterTasksService
     {
     }
 }

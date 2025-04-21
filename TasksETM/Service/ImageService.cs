@@ -8,7 +8,7 @@ using TasksETM.Interfaces;
 
 namespace TasksETM.Service
 {
-    public class ImageManager : IImageManager
+    public class ImageService : IImageService
     {
         public byte[] ConvertImageToBytes(string imagePath)
         {

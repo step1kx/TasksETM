@@ -1,16 +1,16 @@
 ﻿using IssuingTasksETM.Interfaces;
 using Npgsql;
 using System.Data;
-using TasksETM.Interfaces;
+using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
 
-namespace TasksETM.Service
+namespace TasksETM.Service.Tasks
 {
-    internal class TaskManager : ITaskManager
+    internal class TaskService : ITaskService
     {
         private readonly string _connectionString;
 
-        public TaskManager(string connectionString)
+        public TaskService(string connectionString)
         {
             _connectionString = connectionString;
         }

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using TasksETM.Interfaces;
 using TasksETM.Models;
 using TasksETM.Service;
 
@@ -15,46 +16,74 @@ namespace IssuingTasksETM.WPF
         private string ImagePath { get; set; }
         private readonly TaskWindow _taskWindow;
         private readonly IDatabaseConnection _dbConnection;
-        private readonly ImageManager _imageManager;
+        private readonly ImageService _imageManager;
+        private readonly IDepartmentService _departmentService;
+        private readonly IProjectService _projectService;
+        private readonly IAuthService _authService;
 
         public static string loggedInUser = UserSession.Login;
-        public CreateTaskWindow(string selectedProject, IDatabaseConnection dbConnection)
+        public CreateTaskWindow(string selectedProject, 
+            IDatabaseConnection dbConnection, 
+            IDepartmentService departmentService, 
+            IProjectService projectService,
+            IAuthService authService)
         {
             InitializeComponent();
-            _taskWindow = new TaskWindow(selectedProject, dbConnection);
+            _taskWindow = new TaskWindow(selectedProject, dbConnection, departmentService, projectService, authService);
             _dbConnection = new DatabaseConnection();
-            _imageManager = new ImageManager();
-            FillComboBox();
+            _departmentService = new DepartmentService();
+            _projectService = new ProjectService();
+            _authService = new AuthService(DatabaseConnection.connString);
+            _imageManager = new ImageService();
+            FillComboBoxAsync();
         }
 
-        private void FillComboBox()
+        private async Task FillComboBoxAsync()
         {
             try
             {
-                if (string.IsNullOrEmpty(loggedInUser))
+                if (string.IsNullOrEmpty(UserSession.Login)) 
                 {
                     MessageBox.Show("Логин не был инициализирован.");
                     return;
                 }
 
+                string loggedInUser = UserSession.Login;
                 MessageBox.Show($"Имя пользователя: {loggedInUser}");
 
-                FromDepartComboBox.Items.Add(loggedInUser); 
-                FromDepartComboBox.SelectedItem = loggedInUser; 
-
-                if (_dbConnection == null)
+                Dispatcher.Invoke(() =>
                 {
-                    MessageBox.Show("Соединение с базой данных не инициализировано.");
+                    FromDepartComboBox.Items.Clear();
+                    FromDepartComboBox.Items.Add(loggedInUser);
+                    FromDepartComboBox.SelectedItem = loggedInUser;
+                });
+
+                if (_departmentService == null)
+                {
+                    MessageBox.Show("Сервис отделов не инициализирован.");
                     return;
                 }
 
-                _dbConnection.FillDepartmentName(ToDepartComboBox);  
+                var departmentNames = await _departmentService.GetDepartmentNamesAsync();
+
+                Dispatcher.Invoke(() =>
+                {
+                    ToDepartComboBox.Items.Clear();
+                    foreach (var dep in departmentNames)
+                    {
+                        ToDepartComboBox.Items.Add(dep);
+                    }
+
+                    if (ToDepartComboBox.Items.Count > 0)
+                        ToDepartComboBox.SelectedIndex = 0;
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Чето не пошло: {ex.Message}");
+                MessageBox.Show($"Что-то пошло не так: {ex.Message}");
             }
         }
+
 
 
         private void TaskInfoShowButton_Click(object sender, RoutedEventArgs e)

@@ -10,9 +10,7 @@ namespace IssuingTasksETM.Interfaces
         bool Disconnected();
         bool IsConnected();
         DataTable ExecuteQuery(string query);
-        public bool FillProjects(ComboBox comboBox);
-
         public bool CheckerDBConn();
-        public bool FillDepartmentName(ComboBox comboBox);
+        
     }
 }

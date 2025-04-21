@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace TasksETM.Interfaces
 {
-    public interface ICreateTasksManager
+    public interface IDepartmentService
     {
-       
-
-
-
+        Task<IEnumerable<string>> GetDepartmentNamesAsync();
     }
 }

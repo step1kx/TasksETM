@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TasksETM.Interfaces;
 
-namespace TasksETM.Service
+namespace TasksETM.Interfaces
 {
-    public class FilterTasksManager : IFilterTasksManager
+    public interface IAuthService
     {
+        Task<bool> LoginAsync(string departmentName, string password);
     }
 }

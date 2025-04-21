@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TasksETM.Interfaces;
 
-namespace TasksETM.Service
+namespace TasksETM.Interfaces.ITasks
 {
-    public class CreateTasksManager : ICreateTasksManager
+    public interface ICreateTasksService
     {
+       
+
+
+
     }
 }

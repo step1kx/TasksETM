@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TasksETM.Interfaces;
 using TasksETM.Service;
+using TasksETM.Service.Tasks;
 using TasksETM.WPF;
 
 namespace IssuingTasksETM.WPF
@@ -24,16 +25,26 @@ namespace IssuingTasksETM.WPF
     public partial class TaskWindow : Window
     {
         private readonly string _selectedProject;
-        private readonly TaskManager _taskManager;
+        private readonly TaskService _taskManager;
         private readonly IDatabaseConnection _dbConnection;
+        private readonly IDepartmentService _departmentService;
+        private readonly IProjectService _projectService;
+        private readonly IAuthService _authService;
 
 
-        public TaskWindow(string selectedProject, IDatabaseConnection dbConnection)
+        public TaskWindow(string selectedProject, 
+            IDatabaseConnection dbConnection, 
+            IDepartmentService departmentService, 
+            IProjectService projectService,
+            IAuthService authService)
         {
             InitializeComponent();
             _selectedProject = selectedProject;
             _dbConnection = dbConnection;
-            _taskManager = new TaskManager(DatabaseConnection.connString);
+            _departmentService = new DepartmentService();
+            _projectService = new ProjectService();
+            _authService = new AuthService(DatabaseConnection.connString);
+            _taskManager = new TaskService(DatabaseConnection.connString);
             
 
             this.TitleBlock.Text = $"Задание смежным разделам по объекту: {selectedProject}";
@@ -63,7 +74,7 @@ namespace IssuingTasksETM.WPF
 
         private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {
-            var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection);
+            var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService);
             createTaskWindow.Show();
             Close();
         }
@@ -85,7 +96,7 @@ namespace IssuingTasksETM.WPF
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
-            ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow();
+            ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService);
             chooseProjectWindow.Show();
             Close();
         }

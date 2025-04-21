@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssuingTasksETM.Interfaces
+namespace TasksETM.Interfaces.ITasks
 {
-    public interface IProjectRepository
+    public interface IFilterTasksService
     {
     }
 }
