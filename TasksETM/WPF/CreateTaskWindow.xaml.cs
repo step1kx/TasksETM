@@ -54,7 +54,6 @@ namespace IssuingTasksETM.WPF
                 }
 
                 string loggedInUser = UserSession.Login;
-                MessageBox.Show($"Имя пользователя: {loggedInUser}");
 
                 Dispatcher.Invoke(() =>
                 {
@@ -170,7 +169,6 @@ namespace IssuingTasksETM.WPF
 
         private async void CreateTaskButton_Click(object sender, RoutedEventArgs e)
         {
-            // Создаем объект TaskModel
             var taskModel = new TaskModel
             {
                 FromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty,

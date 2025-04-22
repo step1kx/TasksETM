@@ -194,7 +194,6 @@
                             </DataGridTextColumn>
                             <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="160"/>
                             <DataGridTextColumn IsReadOnly="True" Header="Крайний срок" Binding="{Binding TaskDeadline}" Width="*"/>
-
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
