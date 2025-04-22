@@ -196,6 +196,9 @@ namespace IssuingTasksETM.WPF
             await createTaskService.CreateTaskAsync(taskModel);
 
             MessageBox.Show("Задача успешно создана!");
+
+            _taskWindow.Show();
+            Close();
         }
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
@@ -206,6 +209,7 @@ namespace IssuingTasksETM.WPF
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            _taskWindow.Show();
             Close();
         }
     }

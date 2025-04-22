@@ -177,7 +177,7 @@
                             <DataGridTemplateColumn Header="Скриншот экрана"  IsReadOnly="True" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image Source="{Binding ScreenShot, Converter={StaticResource ByteArrayToImageConverter}}"
+                                        <Image Source="{Binding ScreenshotPath, Converter={StaticResource ByteArrayToImageConverter}}"
                                             Stretch="Uniform"
                                              MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=DataGridColumnHeader}}"
                                              MouseLeftButtonDown="Image_MouseLeftButtonUp"/>

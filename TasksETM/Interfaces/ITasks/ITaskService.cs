@@ -10,6 +10,6 @@ namespace TasksETM.Interfaces.ITasks
 {
     public interface ITaskService
     {
-        public Task<DataTable> GetTasksByProjectAsync(string projectName);
+        public Task<List<TaskModel>> GetTasksByProjectAsync(string projectName);
     }
 }
