@@ -192,6 +192,18 @@ namespace IssuingTasksETM.WPF
                 return;
             }
 
+            if (!DateTime.TryParse(TaskDeadLineTextBox.Text, out DateTime deadline))
+            {
+                MessageBox.Show("Некорректный формат даты. Пожалуйста, введите дату в формате ДД.ММ.ГГГГ или ГГГГ-ММ-ДД.");
+                return;
+            }
+
+            if (deadline < DateTime.Now.Date)
+            {
+                MessageBox.Show("Дата дедлайна не может быть раньше текущей даты.");
+                return;
+            }
+
             var createTaskService = new CreateTasksService(_selectedProject); 
             await createTaskService.CreateTaskAsync(taskModel);
 
