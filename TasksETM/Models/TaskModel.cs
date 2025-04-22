@@ -12,7 +12,7 @@ namespace TasksETM.Models
         public string FromDepart { get; set; } = string.Empty;
         public string ToDepart { get; set; } = string.Empty;
         public bool? Accepted { get; set; }
-        public bool TaskCompleted { get; set; }
+        public bool? TaskCompleted { get; set; }
         public byte [] ScreenshotPath { get; set; } 
         public string TaskView { get; set; } = string.Empty;
         public string TaskDescription { get; set; } = string.Empty;

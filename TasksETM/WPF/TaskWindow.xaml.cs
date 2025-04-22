@@ -61,8 +61,16 @@ namespace IssuingTasksETM.WPF
         {
             try
             {
-                var table = await _taskManager.GetTasksByProjectAsync(_selectedProject);
-                tasksDataGrid.ItemsSource = table.DefaultView;
+                var tasks = await _taskManager.GetTasksByProjectAsync(_selectedProject);
+
+                if (tasks == null || tasks.Count == 0)
+                {
+                    MessageBox.Show("Нет данных для отображения.");
+                }
+                else
+                {
+                    tasksDataGrid.ItemsSource = tasks;
+                }
             }
             catch (Exception ex)
             {

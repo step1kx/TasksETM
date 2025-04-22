@@ -26,7 +26,6 @@ namespace TasksETM.Service.Tasks
                 using (var conn = new NpgsqlConnection(DatabaseConnection.connString))
                 {
 
-                    MessageBox.Show($"Текущий проект: {_selectedProject}");
                     await conn.OpenAsync();
 
                     var projectNumberCommand = new NpgsqlCommand(

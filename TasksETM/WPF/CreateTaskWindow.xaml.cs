@@ -54,7 +54,6 @@ namespace IssuingTasksETM.WPF
                 }
 
                 string loggedInUser = UserSession.Login;
-                MessageBox.Show($"Имя пользователя: {loggedInUser}");
 
                 Dispatcher.Invoke(() =>
                 {
@@ -170,7 +169,6 @@ namespace IssuingTasksETM.WPF
 
         private async void CreateTaskButton_Click(object sender, RoutedEventArgs e)
         {
-            // Создаем объект TaskModel
             var taskModel = new TaskModel
             {
                 FromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty,
@@ -194,10 +192,25 @@ namespace IssuingTasksETM.WPF
                 return;
             }
 
+            if (!DateTime.TryParse(TaskDeadLineTextBox.Text, out DateTime deadline))
+            {
+                MessageBox.Show("Некорректный формат даты. Пожалуйста, введите дату в формате ДД.ММ.ГГГГ или ГГГГ-ММ-ДД.");
+                return;
+            }
+
+            if (deadline < DateTime.Now.Date)
+            {
+                MessageBox.Show("Дата дедлайна не может быть раньше текущей даты.");
+                return;
+            }
+
             var createTaskService = new CreateTasksService(_selectedProject); 
             await createTaskService.CreateTaskAsync(taskModel);
 
             MessageBox.Show("Задача успешно создана!");
+
+            _taskWindow.Show();
+            Close();
         }
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
@@ -208,6 +221,7 @@ namespace IssuingTasksETM.WPF
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            _taskWindow.Show();
             Close();
         }
     }
