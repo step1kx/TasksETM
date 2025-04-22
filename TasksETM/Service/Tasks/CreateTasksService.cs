@@ -47,8 +47,8 @@ namespace TasksETM.Service.Tasks
                     createCommand.Parameters.AddWithValue("@TaskDescription", taskModel.TaskDescription);
                     createCommand.Parameters.AddWithValue("@TaskView", taskModel.TaskView);
                     createCommand.Parameters.AddWithValue("@ProjectNumber", projectNumber);
-                    createCommand.Parameters.AddWithValue("@TaskDate", taskModel.TaskDate.ToString("yyyy-MM-dd"));
-                    createCommand.Parameters.AddWithValue("@TaskDeadline", taskModel.TaskDeadline.ToString("yyyy-MM-dd"));
+                    createCommand.Parameters.AddWithValue("@TaskDate", taskModel.TaskDate.ToString());
+                    createCommand.Parameters.AddWithValue("@TaskDeadline", taskModel.TaskDeadline.ToString());
                     
 
 

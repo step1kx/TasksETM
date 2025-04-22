@@ -16,7 +16,7 @@ namespace TasksETM.Models
         public byte [] ScreenshotPath { get; set; } 
         public string TaskView { get; set; } = string.Empty;
         public string TaskDescription { get; set; } = string.Empty;
-        public DateTime TaskDate { get; set; }
-        public DateTime TaskDeadline { get; set; }
+        public string TaskDate { get; set; } = string.Empty;
+        public string TaskDeadline { get; set; }
     }
 }

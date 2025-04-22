@@ -107,7 +107,6 @@ namespace IssuingTasksETM.WPF
             {
                 Width = 300,
                 Height = 100,
-                WindowStyle = WindowStyle.None,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 Content = new StackPanel
                 {
@@ -126,6 +125,25 @@ namespace IssuingTasksETM.WPF
             DialogResult = false;
             loadingWindow.Close();
             Close();
+        }
+
+        private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var image = sender as Image;
+            if (image != null)
+            {
+                var imageSource = image.Source as BitmapImage;
+                if (imageSource != null)
+                {
+                    ShowImageInNewWindow(imageSource);
+                }
+            }
+        }
+        private void ShowImageInNewWindow(BitmapImage imageSource)
+        {
+            var imageWindow = new ImageFullSize();
+            imageWindow.SetImageSource(imageSource);
+            imageWindow.ShowDialog();
         }
 
         private void tasksDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

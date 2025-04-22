@@ -178,8 +178,8 @@ namespace IssuingTasksETM.WPF
                 TaskDescription = TaskDescriptionTextBox.Text, 
                 TaskView = TaskViewTextBox.Text,
                 ScreenshotPath = _imageService.ConvertImageToBytes(ImagePath), 
-                TaskDate = DateTime.Now,
-                TaskDeadline = DateTime.TryParse(TaskDeadLineTextBox.Text, out var deadline) ? deadline : DateTime.Now 
+                TaskDate = DateTime.Now.ToString(),
+                TaskDeadline = TaskDeadLineTextBox.Text
             };
 
             if (string.IsNullOrEmpty(taskModel.FromDepart) || string.IsNullOrEmpty(taskModel.ToDepart) || string.IsNullOrEmpty(taskModel.TaskDescription))
@@ -191,12 +191,6 @@ namespace IssuingTasksETM.WPF
             if (string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
             {
                 MessageBox.Show("Пожалуйста, укажите крайний срок выполнения.");
-                return;
-            }
-
-            if (taskModel.TaskDeadline.Date < DateTime.Now.Date)
-            {
-                MessageBox.Show("Крайний срок выполнения не может быть раньше текущей даты. Пожалуйста, выберите дату, начиная с сегодняшнего дня.");
                 return;
             }
 

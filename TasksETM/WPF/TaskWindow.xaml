@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IssuingTasksETM.WPF"
+        xmlns:converters="clr-namespace:TasksETM.Converters"
         mc:Ignorable="d"
         Title="TaskWindow" 
         Height="700" Width="1500"
@@ -18,6 +19,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Border Background="#272537"
@@ -118,10 +120,11 @@
                            AutoGenerateColumns="False"  
                            HeadersVisibility="Column" 
                            FontFamily="Arial Black" 
-                           CanUserReorderColumns="False"  
+                           CanUserAddRows="False"  
                            Margin="0,0,10,0"
                            Background="#272537"
                            Foreground="Wheat"
+                           RowHeight="100"
                            SelectionChanged="tasksDataGrid_SelectionChanged"
                            Style="{StaticResource CustomDataGridStyle}">
                         <DataGrid.Columns >
@@ -174,19 +177,22 @@
                             <DataGridTemplateColumn Header="Скриншот экрана"  IsReadOnly="True" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-
+                                        <Image Source="{Binding ScreenShot, Converter={StaticResource ByteArrayToImageConverter}}"
+                                            Stretch="Uniform"
+                                             MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=DataGridColumnHeader}}"
+                                             MouseLeftButtonDown="Image_MouseLeftButtonUp"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Вид" Binding="{Binding TaskView}" Width="250"/>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Описание задания" Binding="{Binding  TaskDescription}" Width="350">
+                            <DataGridTextColumn  IsReadOnly="True" Header="Вид" Binding="{Binding TaskView}" Width="170"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Описание задания" Binding="{Binding  TaskDescription}" Width="280">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="TextWrapping" Value="Wrap"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="105"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="160"/>
                             <DataGridTextColumn IsReadOnly="True" Header="Крайний срок" Binding="{Binding TaskDeadline}" Width="*"/>
 
                         </DataGrid.Columns>
