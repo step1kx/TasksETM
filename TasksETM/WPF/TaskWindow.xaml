@@ -137,27 +137,42 @@
                                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <!-- Чекбокс и подпись для АР -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=IsAR}" VerticalAlignment="Center"/>
+                                                <CheckBox IsChecked="{Binding Path=IsAR, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Checked="CheckBox_Changed" 
+                                                        Unchecked="CheckBox_Changed" 
+                                                        VerticalAlignment="Center"/>
                                                 <TextBlock Text="АР" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                             </StackPanel>
                                             <!-- Чекбокс и подпись для ВК -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=IsVK}" VerticalAlignment="Center"/>
+                                            <CheckBox IsChecked="{Binding Path=IsVK, UpdateSourceTrigger=PropertyChanged}" 
+                                                    Checked="CheckBox_Changed" 
+                                                    Unchecked="CheckBox_Changed" 
+                                                    VerticalAlignment="Center"/>
                                                 <TextBlock Text="ВК" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                             </StackPanel>
                                             <!-- Чекбокс и подпись для ОВ -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=IsOV}" VerticalAlignment="Center"/>
+                                                <CheckBox IsChecked="{Binding Path=IsOV, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Checked="CheckBox_Changed" 
+                                                        Unchecked="CheckBox_Changed" 
+                                                        VerticalAlignment="Center"/>
                                                 <TextBlock Text="ОВ" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                             </StackPanel>
                                             <!-- Чекбокс и подпись для СС -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=IsSS}" VerticalAlignment="Center"/>
+                                                <CheckBox IsChecked="{Binding Path=IsSS, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Checked="CheckBox_Changed" 
+                                                        Unchecked="CheckBox_Changed" 
+                                                        VerticalAlignment="Center"/>
                                                 <TextBlock Text="СС" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                             </StackPanel>
                                             <!-- Чекбокс и подпись для ЕС -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=IsES}" VerticalAlignment="Center"/>
+                                                <CheckBox IsChecked="{Binding Path=IsES, UpdateSourceTrigger=PropertyChanged}" 
+                                                          Checked="CheckBox_Changed" 
+                                                          Unchecked="CheckBox_Changed" 
+                                                          VerticalAlignment="Center"/>
                                                 <TextBlock Text="ЕС" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                             </StackPanel>
                                         </StackPanel>

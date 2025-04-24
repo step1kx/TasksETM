@@ -25,7 +25,6 @@ namespace TasksETM.Service.Tasks
             {
                 using (var conn = new NpgsqlConnection(DatabaseConnection.connString))
                 {
-
                     await conn.OpenAsync();
 
                     var projectNumberCommand = new NpgsqlCommand(
@@ -33,12 +32,12 @@ namespace TasksETM.Service.Tasks
                     projectNumberCommand.Parameters.AddWithValue("@ProjectName", _selectedProject);
                     var projectNumber = Convert.ToInt32(await projectNumberCommand.ExecuteScalarAsync());
 
-
                     var createCommand = new NpgsqlCommand(
                         "INSERT INTO public.\"Tasks\" (\"FromDepart\", \"ToDepart\", \"AcceptedDepart\", \"TaskCompleted\", " +
                         "\"ScreenShot\", \"TaskView\", \"TaskDescription\", " +
                         "\"PK_ProjectNumber\", \"TaskDate\", \"TaskDeadLine\") " +
-                        "VALUES (@FromDepart, @ToDepart, 0, 0, @ScreenShot, @TaskView, @TaskDescription, @ProjectNumber, @TaskDate, @TaskDeadline)", conn);
+                        "VALUES (@FromDepart, @ToDepart, 0, 0, @ScreenShot, @TaskView, @TaskDescription, @ProjectNumber, @TaskDate, @TaskDeadline) " +
+                        "RETURNING \"TaskNumber\"", conn);
 
                     createCommand.Parameters.AddWithValue("@FromDepart", taskModel.FromDepart);
                     createCommand.Parameters.AddWithValue("@ToDepart", taskModel.ToDepart);
@@ -46,17 +45,36 @@ namespace TasksETM.Service.Tasks
                     createCommand.Parameters.AddWithValue("@TaskDescription", taskModel.TaskDescription);
                     createCommand.Parameters.AddWithValue("@TaskView", taskModel.TaskView);
                     createCommand.Parameters.AddWithValue("@ProjectNumber", projectNumber);
-                    createCommand.Parameters.AddWithValue("@TaskDate", taskModel.TaskDate.ToString());
-                    createCommand.Parameters.AddWithValue("@TaskDeadline", taskModel.TaskDeadline.ToString());
-                    
+                    createCommand.Parameters.AddWithValue("@TaskDate", taskModel.TaskDate);
+                    createCommand.Parameters.AddWithValue("@TaskDeadline", taskModel.TaskDeadline);
 
+                    var taskNumber = Convert.ToInt32(await createCommand.ExecuteScalarAsync());
 
-                    await createCommand.ExecuteNonQueryAsync();
+                    var sections = new[] { "AR", "VK", "OV", "SS", "ES" };
+                    foreach (var section in sections)
+                    {
+                        var insertAssignmentCommand = new NpgsqlCommand(
+                            "INSERT INTO public.\"TaskAssignments\" (\"TaskNumber\", \"Section\", \"IsAssigned\") " +
+                            "VALUES (@TaskNumber, @Section, @IsAssigned)", conn);
+                        insertAssignmentCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+                        insertAssignmentCommand.Parameters.AddWithValue("@Section", section);
+                        insertAssignmentCommand.Parameters.AddWithValue("@IsAssigned", false);
+                        await insertAssignmentCommand.ExecuteNonQueryAsync();
+                    }
 
                     var selectCommand = new NpgsqlCommand(
-                        "SELECT t.* FROM public.\"Tasks\" t " +
+                        "SELECT t.*, " +
+                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'AR') AS \"IsAR\", " +
+                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'VK') AS \"IsVK\", " +
+                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'OV') AS \"IsOV\", " +
+                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'SS') AS \"IsSS\", " +
+                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'ES') AS \"IsES\" " +
+                        "FROM public.\"Tasks\" t " +
                         "JOIN public.\"Projects\" p ON t.\"PK_ProjectNumber\" = p.\"ProjectNumber\" " +
-                        "WHERE p.\"ProjectNumber\" = @ProjectNumber", conn);
+                        "WHERE p.\"ProjectNumber\" = @ProjectNumber " +
+                        "AND t.\"FromDepart\" IS NOT NULL " +
+                        "AND t.\"ToDepart\" IS NOT NULL " +
+                        "AND t.\"TaskDescription\" IS NOT NULL", conn);
                     selectCommand.Parameters.AddWithValue("@ProjectNumber", projectNumber);
 
                     var dt = new DataTable("public.\"Tasks\"");

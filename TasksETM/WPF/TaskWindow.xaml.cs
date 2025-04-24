@@ -1,6 +1,7 @@
 ﻿using IssuingTasksETM.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TasksETM.Interfaces;
+using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
 using TasksETM.WPF;
@@ -63,7 +65,7 @@ namespace IssuingTasksETM.WPF
             {
                 var tasks = await _taskManager.GetTasksByProjectAsync(_selectedProject);
 
-                if (tasks == null || tasks.Count == 0)
+                if (tasks == null || !tasks.Any())
                 {
                     MessageBox.Show("Нет данных для отображения.");
                 }
@@ -78,7 +80,22 @@ namespace IssuingTasksETM.WPF
             }
         }
 
+        private async void CheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.DataContext is TaskModel task)
+            {
+                var taskNumber = task.TaskNumber;
 
+                var isAR = task.IsAR ?? false;
+                var isVK = task.IsVK ?? false;
+                var isOV = task.IsOV ?? false;
+                var isSS = task.IsSS ?? false;
+                var isES = task.IsES ?? false;
+
+                await _taskManager.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES);
+
+            }
+        }
 
         private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {
