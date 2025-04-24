@@ -93,7 +93,7 @@
                                   />
                         </Button.Effect>
                     </Button>
-                    <Button x:Name="HipLoginButton"
+                    <Button x:Name="TaskInfoButton"
                              Content="Описание, вид, скриншот"
                              Height="40"
                              Background="#3A3A55"

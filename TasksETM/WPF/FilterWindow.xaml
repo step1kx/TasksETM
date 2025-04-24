@@ -5,8 +5,322 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IssuingTasksETM.WPF"
         mc:Ignorable="d"
-        Title="FilterWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="FilterWindow" 
+        Height="450" 
+        Width="800"
+        MouseDown="MovingWin"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Background="#272537"
+        CornerRadius="20">
+        <Grid>
+            <Grid Height="50" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ETM"
+                    FontSize="22"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Foreground="Wheat"
+                    Margin="10,0,0,0"/>
+
+                <TextBlock Text="Фильтрация заданий"
+                        Grid.Column="1"
+                        Foreground="Wheat"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="22"
+                        Margin="0,0,50,0"/>
+                <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
+                    Style="{StaticResource CustomButtonStyle}"
+                    Background="#3A3A55"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center" 
+                    FontWeight="Bold" 
+                    Width="30" 
+                    Height="30"
+                    Foreground="Wheat"
+                    FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+                <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
+                    Style="{StaticResource CustomButtonStyle}"
+                    Background="#3A3A55"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center" 
+                Width="70" 
+                Height="30"
+                Foreground="Wheat"
+                FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
+            </Grid>
+
+            <Grid Margin="0,60,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical"
+                  VerticalAlignment="Center"
+                 Width="200"
+                 Margin="15,0,0,40">
+                    <Button x:Name="DepartFilterButton"
+                        Content="По разделам"
+                        Height="40"
+                        Margin="0,0,0,10"
+                        Background="#3A3A55"
+                        Foreground="Wheat"
+                        BorderThickness="0"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Cursor="Hand"
+                        Click="DepartShowButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                            Color="Black"
+                            Opacity="0.3"
+                            />
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="AcceptedFilterButton"
+                        Content="По принятию задания"
+                        Height="40"
+                        Background="#3A3A55"
+                        Foreground="Wheat"
+                        BorderThickness="0"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Cursor="Hand"
+                        Click="AcceptedShowButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                                Color="Black"
+                            Opacity="0.3"
+                            />
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="CompletedFilterButton"
+                        Content="По выполнению/дате "
+                        Height="40"
+                        Background="#3A3A55"
+                        Foreground="Wheat"
+                        BorderThickness="0"
+                        Margin="0,10,0,0"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Cursor="Hand"
+                        Click="CompletedShowButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                            Color="Black"
+                            Opacity="0.3"
+                            />
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="ClearFilterButton"
+                        Content="Сбросить фильтры"
+                        Height="40"
+                        Background="#3A3A55"
+                        Foreground="Wheat"
+                        BorderThickness="0"
+                        Margin="0,50,0,0"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Cursor="Hand"
+                        Click="ClearFilterSettingsButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                            Color="Black"
+                            Opacity="0.3"
+                            />
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="CompleteFilterSettingsButton"
+                        Content="Применить фильтры"
+                        Height="40"
+                        Background="#3A3A55"
+                        Foreground="Wheat"
+                        BorderThickness="0"
+                        Margin="0,10,0,0"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Cursor="Hand"
+                        Click="FilterSettingsButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                            Color="Black"
+                            Opacity="0.3"
+                            />
+                        </Button.Effect>
+                    </Button>
+                </StackPanel>
+                <Border 
+                     Grid.Column="1"
+                    CornerRadius="20"
+                    Height="300"
+                    Width="300"
+                    Background="#272537"
+                    Margin="25,30,25,60">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="5"
+                    Color="Black"
+                    Opacity="0.5"
+                    BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid x:Name="TasksPanel">
+                        <Grid x:Name="DepartInfoGrid" Visibility="Visible">
+                            <TextBlock Text="Фильтр разделов"
+                            FontSize="20"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Margin="0,20,0,0"/>
+                            <TextBlock Text="От кого задание"
+                            FontSize="16"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="50,70,0,0"/>
+                            <ComboBox 
+                                x:Name="FromDepartComboBox"
+                            Width="200"
+                            Height="25"
+                            VerticalAlignment="Top"
+                            Margin="0,100,0,0"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65" 
+                            Style="{StaticResource CustomComboBoxStyle}"/>
+                            <TextBlock Text="Кому задание"
+                              FontSize="16"
+                              Foreground="Wheat"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="50,150,0,0"/>
+                            <ComboBox
+                                x:Name="ToDepartComboBox"
+                                Width="200"
+                                Height="25"
+                                VerticalAlignment="Top"
+                                Margin="0,180,0,0"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderBrush="#4A4A65"
+                                Style="{StaticResource CustomComboBoxStyle}"/>
+                        </Grid>
+
+
+                        <Grid x:Name="AcceptedInfoGrid" Visibility="Collapsed">
+                            <TextBlock Text="Фильтр принятых заданий"
+                            FontSize="20"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Margin="0,20,0,0"/>
+                            <TextBlock Text="Принял/Не принял"
+                            FontSize="16"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="50,80,0,0"/>
+                            <ComboBox Width="200"
+                            Height="25"
+                            VerticalAlignment="Top"
+                            Margin="0,110,0,0"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65"
+                            Style="{StaticResource CustomComboBoxStyle}"
+                            x:Name="IsAcceptedComboBox">
+                                <ComboBoxItem Content="Принял" IsSelected="True"/>
+                                <ComboBoxItem Content="Не принял"/>
+                            </ComboBox>
+                            <TextBlock Text="Кто принял"
+                              x:Name="WhoAcceptedTextBlock"
+                              FontSize="16"
+                              Foreground="Wheat"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="50,160,0,0"/>
+                            <ComboBox Width="200"
+                            Height="25"
+                            VerticalAlignment="Top"
+                            Margin="0,190,0,0"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65"
+                            Style="{StaticResource CustomComboBoxStyle}"
+                            x:Name="WhoTakenComboBox"/>
+                        </Grid>
+                        <Grid x:Name="CompletedInfoGrid" Visibility="Collapsed">
+                            <TextBlock Text="Фильтры"
+                            FontSize="20"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Margin="0,20,0,0"/>
+                            <TextBlock Text="Готово/Не готово"
+                            FontSize="16"
+                            Foreground="Wheat"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="50,60,0,0"/>
+                            <ComboBox Width="200"
+                            Height="25"
+                            VerticalAlignment="Top"
+                            Margin="0,90,0,0"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65"
+                            Style="{StaticResource CustomComboBoxStyle}"
+                            x:Name="TaskCompletedComboBox">
+                                <ComboBoxItem Content="Готово" IsSelected="True"/>
+                                <ComboBoxItem Content="Не готово"/>
+                            </ComboBox>
+                            <TextBlock Text="Дата выдачи задания"
+                              x:Name="TasksDateTextBlock"
+                              FontSize="16"
+                              Foreground="Wheat"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="50,125,0,0"/>
+                            <TextBox
+                            Width="200px"
+                            Height="25px"
+                            Margin="50,160,50,0"
+                            VerticalAlignment="Top"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65"
+                            Cursor="Hand"
+                            x:Name="TaskDateTextBox"/>
+                            <TextBlock Text="Дата крайнего срока"
+                              x:Name="DeadLineTextBlock"
+                              FontSize="16"
+                              Foreground="Wheat"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="50,190,0,0"/>
+                            <TextBox
+                            Width="200px"
+                            Height="25px"
+                            Margin="50,220,50,0"
+                            VerticalAlignment="Top"
+                            Background="#3A3A55"
+                            Foreground="Wheat"
+                            BorderBrush="#4A4A65"
+                            Cursor="Hand"
+                            x:Name="TaskDeadLineTextBox"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

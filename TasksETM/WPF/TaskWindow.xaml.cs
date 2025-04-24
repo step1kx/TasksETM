@@ -114,7 +114,7 @@ namespace IssuingTasksETM.WPF
 
         private void FilterWindow_Click(object sender, RoutedEventArgs e)
         {
-            var filterTaskWindow = new FilterWindow();
+            var filterTaskWindow = new FilterWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService);
             filterTaskWindow.Show();
             Close();
         }
