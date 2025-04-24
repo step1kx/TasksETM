@@ -86,14 +86,22 @@ namespace IssuingTasksETM.WPF
             {
                 var taskNumber = task.TaskNumber;
 
-                var isAR = task.IsAR ?? false;
-                var isVK = task.IsVK ?? false;
-                var isOV = task.IsOV ?? false;
-                var isSS = task.IsSS ?? false;
-                var isES = task.IsES ?? false;
+                if (checkBox.IsChecked == task.TaskCompleted)
+                {
+                    var isCompleted = task.TaskCompleted ?? false;
+                    await _taskManager.UpdateTaskCompletedAsync(taskNumber, isCompleted);
+                }
+                else
+                {
+                    var isAR = task.IsAR ?? false;
+                    var isVK = task.IsVK ?? false;
+                    var isOV = task.IsOV ?? false;
+                    var isSS = task.IsSS ?? false;
+                    var isES = task.IsES ?? false;
 
-                await _taskManager.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES);
-
+                    await _taskManager.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES);
+                }
+               
             }
         }
 

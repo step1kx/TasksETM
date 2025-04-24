@@ -184,8 +184,11 @@
                             <DataGridTemplateColumn IsReadOnly="False" Header="Готово"  Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding TaskCompleted}"
-                                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <CheckBox IsChecked="{Binding Path=TaskCompleted, UpdateSourceTrigger=PropertyChanged}" 
+                                                    Checked="CheckBox_Changed" 
+                                                    Unchecked="CheckBox_Changed" 
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
