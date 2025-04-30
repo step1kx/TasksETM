@@ -13,7 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TasksETM.Converters;
 using TasksETM.Interfaces;
+using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
 using TasksETM.Service;
 
@@ -29,7 +31,11 @@ namespace IssuingTasksETM.WPF
         private readonly string _selectedProject;
         private readonly IDepartmentService _departmentService;
         private readonly IProjectService _projectService;
-        private readonly IAuthService _authService;
+        private readonly IAuthService _authService; 
+        private readonly ITaskService _taskService;
+
+        private List<TaskModel> _tasks;
+        private List<TaskModel> _filteredTasks;
 
         private Grid[] _screens;
         private Grid _currentScreen;
@@ -39,7 +45,8 @@ namespace IssuingTasksETM.WPF
             IDatabaseConnection dbConnection,
             IDepartmentService departmentService,
             IProjectService projectService,
-            IAuthService authService
+            IAuthService authService,
+            ITaskService taskService
             )
         {
             InitializeComponent();
@@ -49,10 +56,28 @@ namespace IssuingTasksETM.WPF
             _departmentService = new DepartmentService();
             _projectService = new ProjectService();
             _authService = new AuthService(DatabaseConnection.connString);
+            _taskService = taskService;
 
-            _screens = new[] { DepartInfoGrid, AcceptedInfoGrid, CompletedInfoGrid};
+            _tasks = new List<TaskModel>();
+
+            _screens = new[] { DepartInfoGrid, CompletedInfoGrid};
             _currentScreen = DepartInfoGrid;
+            LoadTasksAsync();
             FillComboBoxAsync();
+        }
+
+        private async Task LoadTasksAsync()
+        {
+            try
+            {
+                _tasks = await _taskService.GetTasksByProjectAsync(_selectedProject );
+                _filteredTasks = new List<TaskModel>(_tasks);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке: {ex.Message}");
+            }
         }
 
         private async Task FillComboBoxAsync()
@@ -76,29 +101,14 @@ namespace IssuingTasksETM.WPF
                 Dispatcher.Invoke(() =>
                 {
                     ToDepartComboBox.ItemsSource = departmentNames;
-                    if (ToDepartComboBox.Items.Count > 0)
-                    {
-                        ToDepartComboBox.SelectedIndex = 0;
-                    }
-                    else
-                    {
-                        MessageBox.Show("ToDepartComboBox не заполнен: список отделов пуст.");
-                    }
 
                     FromDepartComboBox.ItemsSource = departmentNames;
-                    if (FromDepartComboBox.Items.Count > 0)
-                    {
-                        FromDepartComboBox.SelectedIndex = 0;
-                    }
-                    else
-                    {
-                        MessageBox.Show("FromDepartComboBox не заполнен: список отделов пуст.");
-                    }
+
                 });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Что-то пошло не так: {ex.Message}");
+                MessageBox.Show($"Ошибка при загрузке отделов: {ex.Message}");
             }
         }
 
@@ -143,15 +153,17 @@ namespace IssuingTasksETM.WPF
             }
         }
 
+
+
         private void DepartShowButton_Click(object sender, RoutedEventArgs e)
         {
             ShowScreen(DepartInfoGrid);
         }
 
-        private void AcceptedShowButton_Click(object sender, RoutedEventArgs e)
-        {
-            ShowScreen(AcceptedInfoGrid);
-        }
+        //private void AcceptedShowButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ShowScreen(AcceptedInfoGrid);
+        //}
 
         private void CompletedShowButton_Click(object sender, RoutedEventArgs e)
         {
@@ -161,12 +173,104 @@ namespace IssuingTasksETM.WPF
 
         private void FilterSettingsButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                _filteredTasks = _tasks.ToList(); 
 
+                if (FromDepartComboBox.SelectedItem != null)
+                {
+                    string selectedFrom = FromDepartComboBox.SelectedItem.ToString();
+                    _filteredTasks = _filteredTasks.Where(t => t.FromDepart == selectedFrom).ToList();
+                }
+                if (ToDepartComboBox.SelectedItem != null)
+                {
+                    string selectedTo = ToDepartComboBox.SelectedItem.ToString();
+                    _filteredTasks = _filteredTasks.Where(t => t.ToDepart == selectedTo).ToList();
+                }
+
+                if (TaskCompletedComboBox.SelectedItem != null)
+                {
+                    var selectedItem = TaskCompletedComboBox.SelectedItem as ComboBoxItem;
+                    bool isCompleted = selectedItem?.Content.ToString() == "Готово";
+                    _filteredTasks = _filteredTasks
+                        .Where(t => t.TaskCompleted.HasValue && t.TaskCompleted.Value == isCompleted)
+                        .ToList();
+                }
+
+                if (!string.IsNullOrEmpty(TaskDateTextBox.Text) && DateTime.TryParse(TaskDateTextBox.Text, out DateTime issueDate))
+                {
+                    _filteredTasks = _filteredTasks.Where(t => DateTime.TryParse(t.TaskDate, out DateTime taskDate) && taskDate.Date == issueDate.Date).ToList();
+                }
+                if (!string.IsNullOrEmpty(TaskDeadLineTextBox.Text) && DateTime.TryParse(TaskDeadLineTextBox.Text, out DateTime deadline))
+                {
+                    _filteredTasks = _filteredTasks.Where(t => !string.IsNullOrEmpty(t.TaskDeadline) && DateTime.TryParse(t.TaskDeadline, out DateTime taskDeadline) && taskDeadline.Date == deadline.Date).ToList();
+                }
+
+                //if (WhoTakenComboBox.SelectedItem != null)
+                //{
+                //    string selectedDepartment = WhoTakenComboBox.SelectedItem.ToString();
+                //    _filteredTasks = _filteredTasks.Where(t =>
+                //        (selectedDepartment == "AR" && t.IsAR == true) ||
+                //        (t.IsVK == true) ||
+                //        (t.IsOV == true) ||
+                //        (t.IsSS == true) ||
+                //        (t.IsES == true)
+                //    ).ToList();
+                //}
+
+                _taskWindow.UpdateTasks(_filteredTasks);
+                _taskWindow.Show();
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при применении фильтров: {ex.Message}");
+            }
         }
+
+        private void ClearFromDepartComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            FromDepartComboBox.SelectedIndex = -1; 
+        }
+
+        private void ClearToDepartComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            ToDepartComboBox.SelectedIndex = -1;
+        }
+
+        //private void ClearWhoTakenComboBox_Click(object sender, RoutedEventArgs e)
+        //{
+        //    WhoTakenComboBox.SelectedIndex = -1;
+        //}
+
+        private void ClearTaskCompletedComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            TaskCompletedComboBox.SelectedIndex = -1; 
+        }
+
+        //private void ClearIsAcceptedComboBox_Click(object sender, RoutedEventArgs e)
+        //{
+        //    IsAcceptedComboBox.SelectedIndex = -1;
+        //}
+
+        
 
         private void ClearFilterSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                FromDepartComboBox.SelectedIndex = -1;
+                ToDepartComboBox.SelectedIndex = -1;
+                //WhoTakenComboBox.SelectedIndex = -1;
+                TaskCompletedComboBox.SelectedIndex = -1;
+                //IsAcceptedComboBox.SelectedIndex = -1;
+                TaskDateTextBox.Text = null;
+                TaskDeadLineTextBox.Text = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сбросе фильтров: {ex.Message}");
+            }
         }
 
         public void MovingWin(object sender, EventArgs e)

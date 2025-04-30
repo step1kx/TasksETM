@@ -78,7 +78,7 @@
                     <Button x:Name="DepartFilterButton"
                         Content="По разделам"
                         Height="40"
-                        Margin="0,0,0,10"
+                        Margin="0,0,0,0"
                         Background="#3A3A55"
                         Foreground="Wheat"
                         BorderThickness="0"
@@ -92,7 +92,7 @@
                             />
                         </Button.Effect>
                     </Button>
-                    <Button x:Name="AcceptedFilterButton"
+                    <!--<Button x:Name="AcceptedFilterButton"
                         Content="По принятию задания"
                         Height="40"
                         Background="#3A3A55"
@@ -107,7 +107,7 @@
                             Opacity="0.3"
                             />
                         </Button.Effect>
-                    </Button>
+                    </Button>-->
                     <Button x:Name="CompletedFilterButton"
                         Content="По выполнению/дате "
                         Height="40"
@@ -197,6 +197,24 @@
                             Foreground="Wheat"
                             BorderBrush="#4A4A65" 
                             Style="{StaticResource CustomComboBoxStyle}"/>
+                            <Button Content="X"
+                                Width="25"
+                                Height="25"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right"
+                                Margin="0,100,10,0"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="ClearFromDepartComboBox_Click">
+                                <Button.Effect>
+                                    <DropShadowEffect ShadowDepth="2"
+                              Color="Black"
+                              Opacity="0.3"/>
+                                </Button.Effect>
+                            </Button>
                             <TextBlock Text="Кому задание"
                               FontSize="16"
                               Foreground="Wheat"
@@ -213,23 +231,41 @@
                                 Foreground="Wheat"
                                 BorderBrush="#4A4A65"
                                 Style="{StaticResource CustomComboBoxStyle}"/>
+                            <Button Content="X"
+                                Width="25"
+                                Height="25"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,10,95"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="ClearToDepartComboBox_Click">
+                                <Button.Effect>
+                                    <DropShadowEffect ShadowDepth="2"
+                              Color="Black"
+                              Opacity="0.3"/>
+                                </Button.Effect>
+                            </Button>
                         </Grid>
 
 
-                        <Grid x:Name="AcceptedInfoGrid" Visibility="Collapsed">
+                        <!--<Grid x:Name="AcceptedInfoGrid" Visibility="Collapsed">
                             <TextBlock Text="Фильтр принятых заданий"
                             FontSize="20"
                             Foreground="Wheat"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             Margin="0,20,0,0"/>
-                            <TextBlock Text="Принял/Не принял"
+                            --><!--<TextBlock Text="Принял/Не принял"
                             FontSize="16"
                             Foreground="Wheat"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
-                            Margin="50,80,0,0"/>
-                            <ComboBox Width="200"
+                            Margin="50,80,0,0"/>-->
+                            <!--<ComboBox Width="200"
                             Height="25"
                             VerticalAlignment="Top"
                             Margin="0,110,0,0"
@@ -238,9 +274,27 @@
                             BorderBrush="#4A4A65"
                             Style="{StaticResource CustomComboBoxStyle}"
                             x:Name="IsAcceptedComboBox">
-                                <ComboBoxItem Content="Принял" IsSelected="True"/>
+                                <ComboBoxItem Content="Принял"/>
                                 <ComboBoxItem Content="Не принял"/>
-                            </ComboBox>
+                            </ComboBox>-->
+                            <!--<Button Content="X"
+                                Width="25"
+                                Height="25"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,10,55"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="ClearIsAcceptedComboBox_Click">
+                                <Button.Effect>
+                                    <DropShadowEffect ShadowDepth="2"
+                              Color="Black"
+                              Opacity="0.3"/>
+                                </Button.Effect>
+                            </Button>--><!--
                             <TextBlock Text="Кто принял"
                               x:Name="WhoAcceptedTextBlock"
                               FontSize="16"
@@ -257,7 +311,25 @@
                             BorderBrush="#4A4A65"
                             Style="{StaticResource CustomComboBoxStyle}"
                             x:Name="WhoTakenComboBox"/>
-                        </Grid>
+                            <Button Content="X"
+                                Width="25"
+                                Height="25"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,10,85"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="ClearWhoTakenComboBox_Click">
+                                <Button.Effect>
+                                    <DropShadowEffect ShadowDepth="2"
+                              Color="Black"
+                              Opacity="0.3"/>
+                                </Button.Effect>
+                            </Button>
+                        </Grid>-->
                         <Grid x:Name="CompletedInfoGrid" Visibility="Collapsed">
                             <TextBlock Text="Фильтры"
                             FontSize="20"
@@ -280,9 +352,27 @@
                             BorderBrush="#4A4A65"
                             Style="{StaticResource CustomComboBoxStyle}"
                             x:Name="TaskCompletedComboBox">
-                                <ComboBoxItem Content="Готово" IsSelected="True"/>
+                                <ComboBoxItem Content="Готово"/>
                                 <ComboBoxItem Content="Не готово"/>
                             </ComboBox>
+                            <Button Content="X"
+                                Width="25"
+                                Height="25"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right"
+                                Margin="0,90,10,0"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="ClearTaskCompletedComboBox_Click">
+                                <Button.Effect>
+                                    <DropShadowEffect ShadowDepth="2"
+                              Color="Black"
+                              Opacity="0.3"/>
+                                </Button.Effect>
+                            </Button>
                             <TextBlock Text="Дата выдачи задания"
                               x:Name="TasksDateTextBlock"
                               FontSize="16"
