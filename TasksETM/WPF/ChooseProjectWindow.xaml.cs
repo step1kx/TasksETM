@@ -3,7 +3,9 @@ using IssuingTasksETM.WPF;
 using System.Windows;
 using System.Windows.Controls;
 using TasksETM.Interfaces;
+using TasksETM.Interfaces.ITasks;
 using TasksETM.Service;
+using TasksETM.Service.Tasks;
 
 
 namespace TasksETM.WPF
@@ -17,14 +19,20 @@ namespace TasksETM.WPF
         private readonly IDepartmentService _departmentService;
         private readonly IProjectService _projectService;
         private readonly IAuthService _authService;
+        private readonly IFilterTasksService _filterTasksService;
 
-        public ChooseProjectWindow(IDatabaseConnection dbConnection, IDepartmentService departmentService, IProjectService projectService, IAuthService authService)
+        public ChooseProjectWindow(IDatabaseConnection dbConnection, 
+            IDepartmentService departmentService, 
+            IProjectService projectService, 
+            IAuthService authService, 
+            IFilterTasksService filterTasksService)
         {
             InitializeComponent();
             _dbConnection = dbConnection ?? new DatabaseConnection();
             _departmentService = new DepartmentService();
             _projectService = new ProjectService();
             _authService = new AuthService(DatabaseConnection.connString);
+            _filterTasksService = new FilterTasksService();
             FillComboBoxAsync();
         }
 
@@ -67,7 +75,7 @@ namespace TasksETM.WPF
             {
                 string selectedProject = ProjectsComboBox.SelectedItem.ToString();
 
-                var taskWindow = new TaskWindow(selectedProject, _dbConnection, _departmentService, _projectService, _authService);
+                var taskWindow = new TaskWindow(selectedProject, _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
                 taskWindow.Show();
                 Close();
             }
@@ -82,7 +90,7 @@ namespace TasksETM.WPF
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
-            LoginWindow loginWindow = new LoginWindow(_dbConnection, _departmentService, _projectService, _authService);
+            LoginWindow loginWindow = new LoginWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             loginWindow.Show();
             Close();
         }

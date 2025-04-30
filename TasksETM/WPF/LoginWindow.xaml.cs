@@ -7,6 +7,7 @@ using TasksETM.Models;
 using TasksETM.WPF;
 using TasksETM.Service;
 using TasksETM.Interfaces;
+using TasksETM.Interfaces.ITasks;
 
 namespace IssuingTasksETM.WPF
 {
@@ -19,12 +20,14 @@ namespace IssuingTasksETM.WPF
         private readonly IProjectService _projectService;
         private readonly IDepartmentService _departmentService;
         private readonly IDatabaseConnection _dbConnection;
+        private readonly IFilterTasksService _filterTasksService;
 
         public LoginWindow(
             IDatabaseConnection dbConnection,
             IDepartmentService departmentService,
             IProjectService projectService,
-            IAuthService authService)
+            IAuthService authService,
+            IFilterTasksService filterTasksService)
         {
             InitializeComponent();
 
@@ -32,6 +35,7 @@ namespace IssuingTasksETM.WPF
             _departmentService = departmentService;
             _projectService = projectService;
             _authService = authService;
+            _filterTasksService = filterTasksService;
             FillComboBoxAsync();
         }
 
@@ -117,7 +121,7 @@ namespace IssuingTasksETM.WPF
                 {
                     UserSession.Login = login;
 
-                    var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService);
+                    var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
                     chooseProjectWindow.Show();
                     this.Close();
                 }

@@ -55,6 +55,16 @@
             Height="30"
             Foreground="Wheat"
             FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+                <Button Content="Свернуть" Grid.Column="1" Click="MinimizeWindow_Click"
+            Style="{StaticResource CustomButtonStyle}"
+            Background="#3A3A55"
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Center" 
+            FontWeight="Bold" 
+            Width="100" 
+            Height="30"
+            Foreground="Wheat"
+            FontSize="20" Cursor="Hand" Margin="20, 0, 65, 0"/>
                 <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
                 Style="{StaticResource CustomButtonStyle}"
                 Background="#3A3A55"
@@ -63,7 +73,8 @@
             Width="70" 
             Height="30"
             Foreground="Wheat"
-            FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
+            FontWeight="Bold"
+            FontSize="20" Cursor="Hand" Margin="20, 0, 180, 0"/>
             </Grid>
                 <Grid Margin="0,60,0,0">
                     <Grid.ColumnDefinitions>

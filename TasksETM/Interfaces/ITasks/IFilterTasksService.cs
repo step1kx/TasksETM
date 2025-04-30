@@ -8,5 +8,8 @@ namespace TasksETM.Interfaces.ITasks
 {
     public interface IFilterTasksService
     {
+        public Task SaveFilterSettingsAsync();
+
+        public Task LoadFilterSettingsAsync();
     }
 }

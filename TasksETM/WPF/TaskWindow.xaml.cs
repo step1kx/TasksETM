@@ -29,11 +29,12 @@ namespace IssuingTasksETM.WPF
     {
         private List<TaskModel> _tasks;
         private readonly string _selectedProject;
-        private readonly ITaskService _taskManager;
+        private readonly ITaskService _taskService;
         private readonly IDatabaseConnection _dbConnection;
         private readonly IDepartmentService _departmentService;
         private readonly IProjectService _projectService;
         private readonly IAuthService _authService;
+        private readonly IFilterTasksService _filterTasksService;
         private bool _isFiltered;
 
 
@@ -41,7 +42,9 @@ namespace IssuingTasksETM.WPF
             IDatabaseConnection dbConnection, 
             IDepartmentService departmentService, 
             IProjectService projectService,
-            IAuthService authService)
+            IAuthService authService,
+            IFilterTasksService filterTasksService
+            )
         {
             InitializeComponent();
             _selectedProject = selectedProject;
@@ -50,7 +53,8 @@ namespace IssuingTasksETM.WPF
             _projectService = projectService ?? new ProjectService();
             _authService = authService ?? new AuthService(DatabaseConnection.connString);
             _authService = new AuthService(DatabaseConnection.connString);
-            _taskManager = new TaskService(DatabaseConnection.connString);
+            _taskService = new TaskService(DatabaseConnection.connString);
+            _filterTasksService = filterTasksService ?? new FilterTasksService();
             _isFiltered = false;
 
             tasksDataGrid.ItemsSource = _tasks;
@@ -74,7 +78,7 @@ namespace IssuingTasksETM.WPF
         {
             try
             {
-                var tasks = await _taskManager.GetTasksByProjectAsync(_selectedProject);
+                var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
                 if (tasks == null || !tasks.Any())
                 {
                     MessageBox.Show("Нет данных для отображения.");
@@ -119,7 +123,7 @@ namespace IssuingTasksETM.WPF
                 if (checkBox.IsChecked == task.TaskCompleted)
                 {
                     var isCompleted = task.TaskCompleted ?? false;
-                    await _taskManager.UpdateTaskCompletedAsync(taskNumber, isCompleted);
+                    await _taskService.UpdateTaskCompletedAsync(taskNumber, isCompleted);
                 }
                 else
                 {
@@ -129,7 +133,7 @@ namespace IssuingTasksETM.WPF
                     var isSS = task.IsSS ?? false;
                     var isES = task.IsES ?? false;
 
-                    await _taskManager.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES);
+                    await _taskService.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES);
                 }
                
             }
@@ -137,14 +141,14 @@ namespace IssuingTasksETM.WPF
 
         private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {
-            var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService);
+            var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             createTaskWindow.Show();
             Close();
         }
 
         private void FilterWindow_Click(object sender, RoutedEventArgs e)
         {
-            var filterTaskWindow = new FilterWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _taskManager);
+            var filterTaskWindow = new FilterWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _taskService, _filterTasksService);
             filterTaskWindow.Show();
             Close();
         }
@@ -159,7 +163,7 @@ namespace IssuingTasksETM.WPF
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
-            ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService);
+            ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             chooseProjectWindow.Show();
             Close();
         }
@@ -194,6 +198,11 @@ namespace IssuingTasksETM.WPF
         private void tasksDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }

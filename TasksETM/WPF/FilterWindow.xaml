@@ -196,7 +196,8 @@
                             Background="#3A3A55"
                             Foreground="Wheat"
                             BorderBrush="#4A4A65" 
-                            Style="{StaticResource CustomComboBoxStyle}"/>
+                            Style="{StaticResource CustomComboBoxStyle}"
+                            SelectionChanged="ComboBox_SelectionChanged"/>
                             <Button Content="X"
                                 Width="25"
                                 Height="25"
@@ -230,7 +231,8 @@
                                 Background="#3A3A55"
                                 Foreground="Wheat"
                                 BorderBrush="#4A4A65"
-                                Style="{StaticResource CustomComboBoxStyle}"/>
+                                Style="{StaticResource CustomComboBoxStyle}"
+                                SelectionChanged="ComboBox_SelectionChanged"/>
                             <Button Content="X"
                                 Width="25"
                                 Height="25"
@@ -351,6 +353,7 @@
                             Foreground="Wheat"
                             BorderBrush="#4A4A65"
                             Style="{StaticResource CustomComboBoxStyle}"
+                            SelectionChanged="ComboBox_SelectionChanged"          
                             x:Name="TaskCompletedComboBox">
                                 <ComboBoxItem Content="Готово"/>
                                 <ComboBoxItem Content="Не готово"/>
@@ -389,7 +392,8 @@
                             Foreground="Wheat"
                             BorderBrush="#4A4A65"
                             Cursor="Hand"
-                            x:Name="TaskDateTextBox"/>
+                            x:Name="TaskDateTextBox"
+                                TextChanged="TextBox_TextChanged"/>
                             <TextBlock Text="Дата крайнего срока"
                               x:Name="DeadLineTextBlock"
                               FontSize="16"
@@ -406,7 +410,8 @@
                             Foreground="Wheat"
                             BorderBrush="#4A4A65"
                             Cursor="Hand"
-                            x:Name="TaskDeadLineTextBox"/>
+                            x:Name="TaskDeadLineTextBox"
+                                TextChanged="TextBox_TextChanged"/>
                         </Grid>
                     </Grid>
                 </Border>

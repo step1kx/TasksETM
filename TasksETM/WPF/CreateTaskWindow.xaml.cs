@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using TasksETM.Interfaces;
+using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
@@ -26,18 +27,21 @@ namespace IssuingTasksETM.WPF
         private readonly IDepartmentService _departmentService;
         private readonly IProjectService _projectService;
         private readonly IAuthService _authService;
+        private readonly IFilterTasksService _filterTasksService;
 
         public static string loggedInUser = UserSession.Login;
         public CreateTaskWindow(string selectedProject, 
             IDatabaseConnection dbConnection, 
             IDepartmentService departmentService, 
             IProjectService projectService,
-            IAuthService authService
+            IAuthService authService,
+            IFilterTasksService filterTasksService
             )
         {
             InitializeComponent();
             _selectedProject = selectedProject;
-            _taskWindow = new TaskWindow(selectedProject, dbConnection, departmentService, projectService, authService);
+            _filterTasksService = new FilterTasksService();
+            _taskWindow = new TaskWindow(selectedProject, dbConnection, departmentService, projectService, authService, filterTasksService);
             _dbConnection = new DatabaseConnection();
             _departmentService = new DepartmentService();
             _projectService = new ProjectService();
@@ -193,7 +197,7 @@ namespace IssuingTasksETM.WPF
                 TaskDeadline = TaskDeadLineTextBox.Text
             };
 
-            if (string.IsNullOrEmpty(taskModel.FromDepart) || string.IsNullOrEmpty(taskModel.ToDepart) || string.IsNullOrEmpty(taskModel.TaskDescription))
+            if (string.IsNullOrEmpty(taskModel.FromDepart) || string.IsNullOrEmpty(taskModel.ToDepart))
             {
                 MessageBox.Show("Пожалуйста, выберите отделы 'От кого' и 'Кому'.");
                 return;
@@ -202,6 +206,12 @@ namespace IssuingTasksETM.WPF
             if (string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
             {
                 MessageBox.Show("Пожалуйста, укажите крайний срок выполнения.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(taskModel.TaskDescription) || string.IsNullOrEmpty(taskModel.TaskView))
+            {
+                MessageBox.Show("Пожалуйста, заполните Вид и Описание");
                 return;
             }
 

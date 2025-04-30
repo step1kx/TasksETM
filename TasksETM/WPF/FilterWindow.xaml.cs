@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,7 @@ using TasksETM.Interfaces;
 using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
 using TasksETM.Service;
+using TasksETM.Service.Tasks;
 
 namespace IssuingTasksETM.WPF
 {
@@ -33,6 +35,7 @@ namespace IssuingTasksETM.WPF
         private readonly IProjectService _projectService;
         private readonly IAuthService _authService; 
         private readonly ITaskService _taskService;
+        private readonly IFilterTasksService _filterTasksService;
 
         private List<TaskModel> _tasks;
         private List<TaskModel> _filteredTasks;
@@ -46,17 +49,19 @@ namespace IssuingTasksETM.WPF
             IDepartmentService departmentService,
             IProjectService projectService,
             IAuthService authService,
-            ITaskService taskService
+            ITaskService taskService,
+            IFilterTasksService filterTasksService
             )
         {
             InitializeComponent();
             _selectedProject = selectedProject;
-            _taskWindow = new TaskWindow(selectedProject, dbConnection, departmentService, projectService, authService);
+            _taskWindow = new TaskWindow(selectedProject, dbConnection, departmentService, projectService, authService, filterTasksService);
             _dbConnection = new DatabaseConnection();
             _departmentService = new DepartmentService();
             _projectService = new ProjectService();
             _authService = new AuthService(DatabaseConnection.connString);
             _taskService = taskService;
+            _filterTasksService = new FilterTasksService();
 
             _tasks = new List<TaskModel>();
 
@@ -64,6 +69,7 @@ namespace IssuingTasksETM.WPF
             _currentScreen = DepartInfoGrid;
             LoadTasksAsync();
             FillComboBoxAsync();
+            InitializeFiltersAsync();
         }
 
         private async Task LoadTasksAsync()
@@ -171,53 +177,74 @@ namespace IssuingTasksETM.WPF
         }
 
 
-        private void FilterSettingsButton_Click(object sender, RoutedEventArgs e)
+        private async void ApplyFilters()
         {
+            _filteredTasks = _tasks.ToList();
             try
             {
-                _filteredTasks = _tasks.ToList(); 
-
+                // FromDepart
                 if (FromDepartComboBox.SelectedItem != null)
                 {
-                    string selectedFrom = FromDepartComboBox.SelectedItem.ToString();
-                    _filteredTasks = _filteredTasks.Where(t => t.FromDepart == selectedFrom).ToList();
-                }
-                if (ToDepartComboBox.SelectedItem != null)
-                {
-                    string selectedTo = ToDepartComboBox.SelectedItem.ToString();
-                    _filteredTasks = _filteredTasks.Where(t => t.ToDepart == selectedTo).ToList();
+                    string fromDepart = FromDepartComboBox.SelectedItem.ToString();
+                    _filteredTasks = _filteredTasks
+                        .Where(t => t.FromDepart == fromDepart)
+                        .ToList();
+                    TasksETM.Properties.Settings.Default.FromDepartFilter = fromDepart;
                 }
 
+                // ToDepart
+                if (ToDepartComboBox.SelectedItem != null)
+                {
+                    string toDepart = ToDepartComboBox.SelectedItem.ToString();
+                    _filteredTasks = _filteredTasks
+                        .Where(t => t.ToDepart == toDepart)
+                        .ToList();
+                    TasksETM.Properties.Settings.Default.ToDepartFilter = toDepart;
+                }
+
+                // TaskCompleted
                 if (TaskCompletedComboBox.SelectedItem != null)
                 {
-                    var selectedItem = TaskCompletedComboBox.SelectedItem as ComboBoxItem;
-                    bool isCompleted = selectedItem?.Content.ToString() == "Готово";
+                    bool isCompleted = (TaskCompletedComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() == "Готово";
                     _filteredTasks = _filteredTasks
                         .Where(t => t.TaskCompleted.HasValue && t.TaskCompleted.Value == isCompleted)
                         .ToList();
+                    TasksETM.Properties.Settings.Default.TaskCompletedFilter = (TaskCompletedComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
                 }
 
-                if (!string.IsNullOrEmpty(TaskDateTextBox.Text) && DateTime.TryParse(TaskDateTextBox.Text, out DateTime issueDate))
+                // TaskDate
+                if (!string.IsNullOrEmpty(TaskDateTextBox.Text))
                 {
-                    _filteredTasks = _filteredTasks.Where(t => DateTime.TryParse(t.TaskDate, out DateTime taskDate) && taskDate.Date == issueDate.Date).ToList();
+                    _filteredTasks = _filteredTasks
+                        .Where(t => t.TaskDate == TaskDateTextBox.Text)
+                        .ToList();
+                    TasksETM.Properties.Settings.Default.TaskDateFilter = TaskDateTextBox.Text;
                 }
-                if (!string.IsNullOrEmpty(TaskDeadLineTextBox.Text) && DateTime.TryParse(TaskDeadLineTextBox.Text, out DateTime deadline))
+
+                // TaskDeadline
+                if (!string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
                 {
-                    _filteredTasks = _filteredTasks.Where(t => !string.IsNullOrEmpty(t.TaskDeadline) && DateTime.TryParse(t.TaskDeadline, out DateTime taskDeadline) && taskDeadline.Date == deadline.Date).ToList();
+                    _filteredTasks = _filteredTasks
+                        .Where(t => t.TaskDeadline == TaskDeadLineTextBox.Text)
+                        .ToList();
+                    TasksETM.Properties.Settings.Default.TaskDeadlineFilter = TaskDeadLineTextBox.Text;
                 }
 
-                //if (WhoTakenComboBox.SelectedItem != null)
-                //{
-                //    string selectedDepartment = WhoTakenComboBox.SelectedItem.ToString();
-                //    _filteredTasks = _filteredTasks.Where(t =>
-                //        (selectedDepartment == "AR" && t.IsAR == true) ||
-                //        (t.IsVK == true) ||
-                //        (t.IsOV == true) ||
-                //        (t.IsSS == true) ||
-                //        (t.IsES == true)
-                //    ).ToList();
-                //}
+                await _filterTasksService.SaveFilterSettingsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"АХТУНГ: {ex.Message}");
+            }
 
+            
+        }
+
+        private async void FilterSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            try 
+            {
+                ApplyFilters();
                 _taskWindow.UpdateTasks(_filteredTasks);
                 _taskWindow.Show();
                 Close();
@@ -228,14 +255,52 @@ namespace IssuingTasksETM.WPF
             }
         }
 
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyFilters();
+        }
+        
+        private async Task InitializeFiltersAsync()
+        {
+            await _filterTasksService.LoadFilterSettingsAsync();
+
+            // Восстанавливаем ComboBox
+            if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.FromDepartFilter))
+            {
+                FromDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.FromDepartFilter;
+            }
+
+            if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.ToDepartFilter))
+            {
+                ToDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.ToDepartFilter;
+            }
+
+            if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.TaskCompletedFilter))
+            {
+                TaskCompletedComboBox.SelectedItem = TasksETM.Properties.Settings.Default.TaskCompletedFilter;
+            }
+
+            // Восстанавливаем TextBox
+            TaskDateTextBox.Text = TasksETM.Properties.Settings.Default.TaskDateFilter;
+            TaskDeadLineTextBox.Text = TasksETM.Properties.Settings.Default.TaskDeadlineFilter;
+
+        }
+
         private void ClearFromDepartComboBox_Click(object sender, RoutedEventArgs e)
         {
-            FromDepartComboBox.SelectedIndex = -1; 
+            FromDepartComboBox.SelectedIndex = -1;
+            TasksETM.Properties.Settings.Default.FromDepartFilter = null;
         }
 
         private void ClearToDepartComboBox_Click(object sender, RoutedEventArgs e)
         {
             ToDepartComboBox.SelectedIndex = -1;
+            TasksETM.Properties.Settings.Default.ToDepartFilter = null;
         }
 
         //private void ClearWhoTakenComboBox_Click(object sender, RoutedEventArgs e)
@@ -245,7 +310,8 @@ namespace IssuingTasksETM.WPF
 
         private void ClearTaskCompletedComboBox_Click(object sender, RoutedEventArgs e)
         {
-            TaskCompletedComboBox.SelectedIndex = -1; 
+            TaskCompletedComboBox.SelectedIndex = -1;
+            TasksETM.Properties.Settings.Default.TaskCompletedFilter = null;
         }
 
         //private void ClearIsAcceptedComboBox_Click(object sender, RoutedEventArgs e)
@@ -255,17 +321,27 @@ namespace IssuingTasksETM.WPF
 
         
 
-        private void ClearFilterSettingsButton_Click(object sender, RoutedEventArgs e)
+        private async void ClearFilterSettingsButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                FromDepartComboBox.SelectedIndex = -1;
-                ToDepartComboBox.SelectedIndex = -1;
-                //WhoTakenComboBox.SelectedIndex = -1;
-                TaskCompletedComboBox.SelectedIndex = -1;
-                //IsAcceptedComboBox.SelectedIndex = -1;
-                TaskDateTextBox.Text = null;
-                TaskDeadLineTextBox.Text = null;
+                FromDepartComboBox.SelectedItem = null;
+                ToDepartComboBox.SelectedItem = null;
+                TaskCompletedComboBox.SelectedItem = null;
+                TaskDateTextBox.Text = string.Empty;
+                TaskDeadLineTextBox.Text = string.Empty;
+
+                // Сбрасываем настройки
+                TasksETM.Properties.Settings.Default.FromDepartFilter = null;
+                TasksETM.Properties.Settings.Default.ToDepartFilter = null;
+                TasksETM.Properties.Settings.Default.TaskCompletedFilter = null;
+                TasksETM.Properties.Settings.Default.TaskDateFilter = null;
+                TasksETM.Properties.Settings.Default.TaskDeadlineFilter = null;
+
+                // Сохраняем сброшенные настройки
+                await _filterTasksService.SaveFilterSettingsAsync();
+
+
             }
             catch (Exception ex)
             {
