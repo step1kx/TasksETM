@@ -11,5 +11,9 @@ namespace TasksETM.Interfaces.ITasks
     public interface ITaskService
     {
         public Task<List<TaskModel>> GetTasksByProjectAsync(string projectName);
+
+        public Task UpdateTaskAssignmentsAsync(int taskNumber, bool isAR, bool isVK, bool isOV, bool isSS, bool isES);
+
+        public Task UpdateTaskCompletedAsync(int taskNumber, bool isCompleted);
     }
 }

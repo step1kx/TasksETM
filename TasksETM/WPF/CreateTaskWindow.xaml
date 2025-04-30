@@ -93,7 +93,7 @@
                                   />
                         </Button.Effect>
                     </Button>
-                    <Button x:Name="HipLoginButton"
+                    <Button x:Name="TaskInfoButton"
                              Content="Описание, вид, скриншот"
                              Height="40"
                              Background="#3A3A55"
@@ -141,7 +141,7 @@
                     BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="TasksPanel">
-                        <Grid x:Name="BaseInfoGrid" Visibility="Collapsed" >
+                        <Grid x:Name="BaseInfoGrid" Visibility="Visible" >
                             <TextBlock Text="Общая информация"
                             FontSize="20"
                             Foreground="Wheat"
@@ -200,7 +200,7 @@
                         </Grid>
 
 
-                        <Grid x:Name="TasksInfoGrid" Visibility="Visible">
+                        <Grid x:Name="TasksInfoGrid" Visibility="Collapsed">
                             <TextBlock Text="Задание"
                             FontSize="20"
                             Foreground="Wheat"

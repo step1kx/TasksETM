@@ -1,6 +1,9 @@
 ﻿using IssuingTasksETM.Interfaces;
+using System.Data;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.Arm;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using TasksETM.Interfaces;
@@ -47,21 +50,6 @@ namespace IssuingTasksETM.WPF
         {
             try
             {
-                if (string.IsNullOrEmpty(UserSession.Login)) 
-                {
-                    MessageBox.Show("Логин не был инициализирован.");
-                    return;
-                }
-
-                string loggedInUser = UserSession.Login;
-
-                Dispatcher.Invoke(() =>
-                {
-                    FromDepartComboBox.Items.Clear();
-                    FromDepartComboBox.Items.Add(loggedInUser);
-                    FromDepartComboBox.SelectedItem = loggedInUser;
-                });
-
                 if (_departmentService == null)
                 {
                     MessageBox.Show("Сервис отделов не инициализирован.");
@@ -70,6 +58,12 @@ namespace IssuingTasksETM.WPF
 
                 var departmentNames = await _departmentService.GetDepartmentNamesAsync();
 
+                if (departmentNames == null || !departmentNames.Any())
+                {
+                    MessageBox.Show("Не удалось загрузить список отделов.");
+                    return;
+                }
+
                 Dispatcher.Invoke(() =>
                 {
                     ToDepartComboBox.Items.Clear();
@@ -77,9 +71,28 @@ namespace IssuingTasksETM.WPF
                     {
                         ToDepartComboBox.Items.Add(dep);
                     }
-
                     if (ToDepartComboBox.Items.Count > 0)
+                    {
                         ToDepartComboBox.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        MessageBox.Show("ToDepartComboBox не заполнен: список отделов пуст.");
+                    }
+
+                    FromDepartComboBox.Items.Clear();
+                    foreach (var dep in departmentNames)
+                    {
+                        FromDepartComboBox.Items.Add(dep);
+                    }
+                    if (FromDepartComboBox.Items.Count > 0)
+                    {
+                        FromDepartComboBox.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        MessageBox.Show("FromDepartComboBox не заполнен: список отделов пуст.");
+                    }
                 });
             }
             catch (Exception ex)
@@ -207,11 +220,10 @@ namespace IssuingTasksETM.WPF
             var createTaskService = new CreateTasksService(_selectedProject); 
             await createTaskService.CreateTaskAsync(taskModel);
 
-            MessageBox.Show("Задача успешно создана!");
-
             _taskWindow.Show();
             Close();
         }
+
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
