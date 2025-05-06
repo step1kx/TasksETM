@@ -9,5 +9,7 @@ namespace TasksETM.Interfaces
     public interface IAuthService
     {
         Task<bool> LoginAsync(string departmentName, string password);
+
+        Task<bool> CheckSavedLoginAsync(string login);
     }
 }

@@ -36,7 +36,7 @@
               Foreground="Wheat"
               Margin="10,0,0,0"/>
 
-                
+
                 <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
                     Style="{StaticResource CustomButtonStyle}"
                     Background="#3A3A55"
@@ -70,19 +70,26 @@
                         BlurRadius="10"/>
                 </Border.Effect>
                 <Grid x:Name="ChooseProjectPanel">
-                    <TextBlock Text="Выбор проекта"
-                      FontSize="20"
-                      Foreground="Wheat"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Top"
-                      Margin="0,20,0,0"/>
-                        <TextBlock Text="Список проектов"
+                    <TextBlock x:Name="WelcomeTextBlock"
+                        Text="Добро пожаловать, сотрудник отдела"
+                        FontSize="20"
+                        TextWrapping="Wrap"
+                        TextAlignment="Center"
+                        TextTrimming="CharacterEllipsis"
+                        Foreground="Wheat"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Margin="0,20,0,0" 
+                        Width="250" 
+                        Height="85"
+                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                    <TextBlock Text="Список проектов"
                       FontSize="16"
                       Foreground="Wheat"
                       HorizontalAlignment="Left"
                       VerticalAlignment="Center"
                       Margin="50,0,0,70"/>
-                        <ComboBox Width="200"
+                    <ComboBox Width="200"
                         x:Name="ProjectsComboBox"
                     Height="25"
                     VerticalAlignment="Center"
@@ -91,7 +98,7 @@
                     Foreground="Wheat"
                     BorderBrush="#4A4A65" SelectionChanged="ProjectsComboBox_SelectionChanged"
                                   Style="{StaticResource CustomComboBoxStyle}"/>
-                       
+
                     <Button
                    Width="150px"
                    Height="30px"

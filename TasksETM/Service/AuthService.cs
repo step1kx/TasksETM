@@ -40,5 +40,25 @@ namespace TasksETM.Service
                 return false;
             }
         }
+
+        public async Task<bool> CheckSavedLoginAsync(string departmentName)
+        {
+            try
+            {
+                using var conn = new NpgsqlConnection(DatabaseConnection.connString);
+                await conn.OpenAsync();
+
+                string query = "SELECT COUNT(1) FROM public.\"Users\" WHERE \"departmentName\" = @departmentName";
+                using var command = new NpgsqlCommand(query, conn);
+                command.Parameters.AddWithValue("@departmentName", departmentName);
+                var count = await command.ExecuteScalarAsync();
+                return Convert.ToInt32(count) > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Что-то пошло не так {ex.Message}");
+                return false;
+            }
+        }
     }
 }

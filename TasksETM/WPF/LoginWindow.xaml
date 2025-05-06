@@ -116,7 +116,7 @@
                                         BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="LoginPanel">
-                        <Grid x:Name="HipLoginGrid"  Visibility="Collapsed">
+                        <Grid x:Name="HipLoginGrid"  Visibility="Visible">
                             <TextBlock Text="Вход для ГИПов"
                                       FontSize="20"
                                       Foreground="Wheat"
@@ -130,12 +130,24 @@
                                       VerticalAlignment="Top"
                                       Margin="50,70,0,0"/>
                             <TextBox Width="200"
-                                    Height="25"
+                                    Height="20"
                                     VerticalAlignment="Top"
                                     Margin="0,100,0,0"
                                     Background="#3A3A55"
                                     Foreground="Wheat"
-                                    BorderBrush="#4A4A65"/>
+                                    BorderBrush="#4A4A65"
+                                    x:Name="HipLoginTextBox"/>
+                            <CheckBox
+                                    x:Name="SaveCurrentUserCheckbox"
+                                    Width="120"
+                                    Height="25"
+                                    Background="#3A3A55"
+                                    Foreground="Wheat"
+                                    BorderBrush="#4A4A65"
+                                    Content="Запомнить меня"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Left"
+                                    Margin="50,0,0,60"/>
                             <TextBlock Text="Пароль"
                                       FontSize="16"
                                       Foreground="Wheat"
@@ -143,7 +155,8 @@
                                       VerticalAlignment="Top"
                                       Margin="50,150,0,0"/>
                             <PasswordBox Width="200"
-                                        Height="25"
+                                        Height="20"
+                                        x:Name="PasswordBoxHip"
                                         VerticalAlignment="Top"
                                         Margin="0,180,0,0"
                                         Background="#3A3A55"
@@ -164,7 +177,7 @@
                         </Grid>
 
                         <!-- Departments Login Panel -->
-                        <Grid x:Name="DeptLoginGrid" Visibility="Visible">
+                        <Grid x:Name="DeptLoginGrid" Visibility="Collapsed">
                             <TextBlock Text="Вход для отделов"
                                       FontSize="20"
                                       Foreground="Wheat"
@@ -190,7 +203,6 @@
                                     BorderBrush="#4A4A65"
                                 Style="{StaticResource CustomComboBoxStyle}"/>
                             <TextBlock 
-                                      
                                       Text="Пароль"
                                       FontSize="16"
                                       Foreground="Wheat"
@@ -206,6 +218,17 @@
                                         Background="#3A3A55"
                                         Foreground="Wheat"
                                         BorderBrush="#4A4A65"/>
+                            <CheckBox
+                                x:Name="SaveCurrentHipCheckbox"
+                                Width="120"
+                                Height="25"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                BorderBrush="#4A4A65"
+                                Content="Запомнить меня"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Left"
+                                Margin="50,0,0,60"/>
                             <Button
                                    Width="150px"
                                    Height="25px"

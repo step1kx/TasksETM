@@ -21,6 +21,7 @@ namespace IssuingTasksETM.WPF
         private readonly IDepartmentService _departmentService;
         private readonly IDatabaseConnection _dbConnection;
         private readonly IFilterTasksService _filterTasksService;
+        private bool _isHipLogin;
 
         public LoginWindow(
             IDatabaseConnection dbConnection,
@@ -36,7 +37,58 @@ namespace IssuingTasksETM.WPF
             _projectService = projectService;
             _authService = authService;
             _filterTasksService = filterTasksService;
+            _isHipLogin = false;
+
+            CheckSavedLoginAsync();
+
             FillComboBoxAsync();
+
+            
+        }
+
+        private async void CheckSavedLoginAsync()
+        {
+            try
+            {
+                if (_authService == null || _dbConnection == null || _departmentService == null ||
+                    _projectService == null || _filterTasksService == null)
+                {
+                    MessageBox.Show("Одна или несколько служб не инициализированы. Перезапустите приложение.");
+                    return;
+                }
+
+                if (TasksETM.Properties.Settings.Default.RememberMe && !string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.SavedLogin))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Проверка сохранённого логина: {TasksETM.Properties.Settings.Default.SavedLogin}");
+                    bool isValid = await _authService.CheckSavedLoginAsync(TasksETM.Properties.Settings.Default.SavedLogin);
+                    if (isValid)
+                    {
+                        UserSession.Login = TasksETM.Properties.Settings.Default.SavedLogin;
+                        System.Diagnostics.Debug.WriteLine($"Логин валиден, открываем ChooseProjectWindow для {UserSession.Login}");
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            var chooseProjectWindow = new ChooseProjectWindow(
+                                _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                            chooseProjectWindow.Show();
+                            Close();
+                        });
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Сохранённый логин невалиден, сбрасываем настройки");
+                        TasksETM.Properties.Settings.Default.SavedLogin = string.Empty;
+                        TasksETM.Properties.Settings.Default.RememberMe = false;
+                        TasksETM.Properties.Settings.Default.Save();
+                        MessageBox.Show("Сохранённая сессия недействительна. Пожалуйста, войдите заново.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка при проверке сохраненного логина: {ex.Message}");
+                MessageBox.Show($"Ошибка при проверке сохраненного логина: {ex.Message}");
+            }
         }
 
         private async void FillComboBoxAsync()
@@ -66,6 +118,7 @@ namespace IssuingTasksETM.WPF
 
         private void HipLoginButton_Click(object sender, RoutedEventArgs e)
         {
+            _isHipLogin = true;
             var fadeOut = (Storyboard)FindResource("FadeOutAnimation");
             var fadeIn = (Storyboard)FindResource("FadeInAnimation");
 
@@ -81,6 +134,7 @@ namespace IssuingTasksETM.WPF
 
         private void DeptLoginButton_Click(object sender, RoutedEventArgs e)
         {
+            _isHipLogin = false;
             var fadeOut = (Storyboard)FindResource("FadeOutAnimation");
             var fadeIn = (Storyboard)FindResource("FadeInAnimation");
 
@@ -98,8 +152,22 @@ namespace IssuingTasksETM.WPF
 
         private async void ToChooseProjectButton_Click(object sender, RoutedEventArgs e)
         {
-            string login = LoginComboBox.Text.Trim();
-            string password = PasswordBox.Password;
+            string login;
+            string password;
+            CheckBox rememberMeCheckbox;
+
+            if (_isHipLogin)
+            {
+                login = HipLoginTextBox.Text.Trim(); // Добавим HipLoginTextBox в XAML
+                password = PasswordBoxHip.Password;
+                rememberMeCheckbox = SaveCurrentUserCheckbox;
+            }
+            else
+            {
+                login = LoginComboBox.Text.Trim();
+                password = PasswordBox.Password;
+                rememberMeCheckbox = SaveCurrentHipCheckbox; // Исправим имя на SaveCurrentUserCheckbox для отделов
+            }
 
             if (string.IsNullOrEmpty(login))
             {
@@ -120,6 +188,19 @@ namespace IssuingTasksETM.WPF
                 if (success)
                 {
                     UserSession.Login = login;
+
+                    if (SaveCurrentUserCheckbox.IsChecked == true)
+                    {
+                        TasksETM.Properties.Settings.Default.SavedLogin = login;
+                        TasksETM.Properties.Settings.Default.RememberMe = true;
+                        TasksETM.Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        TasksETM.Properties.Settings.Default.SavedLogin = string.Empty;
+                        TasksETM.Properties.Settings.Default.RememberMe = false;
+                        TasksETM.Properties.Settings.Default.Save();
+                    }
 
                     var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
                     chooseProjectWindow.Show();

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using TasksETM.Interfaces;
 using TasksETM.Interfaces.ITasks;
+using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
 
@@ -33,9 +34,29 @@ namespace TasksETM.WPF
             _projectService = new ProjectService();
             _authService = new AuthService(DatabaseConnection.connString);
             _filterTasksService = new FilterTasksService();
+
+            UpdateWelcomeMessage();
+
             FillComboBoxAsync();
         }
 
+
+        private void UpdateWelcomeMessage()
+        {
+            string login = UserSession.Login;
+            if (string.IsNullOrEmpty(login))
+            {
+                WelcomeTextBlock.Text = "Добро пожаловать, сотрудник";
+            }
+            else if (login.Equals("GIP", StringComparison.OrdinalIgnoreCase) || login.StartsWith("gip", StringComparison.OrdinalIgnoreCase))
+            {
+                WelcomeTextBlock.Text = "Добро пожаловать, ГИП";
+            }
+            else
+            {
+                WelcomeTextBlock.Text = $"Добро пожаловать, сотрудник отдела {login}";
+            }
+        }
 
 
         private async void FillComboBoxAsync()
@@ -90,13 +111,16 @@ namespace TasksETM.WPF
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.SavedLogin = string.Empty;
+            Properties.Settings.Default.RememberMe = false;
+            Properties.Settings.Default.Save();
             LoginWindow loginWindow = new LoginWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             loginWindow.Show();
             Close();
         }
 
         
-
+        
         private void ProjectsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
