@@ -50,7 +50,7 @@ namespace TasksETM.Service.Tasks
 
                     var taskNumber = Convert.ToInt32(await createCommand.ExecuteScalarAsync());
 
-                    var sections = new[] { "AR", "VK", "OV", "SS", "ES" };
+                    var sections = new[] { "AR", "VK", "OV", "SS", "ES", "GIP" };
                     foreach (var section in sections)
                     {
                         var insertAssignmentCommand = new NpgsqlCommand(
@@ -61,6 +61,16 @@ namespace TasksETM.Service.Tasks
                         insertAssignmentCommand.Parameters.AddWithValue("@IsAssigned", false);
                         await insertAssignmentCommand.ExecuteNonQueryAsync();
                     }
+                    foreach (var section in sections)
+                    {
+                        var insertCompletedCommand = new NpgsqlCommand(
+                            "INSERT INTO public.\"TaskCompleted\" (\"TaskNumber\", \"Section\", \"IsCompleted\") " +
+                            "VALUES (@TaskNumber, @Section, @IsCompleted)", conn);
+                        insertCompletedCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+                        insertCompletedCommand.Parameters.AddWithValue("@Section", section);
+                        insertCompletedCommand.Parameters.AddWithValue("@IsCompleted", false);
+                        await insertCompletedCommand.ExecuteNonQueryAsync();
+                    }
 
                     var selectCommand = new NpgsqlCommand(
                         "SELECT t.*, " +
@@ -68,7 +78,14 @@ namespace TasksETM.Service.Tasks
                         "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'VK') AS \"IsVK\", " +
                         "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'OV') AS \"IsOV\", " +
                         "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'SS') AS \"IsSS\", " +
-                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'ES') AS \"IsES\" " +
+                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'ES') AS \"IsES\", " +
+                        "(SELECT \"IsAssigned\" FROM public.\"TaskAssignments\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'GIP') AS \"IsGIP\", " +
+                        "(SELECT \"IsCompleted\" FROM public.\"TaskCompleted\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'AR') AS \"IsARCompl\", " +
+                        "(SELECT \"IsCompleted\" FROM public.\"TaskCompleted\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'VK') AS \"IsVKCompl\", " +
+                        "(SELECT \"IsCompleted\" FROM public.\"TaskCompleted\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'OV') AS \"IsOVCompl\", " +
+                        "(SELECT \"IsCompleted\" FROM public.\"TaskCompleted\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'SS') AS \"IsSSCompl\", " +
+                        "(SELECT \"IsCompleted\" FROM public.\"TaskCompleted\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'ES') AS \"IsESCompl\", " +
+                        "(SELECT \"IsCompleted\" FROM public.\"TaskCompleted\" WHERE \"TaskNumber\" = t.\"TaskNumber\" AND \"Section\" = 'ES') AS \"IsGIPCompl\" " +
                         "FROM public.\"Tasks\" t " +
                         "JOIN public.\"Projects\" p ON t.\"PK_ProjectNumber\" = p.\"ProjectNumber\" " +
                         "WHERE p.\"ProjectNumber\" = @ProjectNumber " +
@@ -84,6 +101,8 @@ namespace TasksETM.Service.Tasks
                     }
 
                     TaskCreates?.Invoke(this, dt);
+
+                    MessageBox.Show("Вы успешно создали задание!");
                 }
             }
             catch (Exception ex)

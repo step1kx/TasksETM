@@ -102,7 +102,14 @@ namespace IssuingTasksETM.WPF
                     LoginComboBox.Items.Clear();
                     foreach (var dep in departments)
                     {
-                        LoginComboBox.Items.Add(dep);
+                        if (dep == "Все отделы" || dep == "GIP")
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            LoginComboBox.Items.Add(dep);
+                        };
                     }
 
                     if (LoginComboBox.Items.Count > 0)
@@ -160,13 +167,13 @@ namespace IssuingTasksETM.WPF
             {
                 login = HipLoginTextBox.Text.Trim(); // Добавим HipLoginTextBox в XAML
                 password = PasswordBoxHip.Password;
-                rememberMeCheckbox = SaveCurrentUserCheckbox;
+                rememberMeCheckbox = SaveCurrentHipCheckbox;
             }
             else
             {
                 login = LoginComboBox.Text.Trim();
                 password = PasswordBox.Password;
-                rememberMeCheckbox = SaveCurrentHipCheckbox; // Исправим имя на SaveCurrentUserCheckbox для отделов
+                rememberMeCheckbox = SaveCurrentUserCheckbox; // Исправим имя на SaveCurrentUserCheckbox для отделов
             }
 
             if (string.IsNullOrEmpty(login))
@@ -184,7 +191,7 @@ namespace IssuingTasksETM.WPF
             try
             {
                 bool success = await _authService.LoginAsync(login, password);
-
+                 
                 if (success)
                 {
                     UserSession.Login = login;

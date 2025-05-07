@@ -98,9 +98,17 @@ namespace IssuingTasksETM.WPF
 
                 var departmentNames = await _departmentService.GetDepartmentNamesAsync();
 
+                var taskStatus = await _departmentService.GetTaskStatusAsync();
+
                 if (departmentNames == null || !departmentNames.Any())
                 {
                     MessageBox.Show("Не удалось загрузить список отделов.");
+                    return;
+                }
+
+                if (taskStatus == null || !taskStatus.Any())
+                {
+                    MessageBox.Show("Не удалось загрузить список статусов.");
                     return;
                 }
 
@@ -109,6 +117,10 @@ namespace IssuingTasksETM.WPF
                     ToDepartComboBox.ItemsSource = departmentNames;
 
                     FromDepartComboBox.ItemsSource = departmentNames;
+
+                    SectionComboBox.ItemsSource = departmentNames;
+
+                    StatusComboBox.ItemsSource = taskStatus;
 
                 });
             }
@@ -176,7 +188,6 @@ namespace IssuingTasksETM.WPF
             ShowScreen(CompletedInfoGrid);
         }
 
-
         private async void ApplyFilters()
         {
             _filteredTasks = _tasks.ToList();
@@ -186,9 +197,7 @@ namespace IssuingTasksETM.WPF
                 if (FromDepartComboBox.SelectedItem != null)
                 {
                     string fromDepart = FromDepartComboBox.SelectedItem.ToString();
-                    _filteredTasks = _filteredTasks
-                        .Where(t => t.FromDepart == fromDepart)
-                        .ToList();
+                    _filteredTasks = _filteredTasks.Where(t => t.FromDepart == fromDepart).ToList();
                     TasksETM.Properties.Settings.Default.FromDepartFilter = fromDepart;
                 }
 
@@ -196,49 +205,121 @@ namespace IssuingTasksETM.WPF
                 if (ToDepartComboBox.SelectedItem != null)
                 {
                     string toDepart = ToDepartComboBox.SelectedItem.ToString();
-                    _filteredTasks = _filteredTasks
-                        .Where(t => t.ToDepart == toDepart)
-                        .ToList();
+                    _filteredTasks = _filteredTasks.Where(t => t.ToDepart == toDepart).ToList();
                     TasksETM.Properties.Settings.Default.ToDepartFilter = toDepart;
                 }
 
-                // TaskCompleted
-                if (TaskCompletedComboBox.SelectedItem != null)
+                // Готово/Не готово
+                if (StatusComboBox.SelectedItem != null)
                 {
-                    bool isCompleted = (TaskCompletedComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() == "Готово";
-                    _filteredTasks = _filteredTasks
-                        .Where(t => t.TaskCompleted.HasValue && t.TaskCompleted.Value == isCompleted)
-                        .ToList();
-                    TasksETM.Properties.Settings.Default.TaskCompletedFilter = (TaskCompletedComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+                    string status = StatusComboBox.SelectedItem.ToString();
+                    if (status == "Готов")
+                        _filteredTasks = _filteredTasks.Where(t => t.IsARCompl == true || t.IsVKCompl == true ||
+                            t.IsOVCompl == true || t.IsSSCompl == true || t.IsESCompl == true || t.IsGIPCompl == true).ToList();
+                    else if (status == "Не готов")
+                        _filteredTasks = _filteredTasks.Where(t => t.IsARCompl == false || t.IsVKCompl == false ||
+                            t.IsOVCompl == false || t.IsSSCompl == false || t.IsESCompl == false || t.IsGIPCompl == false ||
+                            t.IsARCompl == null || t.IsVKCompl == null || t.IsOVCompl == null || t.IsSSCompl == null ||
+                            t.IsESCompl == null || t.IsGIPCompl == null).ToList();
+                    TasksETM.Properties.Settings.Default.StatusFilter = status; // Исправлено на StatusFilter
+                }
+                else
+                {
+                    TasksETM.Properties.Settings.Default.StatusFilter = null;
                 }
 
-                // TaskDate
+                // Раздел (работает только если статус выбран)
+                if (SectionComboBox.IsEnabled && SectionComboBox.SelectedItem != null)
+                {
+                    string section = SectionComboBox.SelectedItem.ToString();
+                    _filteredTasks = _filteredTasks.Where(t =>
+                        (section == "AR" && t.IsAR == true) ||
+                        (section == "VK" && t.IsVK == true) ||
+                        (section == "OV" && t.IsOV == true) ||
+                        (section == "SS" && t.IsSS == true) ||
+                        (section == "ES" && t.IsES == true) ||
+                        (section == "GIP" && t.IsGIP == true)).ToList();
+                    TasksETM.Properties.Settings.Default.SectionFilter = section; // Исправлено на SectionFilter
+                }
+                else
+                {
+                    TasksETM.Properties.Settings.Default.SectionFilter = null;
+                }
+
+                // TaskDate и TaskDeadline
                 if (!string.IsNullOrEmpty(TaskDateTextBox.Text))
                 {
-                    _filteredTasks = _filteredTasks
-                        .Where(t => t.TaskDate == TaskDateTextBox.Text)
-                        .ToList();
+                    _filteredTasks = _filteredTasks.Where(t => t.TaskDate == TaskDateTextBox.Text).ToList();
                     TasksETM.Properties.Settings.Default.TaskDateFilter = TaskDateTextBox.Text;
                 }
-
-                // TaskDeadline
                 if (!string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
                 {
-                    _filteredTasks = _filteredTasks
-                        .Where(t => t.TaskDeadline == TaskDeadLineTextBox.Text)
-                        .ToList();
+                    _filteredTasks = _filteredTasks.Where(t => t.TaskDeadline == TaskDeadLineTextBox.Text).ToList();
                     TasksETM.Properties.Settings.Default.TaskDeadlineFilter = TaskDeadLineTextBox.Text;
                 }
 
+                TasksETM.Properties.Settings.Default.Save();
                 await _filterTasksService.SaveFilterSettingsAsync();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"АХТУНГ: {ex.Message}");
             }
-
-            
         }
+        //private async void ApplyFilters()
+        //{
+        //    _filteredTasks = _tasks.ToList();
+        //    try
+        //    {
+        //        // FromDepart
+        //        if (FromDepartComboBox.SelectedItem != null)
+        //        {
+        //            string fromDepart = FromDepartComboBox.SelectedItem.ToString();
+        //            _filteredTasks = _filteredTasks
+        //                .Where(t => t.FromDepart == fromDepart)
+        //                .ToList();
+        //            TasksETM.Properties.Settings.Default.FromDepartFilter = fromDepart;
+        //        }
+
+        //        // ToDepart
+        //        if (ToDepartComboBox.SelectedItem != null)
+        //        {
+        //            string toDepart = ToDepartComboBox.SelectedItem.ToString();
+        //            _filteredTasks = _filteredTasks
+        //                .Where(t => t.ToDepart == toDepart)
+        //                .ToList();
+        //            TasksETM.Properties.Settings.Default.ToDepartFilter = toDepart;
+        //        }
+
+        //        //TaskCompleted
+
+
+        //        // TaskDate
+        //        if (!string.IsNullOrEmpty(TaskDateTextBox.Text))
+        //        {
+        //            _filteredTasks = _filteredTasks
+        //                .Where(t => t.TaskDate == TaskDateTextBox.Text)
+        //                .ToList();
+        //            TasksETM.Properties.Settings.Default.TaskDateFilter = TaskDateTextBox.Text;
+        //        }
+
+        //        if (!string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
+        //        {
+        //            _filteredTasks = _filteredTasks
+        //                .Where(t => t.TaskDeadline == TaskDeadLineTextBox.Text)
+        //                .ToList();
+        //            TasksETM.Properties.Settings.Default.TaskDeadlineFilter = TaskDeadLineTextBox.Text;
+        //        }
+
+        //        await _filterTasksService.SaveFilterSettingsAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"АХТУНГ: {ex.Message}");
+        //    }
+
+
+        //}
 
         private async void FilterSettingsButton_Click(object sender, RoutedEventArgs e)
         {
@@ -264,31 +345,66 @@ namespace IssuingTasksETM.WPF
         {
             ApplyFilters();
         }
-        
+
+        private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (StatusComboBox.SelectedIndex > -1) // "Готово" или "Не готово"
+            {
+                SectionComboBox.IsEnabled = true;
+            }
+            else
+            {
+                SectionComboBox.IsEnabled = false;
+                SectionComboBox.SelectedIndex = -1; // Сбрасываем выбор раздела
+                TasksETM.Properties.Settings.Default.SectionFilter = null;
+            }
+            ApplyFilters();
+        }
+
+
+        //private async Task InitializeFiltersAsync()
+        //{
+        //    await _filterTasksService.LoadFilterSettingsAsync();
+
+        //    // Восстанавливаем ComboBox
+        //    if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.FromDepartFilter))
+        //    {
+        //        FromDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.FromDepartFilter;
+        //    }
+
+        //    if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.ToDepartFilter))
+        //    {
+        //        ToDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.ToDepartFilter;
+        //    }
+
+        //    if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.TaskCompletedFilter))
+        //    {
+        //        TaskCompletedComboBox.SelectedItem = TasksETM.Properties.Settings.Default.TaskCompletedFilter;
+        //    }
+
+        //    // Восстанавливаем TextBox
+        //    TaskDateTextBox.Text = TasksETM.Properties.Settings.Default.TaskDateFilter;
+        //    TaskDeadLineTextBox.Text = TasksETM.Properties.Settings.Default.TaskDeadlineFilter;
+
+        //}
+
         private async Task InitializeFiltersAsync()
         {
             await _filterTasksService.LoadFilterSettingsAsync();
-
-            // Восстанавливаем ComboBox
-            if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.FromDepartFilter))
+            Dispatcher.Invoke(() =>
             {
-                FromDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.FromDepartFilter;
-            }
-
-            if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.ToDepartFilter))
-            {
-                ToDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.ToDepartFilter;
-            }
-
-            if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.TaskCompletedFilter))
-            {
-                TaskCompletedComboBox.SelectedItem = TasksETM.Properties.Settings.Default.TaskCompletedFilter;
-            }
-
-            // Восстанавливаем TextBox
-            TaskDateTextBox.Text = TasksETM.Properties.Settings.Default.TaskDateFilter;
-            TaskDeadLineTextBox.Text = TasksETM.Properties.Settings.Default.TaskDeadlineFilter;
-
+                if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.FromDepartFilter))
+                    FromDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.FromDepartFilter;
+                if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.ToDepartFilter))
+                    ToDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.ToDepartFilter;
+                if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.StatusFilter))
+                    StatusComboBox.SelectedItem = TasksETM.Properties.Settings.Default.StatusFilter;
+                if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.SectionFilter))
+                    SectionComboBox.SelectedItem = TasksETM.Properties.Settings.Default.SectionFilter;
+                TaskDateTextBox.Text = TasksETM.Properties.Settings.Default.TaskDateFilter;
+                TaskDeadLineTextBox.Text = TasksETM.Properties.Settings.Default.TaskDeadlineFilter;
+                SectionComboBox.IsEnabled = StatusComboBox.SelectedIndex > 0;
+            });
         }
 
         private void ClearFromDepartComboBox_Click(object sender, RoutedEventArgs e)
@@ -303,21 +419,12 @@ namespace IssuingTasksETM.WPF
             TasksETM.Properties.Settings.Default.ToDepartFilter = null;
         }
 
-        //private void ClearWhoTakenComboBox_Click(object sender, RoutedEventArgs e)
-        //{
-        //    WhoTakenComboBox.SelectedIndex = -1;
-        //}
 
-        private void ClearTaskCompletedComboBox_Click(object sender, RoutedEventArgs e)
+        private void ClearSectionComboBox_Click(object sender, RoutedEventArgs e)
         {
-            TaskCompletedComboBox.SelectedIndex = -1;
+            SectionComboBox.SelectedIndex = -1;
             TasksETM.Properties.Settings.Default.TaskCompletedFilter = null;
         }
-
-        //private void ClearIsAcceptedComboBox_Click(object sender, RoutedEventArgs e)
-        //{
-        //    IsAcceptedComboBox.SelectedIndex = -1;
-        //}
 
         
 
@@ -327,14 +434,16 @@ namespace IssuingTasksETM.WPF
             {
                 FromDepartComboBox.SelectedItem = null;
                 ToDepartComboBox.SelectedItem = null;
-                TaskCompletedComboBox.SelectedItem = null;
+                StatusComboBox.SelectedItem = null;
+                SectionComboBox.SelectedItem = null;
                 TaskDateTextBox.Text = string.Empty;
                 TaskDeadLineTextBox.Text = string.Empty;
 
                 // Сбрасываем настройки
                 TasksETM.Properties.Settings.Default.FromDepartFilter = null;
                 TasksETM.Properties.Settings.Default.ToDepartFilter = null;
-                TasksETM.Properties.Settings.Default.TaskCompletedFilter = null;
+                TasksETM.Properties.Settings.Default.StatusFilter = null; // Исправлено
+                TasksETM.Properties.Settings.Default.SectionFilter = null;
                 TasksETM.Properties.Settings.Default.TaskDateFilter = null;
                 TasksETM.Properties.Settings.Default.TaskDeadlineFilter = null;
 

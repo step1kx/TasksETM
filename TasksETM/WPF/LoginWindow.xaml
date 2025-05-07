@@ -116,7 +116,7 @@
                                         BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="LoginPanel">
-                        <Grid x:Name="HipLoginGrid"  Visibility="Visible">
+                        <Grid x:Name="HipLoginGrid"  Visibility="Collapsed">
                             <TextBlock Text="Вход для ГИПов"
                                       FontSize="20"
                                       Foreground="Wheat"
@@ -138,7 +138,7 @@
                                     BorderBrush="#4A4A65"
                                     x:Name="HipLoginTextBox"/>
                             <CheckBox
-                                    x:Name="SaveCurrentUserCheckbox"
+                                    x:Name="SaveCurrentHipCheckbox"
                                     Width="120"
                                     Height="25"
                                     Background="#3A3A55"
@@ -177,7 +177,7 @@
                         </Grid>
 
                         <!-- Departments Login Panel -->
-                        <Grid x:Name="DeptLoginGrid" Visibility="Collapsed">
+                        <Grid x:Name="DeptLoginGrid" Visibility="Visible">
                             <TextBlock Text="Вход для отделов"
                                       FontSize="20"
                                       Foreground="Wheat"
@@ -219,7 +219,7 @@
                                         Foreground="Wheat"
                                         BorderBrush="#4A4A65"/>
                             <CheckBox
-                                x:Name="SaveCurrentHipCheckbox"
+                                x:Name="SaveCurrentUserCheckbox"
                                 Width="120"
                                 Height="25"
                                 Background="#3A3A55"

@@ -87,7 +87,8 @@ namespace IssuingTasksETM.WPF
                     FromDepartComboBox.Items.Clear();
                     foreach (var dep in departmentNames)
                     {
-                        FromDepartComboBox.Items.Add(dep);
+                        if (dep == "Все отделы") continue;
+                        else FromDepartComboBox.Items.Add(dep);
                     }
                     if (FromDepartComboBox.Items.Count > 0)
                     {
@@ -193,7 +194,7 @@ namespace IssuingTasksETM.WPF
                 TaskDescription = TaskDescriptionTextBox.Text, 
                 TaskView = TaskViewTextBox.Text,
                 ScreenshotPath = _imageService.ConvertImageToBytes(ImagePath), 
-                TaskDate = DateTime.Now.ToString(),
+                TaskDate = DateTime.Now.ToString("d"),
                 TaskDeadline = TaskDeadLineTextBox.Text
             };
 

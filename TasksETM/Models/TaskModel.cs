@@ -20,7 +20,7 @@ namespace TasksETM.Models
         private string _fromDepart = string.Empty;
         private string _toDepart = string.Empty;
         private bool? _accepted;
-        private bool? _taskCompleted;
+        private bool? _completed;
         private byte[] _screenshotPath;
         private string _taskView = string.Empty;
         private string _taskDescription = string.Empty;
@@ -31,6 +31,13 @@ namespace TasksETM.Models
         private bool? _isOV;
         private bool? _isSS;
         private bool? _isES;
+        private bool? _isGIP;
+        private bool? _isARCompl;
+        private bool? _isVKCompl;
+        private bool? _isOVCompl;
+        private bool? _isSSCompl;
+        private bool? _isESCompl;
+        private bool? _isGIPCompl;
 
         public int TaskNumber
         {
@@ -56,10 +63,10 @@ namespace TasksETM.Models
             set { _accepted = value; OnPropertyChanged(nameof(Accepted)); }
         }
 
-        public bool? TaskCompleted
+        public bool? Completed
         {
-            get => _taskCompleted;
-            set { _taskCompleted = value; OnPropertyChanged(nameof(TaskCompleted)); }
+            get => _completed;
+            set { _completed = value; OnPropertyChanged(nameof(Completed)); }
         }
 
         public byte[] ScreenshotPath
@@ -120,6 +127,49 @@ namespace TasksETM.Models
         {
             get => _isES;
             set { _isES = value; OnPropertyChanged(nameof(IsES)); }
+        }
+
+        public bool? IsGIP
+        {
+            get => _isGIP;
+            set { _isGIP = value; OnPropertyChanged(nameof(IsGIP)); }
+
+        }
+
+        public bool? IsARCompl
+        {
+            get => _isARCompl;
+            set { _isARCompl = value; OnPropertyChanged(nameof(IsARCompl)); }
+        }
+
+        public bool? IsVKCompl
+        {
+            get => _isVKCompl;
+            set { _isVKCompl = value; OnPropertyChanged(nameof(IsVKCompl)); }
+        }
+
+        public bool? IsOVCompl
+        {
+            get => _isOVCompl;
+            set { _isOVCompl = value; OnPropertyChanged(nameof(IsOVCompl)); }
+        }
+
+        public bool? IsSSCompl
+        {
+            get => _isSSCompl;
+            set { _isSSCompl = value; OnPropertyChanged(nameof(IsSSCompl)); }
+        }
+
+        public bool? IsESCompl
+        {
+            get => _isESCompl;
+            set { _isESCompl = value; OnPropertyChanged(nameof(IsESCompl)); }   
+        }
+
+        public bool? IsGIPCompl
+        {
+            get => _isGIPCompl;
+            set { _isGIPCompl = value; OnPropertyChanged(nameof(IsGIPCompl)); }
         }
     }
 }

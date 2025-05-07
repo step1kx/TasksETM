@@ -7,7 +7,7 @@ using TasksETM.Models;
 
 namespace TasksETM.Service.Tasks
 {
-    internal class TaskService : ITaskService
+    public class TaskService : ITaskService
     {
         private readonly string _connectionString;
 
@@ -29,8 +29,8 @@ namespace TasksETM.Service.Tasks
                     t.""TaskNumber"", 
                     t.""FromDepart"", 
                     t.""ToDepart"", 
-                    t.""AcceptedDepart"", 
-                    t.""TaskCompleted"", 
+                    t.""AcceptedDepart"",
+                    t.""TaskCompleted"",
                     t.""ScreenShot"", 
                     t.""TaskView"", 
                     t.""TaskDescription"", 
@@ -40,7 +40,14 @@ namespace TasksETM.Service.Tasks
                     (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'VK') AS ""IsVK"",
                     (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'OV') AS ""IsOV"",
                     (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'SS') AS ""IsSS"",
-                    (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'ES') AS ""IsES""
+                    (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'ES') AS ""IsES"",
+                    (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'GIP') As ""IsGIP"",
+                    (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'AR') AS ""IsARCompl"",
+                    (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'VK') AS ""IsVKCompl"",
+                    (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'OV') AS ""IsOVCompl"",
+                    (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'SS') AS ""IsSSCompl"",
+                    (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'ES') AS ""IsESCompl"",
+                    (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'GIP') As ""IsGIPCompl""
                 FROM public.""Tasks"" t
                 WHERE t.""PK_ProjectNumber"" = (
                     SELECT ""ProjectNumber"" FROM public.""Projects"" WHERE ""ProjectName"" = @projectname
@@ -63,7 +70,7 @@ namespace TasksETM.Service.Tasks
                                     FromDepart = reader["FromDepart"] is DBNull ? string.Empty : reader["FromDepart"]!.ToString()!,
                                     ToDepart = reader["ToDepart"] is DBNull ? string.Empty : reader["ToDepart"]!.ToString()!,
                                     Accepted = reader["AcceptedDepart"] is DBNull ? null : (int)reader["AcceptedDepart"] == 1,
-                                    TaskCompleted = reader["TaskCompleted"] is DBNull ? null : (int)reader["TaskCompleted"] == 1,
+                                    Completed = reader["TaskCompleted"] is DBNull ? null : (int)reader["TaskCompleted"] == 1,
                                     ScreenshotPath = reader["ScreenShot"] is DBNull ? new byte[0] : (byte[])reader["ScreenShot"],
                                     TaskView = reader["TaskView"] is DBNull ? string.Empty : reader["TaskView"]!.ToString()!,
                                     TaskDescription = reader["TaskDescription"] is DBNull ? string.Empty : reader["TaskDescription"]!.ToString()!,
@@ -73,7 +80,14 @@ namespace TasksETM.Service.Tasks
                                     IsVK = reader["IsVK"] is DBNull ? null : (bool)reader["IsVK"],
                                     IsOV = reader["IsOV"] is DBNull ? null : (bool)reader["IsOV"],
                                     IsSS = reader["IsSS"] is DBNull ? null : (bool)reader["IsSS"],
-                                    IsES = reader["IsES"] is DBNull ? null : (bool)reader["IsES"]
+                                    IsES = reader["IsES"] is DBNull ? null : (bool)reader["IsES"],
+                                    IsGIP = reader["IsGIP"] is DBNull ? null : (bool)reader["IsGIP"],
+                                    IsARCompl = reader["IsARCompl"] is DBNull ? null : (bool)reader["IsARCompl"],
+                                    IsVKCompl = reader["IsVKCompl"] is DBNull ? null : (bool)reader["IsVKCompl"],
+                                    IsOVCompl = reader["IsOVCompl"] is DBNull ? null : (bool)reader["IsOVCompl"],
+                                    IsSSCompl = reader["IsSSCompl"] is DBNull ? null : (bool)reader["IsSSCompl"],
+                                    IsESCompl = reader["IsESCompl"] is DBNull ? null : (bool)reader["IsESCompl"],
+                                    IsGIPCompl = reader["IsGIPCompl"] is DBNull ? null : (bool)reader["IsGIPCompl"],
                                 };
 
                                 tasks.Add(task);
@@ -90,7 +104,7 @@ namespace TasksETM.Service.Tasks
             return tasks;
         }
 
-        public async Task UpdateTaskAssignmentsAsync(int taskNumber, bool isAR, bool isVK, bool isOV, bool isSS, bool isES)
+        public async Task UpdateTaskAssignmentsAsync(int taskNumber, bool isAR, bool isVK, bool isOV, bool isSS, bool isES, bool isGIP)
         {
             try
             {
@@ -98,7 +112,7 @@ namespace TasksETM.Service.Tasks
                 {
                     await conn.OpenAsync();
 
-                    var sections = new[] { ("AR", isAR), ("VK", isVK), ("OV", isOV), ("SS", isSS), ("ES", isES) };
+                    var sections = new[] { ("AR", isAR), ("VK", isVK), ("OV", isOV), ("SS", isSS), ("ES", isES), ("GIP", isGIP) };
                     foreach (var (section, isAssigned) in sections)
                     {
                         var updateCommand = new NpgsqlCommand(
@@ -129,7 +143,7 @@ namespace TasksETM.Service.Tasks
             }
         }
 
-        public async Task UpdateTaskCompletedAsync(int taskNumber, bool isCompleted)
+        public async Task UpdateTaskCompletedAsync(int taskNumber, bool isARCompl, bool isVKCompl, bool isOVCompl, bool isSSCompl, bool isESCompl, bool isGIPCompl)
         {
             try
             {
@@ -137,20 +151,59 @@ namespace TasksETM.Service.Tasks
                 {
                     await conn.OpenAsync();
 
-                    var updateCommand = new NpgsqlCommand(
-                        "UPDATE public.\"Tasks\" " +
-                        "SET \"TaskCompleted\" = @IsCompleted " +
-                        "WHERE \"TaskNumber\" = @TaskNumber", conn);
-                    updateCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
-                    updateCommand.Parameters.AddWithValue("@IsCompleted", isCompleted ? 1 : 0); // В базе 1 = true, 0 = false
-                    await updateCommand.ExecuteNonQueryAsync();
+                    var sections = new[] { ("AR", isARCompl), ("VK", isVKCompl), ("OV", isOVCompl), ("SS", isSSCompl), ("ES", isESCompl), ("GIP", isGIPCompl) };
+                    foreach (var (section, isCompleted) in sections)
+                    {
+                        var updateCommand = new NpgsqlCommand(
+                            "UPDATE public.\"TaskCompleted\" " +
+                            "SET \"IsCompleted\" = @IsCompleted " +
+                            "WHERE \"TaskNumber\" = @TaskNumber AND \"Section\" = @Section", conn);
+                        updateCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+                        updateCommand.Parameters.AddWithValue("@Section", section);
+                        updateCommand.Parameters.AddWithValue("@IsCompleted", isCompleted);
+                        int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
+
+                        if (rowsAffected == 0)
+                        {
+                            var insertCommand = new NpgsqlCommand(
+                                "INSERT INTO public.\"TaskCompleted\" (\"TaskNumber\", \"Section\", \"IsCompleted\") " +
+                                "VALUES (@TaskNumber, @Section, @IsCompleted)", conn);
+                            insertCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+                            insertCommand.Parameters.AddWithValue("@Section", section);
+                            insertCommand.Parameters.AddWithValue("@IsCompleted", isCompleted);
+                            await insertCommand.ExecuteNonQueryAsync();
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при обновлении статуса задания: {ex.Message}");
+                MessageBox.Show($"Ошибка при обновлении задания: {ex.Message}");
             }
         }
+
+        //public async Task UpdateTaskCompletedAsync(int taskNumber, bool isCompleted)
+        //{
+        //    try
+        //    {
+        //        using (var conn = new NpgsqlConnection(DatabaseConnection.connString))
+        //        {
+        //            await conn.OpenAsync();
+
+        //            var updateCommand = new NpgsqlCommand(
+        //                "UPDATE public.\"Tasks\" " +
+        //                "SET \"TaskCompleted\" = @IsCompleted " +
+        //                "WHERE \"TaskNumber\" = @TaskNumber", conn);
+        //            updateCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+        //            updateCommand.Parameters.AddWithValue("@IsCompleted", isCompleted ? 1 : 0); // В базе 1 = true, 0 = false
+        //            await updateCommand.ExecuteNonQueryAsync();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка при обновлении статуса задания: {ex.Message}");
+        //    }
+        //}
 
     }
 }

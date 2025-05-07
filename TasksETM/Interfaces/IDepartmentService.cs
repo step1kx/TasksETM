@@ -9,5 +9,7 @@ namespace TasksETM.Interfaces
     public interface IDepartmentService
     {
         Task<IEnumerable<string>> GetDepartmentNamesAsync();
+
+        Task<IEnumerable<string>> GetTaskStatusAsync();
     }
 }

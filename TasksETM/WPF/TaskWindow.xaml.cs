@@ -81,7 +81,7 @@ namespace IssuingTasksETM.WPF
                 var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
                 if (tasks == null || !tasks.Any())
                 {
-                    MessageBox.Show("Нет данных для отображения.");
+                    
                     _tasks.Clear();
                 }
                 else
@@ -94,7 +94,7 @@ namespace IssuingTasksETM.WPF
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
+                MessageBox.Show("Пока что никто не добавил заданий в этот проект.");
             }
         }
 
@@ -119,25 +119,54 @@ namespace IssuingTasksETM.WPF
             if (sender is CheckBox checkBox && checkBox.DataContext is TaskModel task)
             {
                 var taskNumber = task.TaskNumber;
+                var bindingExpression = checkBox.GetBindingExpression(CheckBox.IsCheckedProperty);
+                var bindingPath = bindingExpression?.ParentBinding?.Path?.Path;
 
-                if (checkBox.IsChecked == task.TaskCompleted)
+                if (bindingPath?.Contains("Compl") == true) // "Готово" (IsARCompl и т.д.)
                 {
-                    var isCompleted = task.TaskCompleted ?? false;
-                    await _taskService.UpdateTaskCompletedAsync(taskNumber, isCompleted);
+                    await _taskService.UpdateTaskCompletedAsync(taskNumber,
+                        task.IsARCompl ?? false, task.IsVKCompl ?? false, task.IsOVCompl ?? false,
+                        task.IsSSCompl ?? false, task.IsESCompl ?? false, task.IsGIPCompl ?? false);
                 }
-                else
+                else // "Принял" (IsAR, IsVK и т.д.)
                 {
-                    var isAR = task.IsAR ?? false;
-                    var isVK = task.IsVK ?? false;
-                    var isOV = task.IsOV ?? false;
-                    var isSS = task.IsSS ?? false;
-                    var isES = task.IsES ?? false;
-
-                    await _taskService.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES);
+                    await _taskService.UpdateTaskAssignmentsAsync(taskNumber,
+                        task.IsAR ?? false, task.IsVK ?? false, task.IsOV ?? false,
+                        task.IsSS ?? false, task.IsES ?? false, task.IsGIP ?? false);
                 }
-               
             }
         }
+
+        //private async void CheckBox_Changed(object sender, RoutedEventArgs e)
+        //{
+        //    if (sender is CheckBox checkBox && checkBox.DataContext is TaskModel task)
+        //    {
+        //        var taskNumber = task.TaskNumber;
+
+        //        if (checkBox.IsChecked == task.Completed)
+        //        {
+        //            var isARCompl = task.IsAR ?? false;
+        //            var isVKCompl = task.IsVK ?? false;
+        //            var isOVCompl = task.IsOV ?? false;
+        //            var isSSCompl = task.IsSS ?? false;
+        //            var isESCompl = task.IsES ?? false;
+        //            var isGIPCompl = task.IsGIP ?? false;
+        //            await _taskService.UpdateTaskCompletedAsync(taskNumber, isARCompl, isVKCompl, isOVCompl, isSSCompl, isESCompl, isGIPCompl);
+        //        }
+        //        else
+        //        {
+        //            var isAR = task.IsAR ?? false;
+        //            var isVK = task.IsVK ?? false;
+        //            var isOV = task.IsOV ?? false;
+        //            var isSS = task.IsSS ?? false;
+        //            var isES = task.IsES ?? false;
+        //            var isGIP = task.IsGIP ?? false;
+
+        //            await _taskService.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES, isGIP);
+        //        }
+
+        //    }
+        //}
 
         private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {

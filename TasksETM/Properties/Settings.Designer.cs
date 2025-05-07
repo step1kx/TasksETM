@@ -85,7 +85,7 @@ namespace TasksETM.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SavedLogin {
             get {
                 return ((string)(this["SavedLogin"]));
@@ -97,13 +97,36 @@ namespace TasksETM.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RememberMe {
             get {
                 return ((bool)(this["RememberMe"]));
             }
             set {
                 this["RememberMe"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StatusFilter {
+            get {
+                return ((string)(this["StatusFilter"]));
+            }
+            set {
+                this["StatusFilter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SectionFilter {
+            get {
+                return ((string)(this["SectionFilter"]));
+            }
+            set {
+                this["SectionFilter"] = value;
             }
         }
     }

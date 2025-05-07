@@ -186,20 +186,75 @@
                                                           VerticalAlignment="Center"/>
                                                 <TextBlock Text="ЕС" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                             </StackPanel>
+                                            <!-- Чекбокс и подпись для ГИП -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsGIP, UpdateSourceTrigger=PropertyChanged}" 
+                                                          Checked="CheckBox_Changed" 
+                                                          Unchecked="CheckBox_Changed" 
+                                                          VerticalAlignment="Center"
+                                                          Margin="10,0,0,0"/>
+                                                <TextBlock Text="ГИП" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
 
-                            <DataGridTemplateColumn IsReadOnly="False" Header="Готово"  Width="60">
+                            <DataGridTemplateColumn IsReadOnly="False" Header="Готово"  Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding Path=TaskCompleted, UpdateSourceTrigger=PropertyChanged}" 
-                                                    Checked="CheckBox_Changed" 
-                                                    Unchecked="CheckBox_Changed" 
-                                                    VerticalAlignment="Center"
-                                                    HorizontalAlignment="Center"/>
+                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <!-- Чекбокс и подпись для АР -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsARCompl, UpdateSourceTrigger=PropertyChanged}" 
+                Checked="CheckBox_Changed" 
+                Unchecked="CheckBox_Changed" 
+                VerticalAlignment="Center"/>
+                                                <TextBlock Text="АР" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для ВК -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsVKCompl, UpdateSourceTrigger=PropertyChanged}" 
+            Checked="CheckBox_Changed" 
+            Unchecked="CheckBox_Changed" 
+            VerticalAlignment="Center"/>
+                                                <TextBlock Text="ВК" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для ОВ -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsOVCompl, UpdateSourceTrigger=PropertyChanged}" 
+                Checked="CheckBox_Changed" 
+                Unchecked="CheckBox_Changed" 
+                VerticalAlignment="Center"/>
+                                                <TextBlock Text="ОВ" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для СС -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsSSCompl, UpdateSourceTrigger=PropertyChanged}" 
+                Checked="CheckBox_Changed" 
+                Unchecked="CheckBox_Changed" 
+                VerticalAlignment="Center"/>
+                                                <TextBlock Text="СС" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для ЕС -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsESCompl, UpdateSourceTrigger=PropertyChanged}" 
+                  Checked="CheckBox_Changed" 
+                  Unchecked="CheckBox_Changed" 
+                  VerticalAlignment="Center"/>
+                                                <TextBlock Text="ЕС" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <!-- Чекбокс и подпись для ГИП -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding Path=IsGIPCompl, UpdateSourceTrigger=PropertyChanged}" 
+                  Checked="CheckBox_Changed" 
+                  Unchecked="CheckBox_Changed" 
+                  VerticalAlignment="Center"
+                                                          Margin="10,0,0,0"/>
+                                                <TextBlock Text="ГИП" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
