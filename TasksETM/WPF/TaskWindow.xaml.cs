@@ -60,7 +60,7 @@ namespace IssuingTasksETM.WPF
             tasksDataGrid.ItemsSource = _tasks;
 
 
-            this.TitleBlock.Text = $"Задание смежным разделам по объекту: {selectedProject}";
+            this.TitleBlock.Text = $"Задание по объекту: {selectedProject}";
 
             Loaded += TaskWindow_Loaded;
         }
@@ -201,8 +201,11 @@ namespace IssuingTasksETM.WPF
         {
             var closeWindow = new CloseSoftwareWindow();
             closeWindow.Show();
-            await closeWindow.UpdateProgressBarAsync();
-            DialogResult = false;
+            this.Close(); 
+
+            await closeWindow.UpdateProgressBarAsync(); 
+            Application.Current.Shutdown();
+
         }
 
         private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
