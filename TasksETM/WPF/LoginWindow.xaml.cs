@@ -165,7 +165,7 @@ namespace IssuingTasksETM.WPF
 
             if (_isHipLogin)
             {
-                login = HipLoginTextBox.Text.Trim(); // Добавим HipLoginTextBox в XAML
+                login = HipLoginTextBox.Text.Trim(); 
                 password = PasswordBoxHip.Password;
                 rememberMeCheckbox = SaveCurrentHipCheckbox;
             }
@@ -173,7 +173,7 @@ namespace IssuingTasksETM.WPF
             {
                 login = LoginComboBox.Text.Trim();
                 password = PasswordBox.Password;
-                rememberMeCheckbox = SaveCurrentUserCheckbox; // Исправим имя на SaveCurrentUserCheckbox для отделов
+                rememberMeCheckbox = SaveCurrentUserCheckbox; 
             }
 
             if (string.IsNullOrEmpty(login))
@@ -196,7 +196,7 @@ namespace IssuingTasksETM.WPF
                 {
                     UserSession.Login = login;
 
-                    if (SaveCurrentUserCheckbox.IsChecked == true)
+                    if (SaveCurrentUserCheckbox.IsChecked == true || SaveCurrentHipCheckbox.IsChecked == true)
                     {
                         TasksETM.Properties.Settings.Default.SavedLogin = login;
                         TasksETM.Properties.Settings.Default.RememberMe = true;

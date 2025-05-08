@@ -18,10 +18,10 @@
       <Value Profile="(Default)">null</Value>
     </Setting>
     <Setting Name="SavedLogin" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">null</Value>
     </Setting>
     <Setting Name="RememberMe" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="StatusFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

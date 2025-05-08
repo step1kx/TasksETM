@@ -11,6 +11,7 @@ using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
+using TasksETM.WPF;
 
 namespace IssuingTasksETM.WPF
 {
@@ -87,7 +88,7 @@ namespace IssuingTasksETM.WPF
                     FromDepartComboBox.Items.Clear();
                     foreach (var dep in departmentNames)
                     {
-                        if (dep == "Все отделы") continue;
+                        if (dep != UserSession.Login) continue;
                         else FromDepartComboBox.Items.Add(dep);
                     }
                     if (FromDepartComboBox.Items.Count > 0)
@@ -230,6 +231,10 @@ namespace IssuingTasksETM.WPF
 
             var createTaskService = new CreateTasksService(_selectedProject); 
             await createTaskService.CreateTaskAsync(taskModel);
+
+            var taskCreatedSuccessful = new TaskCreatSuccessfulWindow();
+            taskCreatedSuccessful.Show();
+            await taskCreatedSuccessful.UpdateProgressBarAsync();
 
             _taskWindow.Show();
             Close();

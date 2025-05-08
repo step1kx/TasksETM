@@ -388,7 +388,7 @@
                                     <ComboBoxItem>Не готово</ComboBoxItem>-->
                                 </ComboBox>
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                    <TextBlock Text="Раздел" FontSize="16" Foreground="Wheat" VerticalAlignment="Center" Margin="50,0,10,10"/>
+                                    <TextBlock Text="Раздел" FontSize="16" Foreground="Wheat" VerticalAlignment="Center" Margin="51,0,10,10"/>
                                     <ComboBox x:Name="SectionComboBox" 
                   Width="139" Height="25" 
                   VerticalAlignment="Top" 

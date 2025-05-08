@@ -218,9 +218,7 @@ namespace IssuingTasksETM.WPF
                             t.IsOVCompl == true || t.IsSSCompl == true || t.IsESCompl == true || t.IsGIPCompl == true).ToList();
                     else if (status == "Не готов")
                         _filteredTasks = _filteredTasks.Where(t => t.IsARCompl == false || t.IsVKCompl == false ||
-                            t.IsOVCompl == false || t.IsSSCompl == false || t.IsESCompl == false || t.IsGIPCompl == false ||
-                            t.IsARCompl == null || t.IsVKCompl == null || t.IsOVCompl == null || t.IsSSCompl == null ||
-                            t.IsESCompl == null || t.IsGIPCompl == null).ToList();
+                            t.IsOVCompl == false || t.IsSSCompl == false || t.IsESCompl == false || t.IsGIPCompl == false).ToList();
                     TasksETM.Properties.Settings.Default.StatusFilter = status; // Исправлено на StatusFilter
                 }
                 else
@@ -231,15 +229,30 @@ namespace IssuingTasksETM.WPF
                 // Раздел (работает только если статус выбран)
                 if (SectionComboBox.IsEnabled && SectionComboBox.SelectedItem != null)
                 {
+                    string status = TasksETM.Properties.Settings.Default.StatusFilter;
                     string section = SectionComboBox.SelectedItem.ToString();
-                    _filteredTasks = _filteredTasks.Where(t =>
-                        (section == "AR" && t.IsAR == true) ||
-                        (section == "VK" && t.IsVK == true) ||
-                        (section == "OV" && t.IsOV == true) ||
-                        (section == "SS" && t.IsSS == true) ||
-                        (section == "ES" && t.IsES == true) ||
-                        (section == "GIP" && t.IsGIP == true)).ToList();
-                    TasksETM.Properties.Settings.Default.SectionFilter = section; // Исправлено на SectionFilter
+                    if(status == "Готов")
+                    {
+                        _filteredTasks = _filteredTasks.Where(t =>
+                            (section == "AR" && t.IsARCompl == true) ||
+                            (section == "VK" && t.IsVKCompl == true) ||
+                            (section == "OV" && t.IsOVCompl == true) ||
+                            (section == "SS" && t.IsSSCompl == true) ||
+                            (section == "ES" && t.IsESCompl == true) ||
+                            (section == "GIP" && t.IsGIPCompl == true)).ToList();
+                    }
+                    else if (status == "Не готов")
+                    {
+                        _filteredTasks = _filteredTasks.Where(t =>
+                                (section == "AR" && t.IsARCompl == false) ||
+                                (section == "VK" && t.IsVKCompl == false) ||
+                                (section == "OV" && t.IsOVCompl == false) ||
+                                (section == "SS" && t.IsSSCompl == false) ||
+                                (section == "ES" && t.IsESCompl == false) ||
+                                (section == "GIP" && t.IsGIPCompl == false)).ToList();
+                    }
+                    TasksETM.Properties.Settings.Default.SectionFilter = section;
+
                 }
                 else
                 {

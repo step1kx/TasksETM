@@ -102,7 +102,6 @@ namespace TasksETM.Service.Tasks
 
                     TaskCreates?.Invoke(this, dt);
 
-                    MessageBox.Show("Вы успешно создали задание!");
                 }
             }
             catch (Exception ex)
