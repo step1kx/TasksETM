@@ -45,7 +45,7 @@
                       VerticalAlignment="Center"
                       FontSize="22"
                       Margin="0,0,50,0"/>
-                <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
+                <Button Content="X" Grid.Column="1" Click="MinimizeWindow_Click"
             Style="{StaticResource CustomButtonStyle}"
             Background="#3A3A55"
             HorizontalAlignment="Right" 
@@ -55,26 +55,26 @@
             Height="30"
             Foreground="Wheat"
             FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
-                <Button Content="Свернуть" Grid.Column="1" Click="MinimizeWindow_Click"
+                <!--<Button Content="_" Grid.Column="1" Click="MinimizeWindow_Click"
             Style="{StaticResource CustomButtonStyle}"
             Background="#3A3A55"
             HorizontalAlignment="Right" 
             VerticalAlignment="Center" 
             FontWeight="Bold" 
-            Width="100" 
+            Width="50" 
             Height="30"
             Foreground="Wheat"
-            FontSize="20" Cursor="Hand" Margin="20, 0, 65, 0"/>
-                <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
+            FontSize="40" Cursor="Hand" Margin="20, 0, 65, 0"/>-->
+                <Button Content="&lt;-" Grid.Column="1" Click="ToPrevWindow_Click"
                 Style="{StaticResource CustomButtonStyle}"
                 Background="#3A3A55"
                 HorizontalAlignment="Right" 
                 VerticalAlignment="Center" 
-            Width="70" 
+            Width="50" 
             Height="30"
             Foreground="Wheat"
             FontWeight="Bold"
-            FontSize="20" Cursor="Hand" Margin="20, 0, 180, 0"/>
+            FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
             </Grid>
                 <Grid Margin="0,60,0,0">
                     <Grid.ColumnDefinitions>

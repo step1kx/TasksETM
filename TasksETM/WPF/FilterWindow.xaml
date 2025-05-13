@@ -54,12 +54,12 @@
                     Height="30"
                     Foreground="Wheat"
                     FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
-                <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
+                <Button Content="&lt;-" Grid.Column="1" Click="ToPrevWindow_Click"
                     Style="{StaticResource CustomButtonStyle}"
                     Background="#3A3A55"
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Center" 
-                Width="70" 
+                Width="50" 
                 Height="30"
                 Foreground="Wheat"
                 FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
