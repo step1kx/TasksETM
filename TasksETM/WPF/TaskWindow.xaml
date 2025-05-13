@@ -139,9 +139,9 @@
                            SelectionChanged="tasksDataGrid_SelectionChanged"
                            Style="{StaticResource CustomDataGridStyle}">
                         <DataGrid.Columns >
-                            <!--<DataGridTextColumn   IsReadOnly="True" Header="№" Binding="{Binding Path=TaskNumber}" Width="20"/>-->
+                            <DataGridTextColumn   IsReadOnly="True" Header="№" Binding="{Binding TaskNumber}" Width="40"/>
                             <DataGridTextColumn  IsReadOnly="True" Header="От" Binding="{Binding  FromDepart}" Width="50"/>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Кому" Binding="{Binding  ToDepart}" Width="50"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Кому" Binding="{Binding  ToDepart}" Width="90"/>
                             <DataGridTemplateColumn IsReadOnly="False" Header="Принял" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
