@@ -1,14 +1,8 @@
 ﻿using IssuingTasksETM.Interfaces;
-using System;
-using System.Collections.Generic;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -36,6 +30,8 @@ namespace IssuingTasksETM.WPF
         private readonly IAuthService _authService;
         private readonly IFilterTasksService _filterTasksService;
         private bool _isFiltered;
+        private System.Timers.Timer _notificationTimer;
+        private string _currentUserSection;
 
 
         public TaskWindow(string selectedProject, 
@@ -57,10 +53,11 @@ namespace IssuingTasksETM.WPF
             _filterTasksService = filterTasksService ?? new FilterTasksService();
             _isFiltered = false;
 
+            _currentUserSection = _authService.GetCurrentUserSection();
             tasksDataGrid.ItemsSource = _tasks;
 
 
-            this.TitleBlock.Text = $"Задание смежным разделам по объекту: {selectedProject}";
+            this.TitleBlock.Text = $"Задание по объекту: {selectedProject}";
 
             Loaded += TaskWindow_Loaded;
         }
@@ -71,7 +68,17 @@ namespace IssuingTasksETM.WPF
             if (!_isFiltered)
             {
                 await LoadAsync();
+                SetupNotificationTimer();
             }
+        }
+
+        private void SetupNotificationTimer()
+        {
+            _notificationTimer = new System.Timers.Timer(10000); // Проверка каждые 60 секунд
+            _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
+            _notificationTimer.Start();
+
+
         }
 
         public async Task LoadAsync()
@@ -96,6 +103,177 @@ namespace IssuingTasksETM.WPF
             {
                 MessageBox.Show("Пока что никто не добавил заданий в этот проект.");
             }
+        }
+
+        static void ShowNotification(string title, string message)
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .Show(); // <-- Это автоматически вызывает ToastNotificationManager с нужными параметрами
+        }
+
+        //static void ShowNotification(string title, string message)
+        //{
+        //    var toastContent = new ToastContentBuilder()
+        //        .AddText(title)
+        //        .AddText(message)
+        //        .GetToastContent();
+
+        //    var toast = new Windows.UI.Notifications.ToastNotification(toastContent.GetXml());
+
+        //    toast.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(5);
+
+        //    Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier().Show(toast);
+        //}
+
+
+
+
+        //private async Task CheckTasksForNotificationsAsync()
+        //{
+        //    try
+        //    {
+        //        var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
+        //        //Dispatcher.Invoke(() => MessageBox.Show($"Загружено задач: {tasks.Count}")); // Отладка
+
+        //        var userTasks = tasks.Where(t => t.ToDepart == _currentUserSection).ToList();
+        //        //Dispatcher.Invoke(() => MessageBox.Show($"Задач для раздела {_currentUserSection}: {userTasks.Count}"));
+
+        //        foreach (var task in userTasks)
+        //        {
+        //            // 1. Не принятое задание 
+        //            if (!IsTaskAccepted(task, _currentUserSection))
+        //            {
+        //                Dispatcher.Invoke(() =>
+        //                    MessageBox.Show($"Эй, вы не приняли задание #{task.TaskNumber}!", "Не принято"));
+        //            }
+        //            // 2. Принято, но не выполнено, и дедлайн прошёл
+        //            else if (IsTaskAccepted(task, _currentUserSection) &&
+        //                     !IsTaskCompleted(task, _currentUserSection) 
+        //                     /*IsTaskOverdue(task.TaskDeadline)*/)
+        //            {
+        //                Dispatcher.Invoke(() =>
+        //                    MessageBox.Show($"Эй, вы не выполнили задание #{task.TaskNumber}! Дедлайн прошёл!", "Просрочено"));
+        //            }
+        //            // 3. Напоминание за 2 дня до дедлайна
+        //            else if (IsTaskAccepted(task, _currentUserSection) &&
+        //                     !IsTaskCompleted(task, _currentUserSection) &&
+        //                     IsDaysLeft(task.TaskDeadline, 2))
+        //            {
+        //                Dispatcher.Invoke(() =>
+        //                    MessageBox.Show($"Осталось 2 дня до дедлайна для задания #{task.TaskNumber}!", "Напоминание"));
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Dispatcher.Invoke(() => MessageBox.Show($"Ошибка: {ex.Message}"));
+        //    }
+        //}
+
+        private async Task CheckTasksForNotificationsAsync()
+        {
+            try
+            {
+                var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
+                var userTasks = tasks.Where(t => t.ToDepart == _currentUserSection).ToList();
+
+                foreach (var task in userTasks)
+                {
+                    // не принято
+                    if (!IsTaskAccepted(task, _currentUserSection))
+                    {
+                        Dispatcher.Invoke(() =>
+                            ShowNotification($"Не принято. Объект: {_selectedProject}", $"Эй, вы не приняли задание №{task.TaskNumber}!"));
+                    }
+                    else if (IsTaskAccepted(task, _currentUserSection) &&
+                             !IsTaskCompleted(task, _currentUserSection))
+                    {
+                        // Просрочено
+                        if (IsTaskOverdue(task.TaskDeadline))
+                        {
+                            Dispatcher.Invoke(() =>
+                                ShowNotification($"Просрочено. Объект: {_selectedProject}", $"Эй, вы не выполнили задание №{task.TaskNumber}! Дедлайн прошёл!"));
+                        }
+                        // Напоминание за 2 дня
+                        else if (IsDaysLeft(task.TaskDeadline, 2))
+                        {
+                            Dispatcher.Invoke(() =>
+                                ShowNotification($"Напоминание. Объект: {_selectedProject}", $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber}!"));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(() =>
+                    ShowNotification("Ошибка", $"Произошла ошибка при проверке заданий: {ex.Message}"));
+            }
+        }
+
+
+        private bool IsTaskAccepted(TaskModel task, string section)
+        {
+            return section switch
+            {
+                "AR" => task.IsAR == true,
+                "VK" => task.IsVK == true,
+                "OV" => task.IsOV == true,
+                "SS" => task.IsSS == true,
+                "ES" => task.IsES == true,
+                "GIP" => task.IsGIP == true,
+                _ => false
+            };
+        }
+
+        private bool GetSectionProperty(TaskModel task, string section)
+        {
+            return section switch
+            {
+                "AR" => task.IsAR ?? false,
+                "VK" => task.IsVK ?? false,
+                "OV" => task.IsOV ?? false,
+                "SS" => task.IsSS ?? false,
+                "ES" => task.IsES ?? false,
+                "GIP" => task.IsGIP ?? false,
+                _ => false
+            };
+        }
+
+        private bool IsTaskCompleted(TaskModel task, string section)
+        {
+            return section switch
+            {
+                "AR" => task.IsARCompl ?? false,
+                "VK" => task.IsVKCompl ?? false,
+                "OV" => task.IsOVCompl ?? false,
+                "SS" => task.IsSSCompl ?? false,
+                "ES" => task.IsESCompl ?? false,
+                "GIP" => task.IsGIPCompl ?? false,
+                _ => false
+            };
+        }
+
+        private bool IsTaskOverdue(string deadline)
+        {
+            if (string.IsNullOrEmpty(deadline)) return false;
+            if (DateTime.TryParse(deadline, out DateTime deadlineDate))
+            {
+                return DateTime.Now > deadlineDate;
+            }
+            return false;
+        }
+
+        private bool IsDaysLeft(string deadline, int days)
+        {
+            if (string.IsNullOrEmpty(deadline)) return false;
+            if (DateTime.TryParse(deadline, out DateTime deadlineDate))
+            {
+                var daysLeft = (deadlineDate - DateTime.Now).Days;
+                return daysLeft > 0 && daysLeft <= days;
+            }
+            return false;
         }
 
         // Метод для обновления задач с учетом фильтров
@@ -137,51 +315,6 @@ namespace IssuingTasksETM.WPF
             }
         }
 
-        //private async void CheckBox_Changed(object sender, RoutedEventArgs e)
-        //{
-        //    if (sender is CheckBox checkBox && checkBox.DataContext is TaskModel task)
-        //    {
-        //        var taskNumber = task.TaskNumber;
-
-        //        if (checkBox.IsChecked == task.Completed)
-        //        {
-        //            var isARCompl = task.IsAR ?? false;
-        //            var isVKCompl = task.IsVK ?? false;
-        //            var isOVCompl = task.IsOV ?? false;
-        //            var isSSCompl = task.IsSS ?? false;
-        //            var isESCompl = task.IsES ?? false;
-        //            var isGIPCompl = task.IsGIP ?? false;
-        //            await _taskService.UpdateTaskCompletedAsync(taskNumber, isARCompl, isVKCompl, isOVCompl, isSSCompl, isESCompl, isGIPCompl);
-        //        }
-        //        else
-        //        {
-        //            var isAR = task.IsAR ?? false;
-        //            var isVK = task.IsVK ?? false;
-        //            var isOV = task.IsOV ?? false;
-        //            var isSS = task.IsSS ?? false;
-        //            var isES = task.IsES ?? false;
-        //            var isGIP = task.IsGIP ?? false;
-
-        //            await _taskService.UpdateTaskAssignmentsAsync(taskNumber, isAR, isVK, isOV, isSS, isES, isGIP);
-        //        }
-
-        //    }
-        //}
-
-        private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
-        {
-            var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
-            createTaskWindow.Show();
-            Close();
-        }
-
-        private void FilterWindow_Click(object sender, RoutedEventArgs e)
-        {
-            var filterTaskWindow = new FilterWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _taskService, _filterTasksService);
-            filterTaskWindow.Show();
-            Close();
-        }
-
         public void MovingWin(object sender, EventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
@@ -190,8 +323,37 @@ namespace IssuingTasksETM.WPF
             }
         }
 
+        private void StopNotificationTimer()
+        {
+            if (_notificationTimer != null)
+            {
+                _notificationTimer.Stop();
+                _notificationTimer.Dispose();
+                _notificationTimer = null;
+            }
+        }
+
+        private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
+        {
+            StopNotificationTimer();
+            var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+            createTaskWindow.Show();
+            Close();
+        }
+
+        private void FilterWindow_Click(object sender, RoutedEventArgs e)
+        {
+            StopNotificationTimer();
+            var filterTaskWindow = new FilterWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _taskService, _filterTasksService);
+            filterTaskWindow.Show();
+            Close();
+        }
+
+       
+
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
+            StopNotificationTimer();
             ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             chooseProjectWindow.Show();
             Close();
@@ -199,10 +361,14 @@ namespace IssuingTasksETM.WPF
 
         private async void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            StopNotificationTimer();
             var closeWindow = new CloseSoftwareWindow();
             closeWindow.Show();
-            await closeWindow.UpdateProgressBarAsync();
-            DialogResult = false;
+            this.Close(); 
+
+            await closeWindow.UpdateProgressBarAsync(); 
+            Application.Current.Shutdown();
+
         }
 
         private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

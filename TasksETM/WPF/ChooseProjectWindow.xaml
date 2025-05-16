@@ -37,7 +37,7 @@
               Margin="10,0,0,0"/>
 
 
-                <Button Content="X" Grid.Column="1" Click="CancelButton_Click"
+                <Button Content="X" Grid.Column="1" Click="MinimizeWindow_Click"
                     Style="{StaticResource CustomButtonStyle}"
                     Background="#3A3A55"
                     HorizontalAlignment="Right" 
@@ -47,12 +47,12 @@
                     Height="30"
                     Foreground="Wheat"
                     FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
-                <Button Content="Назад" Grid.Column="1" Click="ToPrevWindow_Click"
+                <Button Content="&lt;-" Grid.Column="1" Click="ToPrevWindow_Click"
                     Style="{StaticResource CustomButtonStyle}"
                     Background="#3A3A55"
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Center" 
-                    Width="70" 
+                    Width="50" 
                     Height="30"
                     Foreground="Wheat"
                     FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>

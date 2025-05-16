@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TasksETM.Interfaces;
+using TasksETM.Models;
 
 namespace TasksETM.Service
 {
@@ -59,6 +60,11 @@ namespace TasksETM.Service
                 MessageBox.Show($"Что-то пошло не так {ex.Message}");
                 return false;
             }
+        }
+
+        public string GetCurrentUserSection()
+        {
+            return UserSession.Login;
         }
     }
 }

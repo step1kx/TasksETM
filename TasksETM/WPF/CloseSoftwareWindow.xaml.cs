@@ -22,7 +22,6 @@ namespace TasksETM.WPF
         public CloseSoftwareWindow()
         {
             InitializeComponent();
-            UpdateProgressBarAsync();
         }
 
         public async Task UpdateProgressBarAsync()

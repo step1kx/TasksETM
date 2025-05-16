@@ -1,4 +1,6 @@
 ﻿using IssuingTasksETM.WPF;
+using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
@@ -7,9 +9,19 @@ namespace TasksETM
 {
     internal class MainProgramClass
     {
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int SetCurrentProcessExplicitAppUserModelID(string appID);
+
+        private static void SetAppId()
+        {
+            SetCurrentProcessExplicitAppUserModelID("TasksETM.NotificationApp");
+        }
+
         [STAThread]
         public static void Main()
         {
+            SetAppId(); 
+
             var app = new Application();
             var dbConnection = new DatabaseConnection();
             var departmentService = new DepartmentService();

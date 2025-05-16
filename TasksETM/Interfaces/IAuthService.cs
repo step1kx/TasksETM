@@ -11,5 +11,7 @@ namespace TasksETM.Interfaces
         Task<bool> LoginAsync(string departmentName, string password);
 
         Task<bool> CheckSavedLoginAsync(string login);
+
+        string GetCurrentUserSection();
     }
 }
