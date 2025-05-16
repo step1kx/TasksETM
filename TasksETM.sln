@@ -5,6 +5,10 @@ VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksETM", "TasksETM\TasksETM.csproj", "{B8CDEA0B-28D3-41DF-8D21-4929E57840DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notify", "Notify\Notify.csproj", "{B08A8BFA-6303-41AC-BAD3-34383D0EEBF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksETMCommon", "TasksETM.Common\TasksETMCommon.csproj", "{5618D515-6F2D-404E-B765-EDB7E14A72D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{B8CDEA0B-28D3-41DF-8D21-4929E57840DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8CDEA0B-28D3-41DF-8D21-4929E57840DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8CDEA0B-28D3-41DF-8D21-4929E57840DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B08A8BFA-6303-41AC-BAD3-34383D0EEBF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08A8BFA-6303-41AC-BAD3-34383D0EEBF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08A8BFA-6303-41AC-BAD3-34383D0EEBF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08A8BFA-6303-41AC-BAD3-34383D0EEBF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5618D515-6F2D-404E-B765-EDB7E14A72D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5618D515-6F2D-404E-B765-EDB7E14A72D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5618D515-6F2D-404E-B765-EDB7E14A72D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5618D515-6F2D-404E-B765-EDB7E14A72D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

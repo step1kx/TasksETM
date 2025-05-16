@@ -33,7 +33,12 @@
 
   <ItemGroup>
     <Folder Include="Application\" />
+    <Folder Include="Models\" />
     <Folder Include="Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TasksETM.Common\TasksETMCommon.csproj" />
   </ItemGroup>
 
   <ItemGroup>

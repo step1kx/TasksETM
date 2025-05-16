@@ -8,6 +8,8 @@ using TasksETM.WPF;
 using TasksETM.Service;
 using TasksETM.Interfaces;
 using TasksETM.Interfaces.ITasks;
+using TasksETMCommon.Models;
+using TasksETMCommon.Helpers;
 
 namespace IssuingTasksETM.WPF
 {
@@ -64,6 +66,8 @@ namespace IssuingTasksETM.WPF
                     if (isValid)
                     {
                         UserSession.Login = TasksETM.Properties.Settings.Default.SavedLogin;
+
+
                         System.Diagnostics.Debug.WriteLine($"Логин валиден, открываем ChooseProjectWindow для {UserSession.Login}");
 
                         Dispatcher.Invoke(() =>
@@ -201,6 +205,8 @@ namespace IssuingTasksETM.WPF
                         TasksETM.Properties.Settings.Default.SavedLogin = login;
                         TasksETM.Properties.Settings.Default.RememberMe = true;
                         TasksETM.Properties.Settings.Default.Save();
+
+                        SharedLoginStorage.SaveLogin(login);
                     }
                     else
                     {
