@@ -1,14 +1,8 @@
 ﻿using IssuingTasksETM.Interfaces;
-using System;
-using System.Collections.Generic;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -83,6 +77,8 @@ namespace IssuingTasksETM.WPF
             _notificationTimer = new System.Timers.Timer(10000); // Проверка каждые 60 секунд
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.Start();
+
+
         }
 
         public async Task LoadAsync()
@@ -109,47 +105,113 @@ namespace IssuingTasksETM.WPF
             }
         }
 
+        static void ShowNotification(string title, string message)
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .Show(); // <-- Это автоматически вызывает ToastNotificationManager с нужными параметрами
+        }
+
+        //static void ShowNotification(string title, string message)
+        //{
+        //    var toastContent = new ToastContentBuilder()
+        //        .AddText(title)
+        //        .AddText(message)
+        //        .GetToastContent();
+
+        //    var toast = new Windows.UI.Notifications.ToastNotification(toastContent.GetXml());
+
+        //    toast.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(5);
+
+        //    Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier().Show(toast);
+        //}
+
+
+
+
+        //private async Task CheckTasksForNotificationsAsync()
+        //{
+        //    try
+        //    {
+        //        var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
+        //        //Dispatcher.Invoke(() => MessageBox.Show($"Загружено задач: {tasks.Count}")); // Отладка
+
+        //        var userTasks = tasks.Where(t => t.ToDepart == _currentUserSection).ToList();
+        //        //Dispatcher.Invoke(() => MessageBox.Show($"Задач для раздела {_currentUserSection}: {userTasks.Count}"));
+
+        //        foreach (var task in userTasks)
+        //        {
+        //            // 1. Не принятое задание 
+        //            if (!IsTaskAccepted(task, _currentUserSection))
+        //            {
+        //                Dispatcher.Invoke(() =>
+        //                    MessageBox.Show($"Эй, вы не приняли задание #{task.TaskNumber}!", "Не принято"));
+        //            }
+        //            // 2. Принято, но не выполнено, и дедлайн прошёл
+        //            else if (IsTaskAccepted(task, _currentUserSection) &&
+        //                     !IsTaskCompleted(task, _currentUserSection) 
+        //                     /*IsTaskOverdue(task.TaskDeadline)*/)
+        //            {
+        //                Dispatcher.Invoke(() =>
+        //                    MessageBox.Show($"Эй, вы не выполнили задание #{task.TaskNumber}! Дедлайн прошёл!", "Просрочено"));
+        //            }
+        //            // 3. Напоминание за 2 дня до дедлайна
+        //            else if (IsTaskAccepted(task, _currentUserSection) &&
+        //                     !IsTaskCompleted(task, _currentUserSection) &&
+        //                     IsDaysLeft(task.TaskDeadline, 2))
+        //            {
+        //                Dispatcher.Invoke(() =>
+        //                    MessageBox.Show($"Осталось 2 дня до дедлайна для задания #{task.TaskNumber}!", "Напоминание"));
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Dispatcher.Invoke(() => MessageBox.Show($"Ошибка: {ex.Message}"));
+        //    }
+        //}
+
         private async Task CheckTasksForNotificationsAsync()
         {
             try
             {
                 var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
-                //Dispatcher.Invoke(() => MessageBox.Show($"Загружено задач: {tasks.Count}")); // Отладка
-
                 var userTasks = tasks.Where(t => t.ToDepart == _currentUserSection).ToList();
-                //Dispatcher.Invoke(() => MessageBox.Show($"Задач для раздела {_currentUserSection}: {userTasks.Count}"));
 
                 foreach (var task in userTasks)
                 {
-                    // 1. Не принятое задание 
+                    // не принято
                     if (!IsTaskAccepted(task, _currentUserSection))
                     {
                         Dispatcher.Invoke(() =>
-                            MessageBox.Show($"Эй, вы не приняли задание #{task.TaskNumber}!", "Не принято"));
+                            ShowNotification($"Не принято. Объект: {_selectedProject}", $"Эй, вы не приняли задание №{task.TaskNumber}!"));
                     }
-                    // 2. Принято, но не выполнено, и дедлайн прошёл
                     else if (IsTaskAccepted(task, _currentUserSection) &&
-                             !IsTaskCompleted(task, _currentUserSection) 
-                             /*IsTaskOverdue(task.TaskDeadline)*/)
+                             !IsTaskCompleted(task, _currentUserSection))
                     {
-                        Dispatcher.Invoke(() =>
-                            MessageBox.Show($"Эй, вы не выполнили задание #{task.TaskNumber}! Дедлайн прошёл!", "Просрочено"));
-                    }
-                    // 3. Напоминание за 2 дня до дедлайна
-                    else if (IsTaskAccepted(task, _currentUserSection) &&
-                             !IsTaskCompleted(task, _currentUserSection) &&
-                             IsDaysLeft(task.TaskDeadline, 2))
-                    {
-                        Dispatcher.Invoke(() =>
-                            MessageBox.Show($"Осталось 2 дня до дедлайна для задания #{task.TaskNumber}!", "Напоминание"));
+                        // Просрочено
+                        if (IsTaskOverdue(task.TaskDeadline))
+                        {
+                            Dispatcher.Invoke(() =>
+                                ShowNotification($"Просрочено. Объект: {_selectedProject}", $"Эй, вы не выполнили задание №{task.TaskNumber}! Дедлайн прошёл!"));
+                        }
+                        // Напоминание за 2 дня
+                        else if (IsDaysLeft(task.TaskDeadline, 2))
+                        {
+                            Dispatcher.Invoke(() =>
+                                ShowNotification($"Напоминание. Объект: {_selectedProject}", $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber}!"));
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Dispatcher.Invoke(() => MessageBox.Show($"Ошибка: {ex.Message}"));
+                Dispatcher.Invoke(() =>
+                    ShowNotification("Ошибка", $"Произошла ошибка при проверке заданий: {ex.Message}"));
             }
         }
+
 
         private bool IsTaskAccepted(TaskModel task, string section)
         {
