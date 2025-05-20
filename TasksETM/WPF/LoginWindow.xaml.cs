@@ -10,6 +10,7 @@ using TasksETM.Interfaces;
 using TasksETM.Interfaces.ITasks;
 using TasksETMCommon.Models;
 using TasksETMCommon.Helpers;
+using Windows.Devices.Sensors;
 
 namespace IssuingTasksETM.WPF
 {
@@ -24,6 +25,7 @@ namespace IssuingTasksETM.WPF
         private readonly IDatabaseConnection _dbConnection;
         private readonly IFilterTasksService _filterTasksService;
         private bool _isHipLogin;
+        public string loginForNotify = string.Empty;
 
         public LoginWindow(
             IDatabaseConnection dbConnection,
@@ -67,6 +69,8 @@ namespace IssuingTasksETM.WPF
                     {
                         UserSession.Login = TasksETM.Properties.Settings.Default.SavedLogin;
 
+                        UserSessionForNotify.Login = UserSession.Login;
+
                         SharedLoginStorage.SaveLogin(UserSession.Login);
 
 
@@ -86,6 +90,10 @@ namespace IssuingTasksETM.WPF
                         TasksETM.Properties.Settings.Default.SavedLogin = string.Empty;
                         TasksETM.Properties.Settings.Default.RememberMe = false;
                         TasksETM.Properties.Settings.Default.Save();
+
+                        UserSessionForNotify.Login = string.Empty;
+
+                        SharedLoginStorage.SaveLogin(loginForNotify);
                         MessageBox.Show("Сохранённая сессия недействительна. Пожалуйста, войдите заново.");
                     }
                 }
@@ -201,6 +209,7 @@ namespace IssuingTasksETM.WPF
                 if (success)
                 {
                     UserSession.Login = login;
+                   
 
                     if (SaveCurrentUserCheckbox.IsChecked == true || SaveCurrentHipCheckbox.IsChecked == true)
                     {
@@ -208,6 +217,7 @@ namespace IssuingTasksETM.WPF
                         TasksETM.Properties.Settings.Default.RememberMe = true;
                         TasksETM.Properties.Settings.Default.Save();
 
+                        UserSessionForNotify.Login = login;
                         SharedLoginStorage.SaveLogin(login);
                     }
                     else
@@ -215,6 +225,10 @@ namespace IssuingTasksETM.WPF
                         TasksETM.Properties.Settings.Default.SavedLogin = string.Empty;
                         TasksETM.Properties.Settings.Default.RememberMe = false;
                         TasksETM.Properties.Settings.Default.Save();
+
+                        UserSessionForNotify.Login = string.Empty;
+
+                        SharedLoginStorage.SaveLogin(loginForNotify);
                     }
 
                     var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);

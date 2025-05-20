@@ -7,6 +7,7 @@ using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
+using TasksETMCommon.Helpers;
 
 
 namespace TasksETM.WPF
@@ -114,6 +115,7 @@ namespace TasksETM.WPF
             Properties.Settings.Default.SavedLogin = string.Empty;
             Properties.Settings.Default.RememberMe = false;
             Properties.Settings.Default.Save();
+            SharedLoginStorage.SaveLogin(Properties.Settings.Default.SavedLogin);
             LoginWindow loginWindow = new LoginWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             loginWindow.Show();
             Close();

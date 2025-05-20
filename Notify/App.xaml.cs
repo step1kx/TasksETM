@@ -27,7 +27,7 @@ namespace Notify
         {
             base.OnStartup(e);
 
-            _taskService = new TaskService(); // Убедитесь, что TaskService инициализируется правильно
+            _taskService = new TaskService(); 
 
            
 
@@ -36,7 +36,7 @@ namespace Notify
 
         private void SetupNotificationTimer()
         {
-            _notificationTimer = new System.Timers.Timer(10000); // Проверка каждые 60 секунд
+            _notificationTimer = new System.Timers.Timer(60000); 
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
@@ -56,9 +56,9 @@ namespace Notify
                 }
                 else
                 {
+                    return;
                 }
 
-                // Получаем все задания для пользователя
                 var tasks = await _taskService.GetTasksByUserAsync(savedLogin);
                 if (tasks == null || !tasks.Any())
                 {
@@ -76,7 +76,7 @@ namespace Notify
                         ShowNotification(
                             $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
                             $"Вы не приняли задание №{task.TaskNumber} от раздела {task.FromDepart}" +
-                            $"Крайний срок сдачи задания - {task.TaskDeadline}");
+                            $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
                     }
                     // Принято, но не завершено
                     else if (IsTaskAccepted(task, userSection) && !IsTaskCompleted(task, userSection))
@@ -87,7 +87,7 @@ namespace Notify
                             ShowNotification(
                                 $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
                                 $"Вы не выполнили задание №{task.TaskNumber} от раздела {task.FromDepart}" + 
-                                $"Крайний срок сдачи задания - {task.TaskDeadline}");
+                                $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
                         }
                         // Напоминание за 2 дня
                         else if (IsDaysLeft(task.TaskDeadline, 2))
@@ -95,7 +95,7 @@ namespace Notify
                             ShowNotification(
                                 $"Напоминание! Объект {task.ProjectName}",
                                 $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber} от раздела  {task.FromDepart}" +
-                                $"Крайний срок сдачи задания - {task.TaskDeadline}");
+                                $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
                         }
                     }
                 }
