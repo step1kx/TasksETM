@@ -9,6 +9,6 @@ namespace Notify.Interfaces
 {
     public interface ITaskService
     {
-        public Task<List<TaskModel>> GetTasksByUserAsync(string currentLogin);
+        public Task<List<TaskModel>> GetTasksByUserAsync(string departmentName);
     }
 }

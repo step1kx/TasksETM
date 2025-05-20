@@ -11,6 +11,8 @@ using Notify.Models;
 using TasksETM.Models;
 using TasksETMCommon.Helpers;
 using TasksETMCommon.Models;
+using Windows.Services.TargetedContent;
+using Windows.ApplicationModel.UserDataTasks;
 
 namespace Notify
 {
@@ -18,6 +20,8 @@ namespace Notify
     {
         private System.Timers.Timer _notificationTimer; 
         private ITaskService _taskService;
+
+        private static int _notificationCounter = 0;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -32,11 +36,11 @@ namespace Notify
 
         private void SetupNotificationTimer()
         {
-            _notificationTimer = new System.Timers.Timer(3000); // Проверка каждые 60 секунд
+            _notificationTimer = new System.Timers.Timer(10000); // Проверка каждые 60 секунд
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
-            MessageBox.Show("Таймер уведомлений запущен.", "Отладка");
+            //MessageBox.Show("Таймер уведомлений запущен.", "Отладка");
         }
 
         private async Task CheckTasksForNotificationsAsync()
@@ -46,13 +50,12 @@ namespace Notify
 
                 string savedLogin = SharedLoginStorage.LoadLogin();
 
-                if (!string.IsNullOrEmpty(savedLogin))
+                if (!string.IsNullOrWhiteSpace(savedLogin))
                 {
                     UserSessionForNotify.Login = savedLogin;
                 }
                 else
                 {
-                    MessageBox.Show("Файл с логином не найден или пуст.", "Отладка");
                 }
 
                 // Получаем все задания для пользователя
@@ -71,8 +74,9 @@ namespace Notify
                     if (!IsTaskAccepted(task, userSection))
                     {
                         ShowNotification(
-                            $"Не принято: Объект №{task.TaskNumber}",
-                            $"Эй, вы не приняли задание №{task.TaskNumber}!");
+                            $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
+                            $"Вы не приняли задание №{task.TaskNumber} от раздела {task.FromDepart}" +
+                            $"Крайний срок сдачи задания - {task.TaskDeadline}");
                     }
                     // Принято, но не завершено
                     else if (IsTaskAccepted(task, userSection) && !IsTaskCompleted(task, userSection))
@@ -81,15 +85,17 @@ namespace Notify
                         if (IsTaskOverdue(task.TaskDeadline))
                         {
                             ShowNotification(
-                                $"Просрочено: Задание №{task.TaskNumber}",
-                                $"Эй, вы не выполнили задание №{task.TaskNumber}! Дедлайн прошёл!");
+                                $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
+                                $"Вы не выполнили задание №{task.TaskNumber} от раздела {task.FromDepart}" + 
+                                $"Крайний срок сдачи задания - {task.TaskDeadline}");
                         }
                         // Напоминание за 2 дня
                         else if (IsDaysLeft(task.TaskDeadline, 2))
                         {
                             ShowNotification(
-                                $"Напоминание: Задание №{task.TaskNumber}",
-                                $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber}!");
+                                $"Напоминание! Объект {task.ProjectName}",
+                                $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber} от раздела  {task.FromDepart}" +
+                                $"Крайний срок сдачи задания - {task.TaskDeadline}");
                         }
                     }
                 }
@@ -100,13 +106,26 @@ namespace Notify
             }
         }
 
+        //private static void ShowNotification(string title, string message)
+        //{
+        //    new ToastContentBuilder()
+        //        .AddText(title)
+        //        .AddText(message)
+        //        .Show();
+        //}
+
         private static void ShowNotification(string title, string message)
         {
-            MessageBox.Show($"Отправка уведомления: {title}\n{message}", "Отладка");
+            string tag = $"taskNotification{_notificationCounter++}"; 
+
             new ToastContentBuilder()
                 .AddText(title)
                 .AddText(message)
-                .Show();
+                .Show(toast =>
+                {
+                    toast.Tag = tag;
+                    toast.Group = "tasksGroup";
+                });
         }
 
         private bool IsTaskAccepted(TaskModel task, string section)

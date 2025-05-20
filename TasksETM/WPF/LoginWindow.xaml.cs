@@ -67,6 +67,8 @@ namespace IssuingTasksETM.WPF
                     {
                         UserSession.Login = TasksETM.Properties.Settings.Default.SavedLogin;
 
+                        SharedLoginStorage.SaveLogin(UserSession.Login);
+
 
                         System.Diagnostics.Debug.WriteLine($"Логин валиден, открываем ChooseProjectWindow для {UserSession.Login}");
 

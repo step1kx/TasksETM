@@ -16,7 +16,7 @@ namespace Notify.NotificationService
     {
         public readonly string connectionString = "Server=192.168.0.171; Port=5432; User Id=User; Password=123; Database=postgres";
 
-        public async Task<List<TaskModel>> GetTasksByUserAsync(string currentLogin)
+        public async Task<List<TaskModel>> GetTasksByUserAsync(string departmentName)
         {
             var tasks = new List<TaskModel>();
 
@@ -50,15 +50,16 @@ namespace Notify.NotificationService
                     (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'ES') AS ""IsESCompl"",
                     (SELECT ""IsCompleted"" FROM public.""TaskCompleted"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'GIP') As ""IsGIPCompl""
                 FROM public.""Tasks"" t
-                JOIN public.""Project"" p ON p.""ProjectNumber"" = t.""PK_ProjectNumber""
+                JOIN public.""Projects"" p ON p.""ProjectNumber"" = t.""PK_ProjectNumber""
                 WHERE t.""ToDepart"" IN (
-                    SELECT ""departmentName"" FROM public.""Users"" WHERE ""Login"" = @login
+                        SELECT ""departmentName"" FROM public.""Users"" WHERE ""departmentName"" = @departmentName
                 )
                 AND t.""FromDepart"" IS NOT NULL 
                 AND t.""ToDepart"" IS NOT NULL 
                 AND t.""TaskDescription"" IS NOT NULL
                 ", conn))
                 {
+                    cmd.Parameters.AddWithValue("@departmentName", departmentName);
                     try
                     {
                         using (var reader = await cmd.ExecuteReaderAsync())
@@ -72,6 +73,7 @@ namespace Notify.NotificationService
                                     ToDepart = reader["ToDepart"] is DBNull ? string.Empty : reader["ToDepart"]!.ToString()!,
                                     Accepted = reader["AcceptedDepart"] is DBNull ? null : (int)reader["AcceptedDepart"] == 1,
                                     Completed = reader["TaskCompleted"] is DBNull ? null : (int)reader["TaskCompleted"] == 1,
+                                    ProjectName = reader["ProjectName"] is DBNull ? string.Empty : reader["ProjectName"]!.ToString()!,
                                     ScreenshotPath = reader["ScreenShot"] is DBNull ? new byte[0] : (byte[])reader["ScreenShot"],
                                     TaskView = reader["TaskView"] is DBNull ? string.Empty : reader["TaskView"]!.ToString()!,
                                     TaskDescription = reader["TaskDescription"] is DBNull ? string.Empty : reader["TaskDescription"]!.ToString()!,
