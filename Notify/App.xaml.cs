@@ -23,6 +23,8 @@ namespace Notify
     {
         private System.Timers.Timer _notificationTimer; 
         private ITaskService _taskService;
+        private CancellationTokenSource _cts = new CancellationTokenSource();
+
 
         private static int _notificationCounter = 0;
 
@@ -42,11 +44,20 @@ namespace Notify
             SetCurrentProcessExplicitAppUserModelID(AppId);
             CreateStartMenuShortcut();
 
-            //MessageBox.Show("TasksETM", "Уведомления готовы!");
 
-            
 
+            StartPeriodicNotificationCheck();
             SetupNotificationTimer();
+            
+        }
+
+        private async void StartPeriodicNotificationCheck()
+        {
+            while (!_cts.Token.IsCancellationRequested)
+            {
+                await CheckTasksForNotificationsAsync();
+                await Task.Delay(TimeSpan.FromMinutes(5), _cts.Token); // каждые 3 минуты (тест)
+            }
         }
 
         private void CreateStartMenuShortcut()
@@ -57,7 +68,7 @@ namespace Notify
                 ShortcutName);
 
             if (System.IO.File.Exists(shortcutPath))
-                return; // ярлык уже есть
+                return; 
 
             string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
@@ -71,7 +82,6 @@ namespace Notify
             shortcut.IconLocation = exePath;
             shortcut.Save();
 
-            // Присваиваем AppUserModelID
             try
             {
                 dynamic shortcutObject = shell.CreateShortcut(shortcutPath);
@@ -86,40 +96,99 @@ namespace Notify
 
         private void SetupNotificationTimer()
         {
-            _notificationTimer = new System.Timers.Timer(60000); 
+            _notificationTimer = new System.Timers.Timer(600000);
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
-            //MessageBox.Show("Таймер уведомлений запущен.", "Отладка");
+            MessageBox.Show("Таймер уведомлений запущен.", "Отладка");
         }
+
+        //private async Task CheckTasksForNotificationsAsync()
+        //{
+        //    try
+        //    {
+
+        //        string savedLogin = SharedLoginStorage.LoadLogin();
+
+        //        if (!string.IsNullOrWhiteSpace(savedLogin))
+        //        {
+        //            UserSessionForNotify.Login = savedLogin;
+        //            //MessageBox.Show($"Логин: {savedLogin}");
+        //        }
+        //        else
+        //        {
+        //            //MessageBox.Show($"Логин: {savedLogin}");
+        //            return;
+        //        }
+
+        //        var tasks = await _taskService.GetTasksByUserAsync(savedLogin);
+        //        if (tasks == null || !tasks.Any())
+        //        {
+        //            MessageBox.Show("Задания не найдены или список пуст.", "Отладка");
+        //            return;
+        //        }
+
+        //        foreach (var task in tasks)
+        //        {
+        //            string userSection = task.ToDepart;
+
+        //            // Непринято
+        //            if (!IsTaskAccepted(task, userSection))
+        //            {
+        //                ShowNotification(
+        //                    $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
+        //                    $"Вы не приняли задание №{task.TaskNumber} от раздела {task.FromDepart}" +
+        //                    $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
+        //            }
+        //            // Принято, но не завершено
+        //            else if (IsTaskAccepted(task, userSection) && !IsTaskCompleted(task, userSection))
+        //            {
+        //                // Просрочено
+        //                if (IsTaskOverdue(task.TaskDeadline))
+        //                {
+        //                    ShowNotification(
+        //                        $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
+        //                        $"Вы не выполнили задание №{task.TaskNumber} от раздела {task.FromDepart}" + 
+        //                        $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
+        //                }
+        //                // Напоминание за 2 дня
+        //                else if (IsDaysLeft(task.TaskDeadline, 2))
+        //                {
+        //                    ShowNotification(
+        //                        $"Напоминание! Объект {task.ProjectName}",
+        //                        $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber} от раздела  {task.FromDepart}" +
+        //                        $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка при проверке заданий: {ex.Message}", "Отладка: Ошибка");
+        //    }
+        //}
 
         private async Task CheckTasksForNotificationsAsync()
         {
             try
             {
+                var notifyProjects = await _taskService.GetNotifyStatusFromProjectsAsync();
 
                 string savedLogin = SharedLoginStorage.LoadLogin();
-
-                if (!string.IsNullOrWhiteSpace(savedLogin))
-                {
-                    UserSessionForNotify.Login = savedLogin;
-                    //MessageBox.Show($"Логин: {savedLogin}");
-                }
-                else
-                {
-                    //MessageBox.Show($"Логин: {savedLogin}");
+                if (string.IsNullOrWhiteSpace(savedLogin))
                     return;
-                }
 
+                UserSessionForNotify.Login = savedLogin;
                 var tasks = await _taskService.GetTasksByUserAsync(savedLogin);
                 if (tasks == null || !tasks.Any())
-                {
-                    MessageBox.Show("Задания не найдены или список пуст.", "Отладка");
                     return;
-                }
 
                 foreach (var task in tasks)
                 {
+                    // Проверка: включены ли уведомления по проекту
+                    if (!notifyProjects.TryGetValue(task.ProjectName, out bool isNotify) || !isNotify)
+                        continue;
+
                     string userSection = task.ToDepart;
 
                     // Непринято
@@ -133,20 +202,18 @@ namespace Notify
                     // Принято, но не завершено
                     else if (IsTaskAccepted(task, userSection) && !IsTaskCompleted(task, userSection))
                     {
-                        // Просрочено
                         if (IsTaskOverdue(task.TaskDeadline))
                         {
                             ShowNotification(
                                 $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
-                                $"Вы не выполнили задание №{task.TaskNumber} от раздела {task.FromDepart}" + 
+                                $"Вы не выполнили задание №{task.TaskNumber} от раздела {task.FromDepart}" +
                                 $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
                         }
-                        // Напоминание за 2 дня
                         else if (IsDaysLeft(task.TaskDeadline, 2))
                         {
                             ShowNotification(
                                 $"Напоминание! Объект {task.ProjectName}",
-                                $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber} от раздела  {task.FromDepart}" +
+                                $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber} от раздела {task.FromDepart}" +
                                 $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
                         }
                     }
@@ -158,13 +225,6 @@ namespace Notify
             }
         }
 
-        //private static void ShowNotification(string title, string message)
-        //{
-        //    new ToastContentBuilder()
-        //        .AddText(title)
-        //        .AddText(message)
-        //        .Show();
-        //}
 
         private static void ShowNotification(string title, string message)
         {

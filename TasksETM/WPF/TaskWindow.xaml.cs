@@ -32,6 +32,7 @@ namespace IssuingTasksETM.WPF
         private bool _isFiltered;
         private System.Timers.Timer _notificationTimer;
         private string _currentUserSection;
+        private readonly NotifyModel _notifyModel;
 
 
         public TaskWindow(string selectedProject, 
@@ -52,6 +53,7 @@ namespace IssuingTasksETM.WPF
             _taskService = new TaskService(DatabaseConnection.connString);
             _filterTasksService = filterTasksService ?? new FilterTasksService();
             _isFiltered = false;
+            _notifyModel = new NotifyModel();
 
             _currentUserSection = _authService.GetCurrentUserSection();
             tasksDataGrid.ItemsSource = _tasks;
@@ -64,22 +66,28 @@ namespace IssuingTasksETM.WPF
 
         private async void TaskWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            // Загружаем данные только если фильтры не применены
+            bool isNotify = await _projectService.GetNotifyStatusByProjectNameAndUserLogin(_selectedProject, TasksETM.Properties.Settings.Default.SavedLogin);
+            _notifyModel.IsNotify = isNotify;
+
+            this.DataContext = _notifyModel;
+
+
             if (!_isFiltered)
             {
                 await LoadAsync();
-                SetupNotificationTimer();
+                //SetupNotificationTimer();
             }
-        }
-
-        private void SetupNotificationTimer()
-        {
-            _notificationTimer = new System.Timers.Timer(10000); // Проверка каждые 60 секунд
-            _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
-            _notificationTimer.Start();
-
 
         }
+
+        //private void SetupNotificationTimer()
+        //{
+        //    _notificationTimer = new System.Timers.Timer(10000); // Проверка каждые 60 секунд
+        //    _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
+        //    _notificationTimer.Start();
+
+
+        //}
 
         public async Task LoadAsync()
         {
@@ -105,117 +113,117 @@ namespace IssuingTasksETM.WPF
             }
         }
 
-        static void ShowNotification(string title, string message)
-        {
-            new ToastContentBuilder()
-                .AddText(title)
-                .AddText(message)
-                .Show(); // <-- Это автоматически вызывает ToastNotificationManager с нужными параметрами
-        }
+        //static void ShowNotification(string title, string message)
+        //{
+        //    new ToastContentBuilder()
+        //        .AddText(title)
+        //        .AddText(message)
+        //        .Show(); 
+        //}
 
-        private async Task CheckTasksForNotificationsAsync()
-        {
-            try
-            {
-                var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
-                var userTasks = tasks.Where(t => t.ToDepart == _currentUserSection).ToList();
+        //private async Task CheckTasksForNotificationsAsync()
+        //{
+        //    try
+        //    {
+        //        var tasks = await _taskService.GetTasksByProjectAsync(_selectedProject);
+        //        var userTasks = tasks.Where(t => t.ToDepart == _currentUserSection).ToList();
 
-                foreach (var task in userTasks)
-                {
-                    // не принято
-                    if (!IsTaskAccepted(task, _currentUserSection))
-                    {
-                        Dispatcher.Invoke(() =>
-                            ShowNotification($"Не принято. Объект: {_selectedProject}", $"Эй, вы не приняли задание №{task.TaskNumber}!"));
-                    }
-                    else if (IsTaskAccepted(task, _currentUserSection) &&
-                             !IsTaskCompleted(task, _currentUserSection))
-                    {
-                        // Просрочено
-                        if (IsTaskOverdue(task.TaskDeadline))
-                        {
-                            Dispatcher.Invoke(() =>
-                                ShowNotification($"Просрочено. Объект: {_selectedProject}", $"Эй, вы не выполнили задание №{task.TaskNumber}! Дедлайн прошёл!"));
-                        }
-                        // Напоминание за 2 дня
-                        else if (IsDaysLeft(task.TaskDeadline, 2))
-                        {
-                            Dispatcher.Invoke(() =>
-                                ShowNotification($"Напоминание. Объект: {_selectedProject}", $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber}!"));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Dispatcher.Invoke(() =>
-                    ShowNotification("Ошибка", $"Произошла ошибка при проверке заданий: {ex.Message}"));
-            }
-        }
+        //        foreach (var task in userTasks)
+        //        {
+        //            // не принято
+        //            if (!IsTaskAccepted(task, _currentUserSection))
+        //            {
+        //                Dispatcher.Invoke(() =>
+        //                    ShowNotification($"Не принято. Объект: {_selectedProject}", $"Эй, вы не приняли задание №{task.TaskNumber}!"));
+        //            }
+        //            else if (IsTaskAccepted(task, _currentUserSection) &&
+        //                     !IsTaskCompleted(task, _currentUserSection))
+        //            {
+        //                // Просрочено
+        //                if (IsTaskOverdue(task.TaskDeadline))
+        //                {
+        //                    Dispatcher.Invoke(() =>
+        //                        ShowNotification($"Просрочено. Объект: {_selectedProject}", $"Эй, вы не выполнили задание №{task.TaskNumber}! Дедлайн прошёл!"));
+        //                }
+        //                // Напоминание за 2 дня
+        //                else if (IsDaysLeft(task.TaskDeadline, 2))
+        //                {
+        //                    Dispatcher.Invoke(() =>
+        //                        ShowNotification($"Напоминание. Объект: {_selectedProject}", $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber}!"));
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Dispatcher.Invoke(() =>
+        //            ShowNotification("Ошибка", $"Произошла ошибка при проверке заданий: {ex.Message}"));
+        //    }
+        //}
 
 
-        private bool IsTaskAccepted(TaskModel task, string section)
-        {
-            return section switch
-            {
-                "AR" => task.IsAR == true,
-                "VK" => task.IsVK == true,
-                "OV" => task.IsOV == true,
-                "SS" => task.IsSS == true,
-                "ES" => task.IsES == true,
-                "GIP" => task.IsGIP == true,
-                _ => false
-            };
-        }
+        //private bool IsTaskAccepted(TaskModel task, string section)
+        //{
+        //    return section switch
+        //    {
+        //        "AR" => task.IsAR == true,
+        //        "VK" => task.IsVK == true,
+        //        "OV" => task.IsOV == true,
+        //        "SS" => task.IsSS == true,
+        //        "ES" => task.IsES == true,
+        //        "GIP" => task.IsGIP == true,
+        //        _ => false
+        //    };
+        //}
 
-        private bool GetSectionProperty(TaskModel task, string section)
-        {
-            return section switch
-            {
-                "AR" => task.IsAR ?? false,
-                "VK" => task.IsVK ?? false,
-                "OV" => task.IsOV ?? false,
-                "SS" => task.IsSS ?? false,
-                "ES" => task.IsES ?? false,
-                "GIP" => task.IsGIP ?? false,
-                _ => false
-            };
-        }
+        //private bool GetSectionProperty(TaskModel task, string section)
+        //{
+        //    return section switch
+        //    {
+        //        "AR" => task.IsAR ?? false,
+        //        "VK" => task.IsVK ?? false,
+        //        "OV" => task.IsOV ?? false,
+        //        "SS" => task.IsSS ?? false,
+        //        "ES" => task.IsES ?? false,
+        //        "GIP" => task.IsGIP ?? false,
+        //        _ => false
+        //    };
+        //}
 
-        private bool IsTaskCompleted(TaskModel task, string section)
-        {
-            return section switch
-            {
-                "AR" => task.IsARCompl ?? false,
-                "VK" => task.IsVKCompl ?? false,
-                "OV" => task.IsOVCompl ?? false,
-                "SS" => task.IsSSCompl ?? false,
-                "ES" => task.IsESCompl ?? false,
-                "GIP" => task.IsGIPCompl ?? false,
-                _ => false
-            };
-        }
+        //private bool IsTaskCompleted(TaskModel task, string section)
+        //{
+        //    return section switch
+        //    {
+        //        "AR" => task.IsARCompl ?? false,
+        //        "VK" => task.IsVKCompl ?? false,
+        //        "OV" => task.IsOVCompl ?? false,
+        //        "SS" => task.IsSSCompl ?? false,
+        //        "ES" => task.IsESCompl ?? false,
+        //        "GIP" => task.IsGIPCompl ?? false,
+        //        _ => false
+        //    };
+        //}
 
-        private bool IsTaskOverdue(string deadline)
-        {
-            if (string.IsNullOrEmpty(deadline)) return false;
-            if (DateTime.TryParse(deadline, out DateTime deadlineDate))
-            {
-                return DateTime.Now > deadlineDate;
-            }
-            return false;
-        }
+        //private bool IsTaskOverdue(string deadline)
+        //{
+        //    if (string.IsNullOrEmpty(deadline)) return false;
+        //    if (DateTime.TryParse(deadline, out DateTime deadlineDate))
+        //    {
+        //        return DateTime.Now > deadlineDate;
+        //    }
+        //    return false;
+        //}
 
-        private bool IsDaysLeft(string deadline, int days)
-        {
-            if (string.IsNullOrEmpty(deadline)) return false;
-            if (DateTime.TryParse(deadline, out DateTime deadlineDate))
-            {
-                var daysLeft = (deadlineDate - DateTime.Now).Days;
-                return daysLeft > 0 && daysLeft <= days;
-            }
-            return false;
-        }
+        //private bool IsDaysLeft(string deadline, int days)
+        //{
+        //    if (string.IsNullOrEmpty(deadline)) return false;
+        //    if (DateTime.TryParse(deadline, out DateTime deadlineDate))
+        //    {
+        //        var daysLeft = (deadlineDate - DateTime.Now).Days;
+        //        return daysLeft > 0 && daysLeft <= days;
+        //    }
+        //    return false;
+        //}
 
         // Метод для обновления задач с учетом фильтров
         public void UpdateTasks(List<TaskModel> filteredTasks)
@@ -255,6 +263,17 @@ namespace IssuingTasksETM.WPF
                 }
             }
         }
+
+        private async void NotifyCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkbox)
+            {
+                bool newValue = checkbox.IsChecked == true;
+                await _projectService.UpdateNotifyStatusForUserAndProject(_selectedProject, TasksETM.Properties.Settings.Default.SavedLogin, newValue);
+            }
+        }
+
+
 
         public void MovingWin(object sender, EventArgs e)
         {

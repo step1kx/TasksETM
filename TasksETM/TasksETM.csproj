@@ -111,7 +111,6 @@
 
   <ItemGroup>
     <Folder Include="Application\" />
-    <Folder Include="Models\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 

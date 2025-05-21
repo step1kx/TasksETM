@@ -84,9 +84,25 @@
 
                     <StackPanel Orientation="Vertical"
                                 VerticalAlignment="Center"
-                                Width="200"
+                                Width="210"
                                 Margin="15,30,0,40">
-                        <Button x:Name="DeptLoginButton"
+                    <CheckBox IsChecked="{Binding IsNotify, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="0,10,0,50"
+                        Foreground="Wheat"
+                        FontSize="16"
+                        HorizontalAlignment="Left"
+                        Checked="NotifyCheckBox_Changed" 
+                        Unchecked="NotifyCheckBox_Changed" 
+                        VerticalAlignment="Center">
+                        <CheckBox.Content>
+                          <TextBlock>
+                            <Run Text="Отправлять уведомления"/>
+                            <LineBreak/>
+                            <Run Text="по данному объекту"/>
+                          </TextBlock>
+                      </CheckBox.Content>
+                    </CheckBox>
+                    <Button x:Name="DeptLoginButton"
                                 Content="Создание заданий"
                                 Height="40"
                                 Margin="0,0,0,10"
@@ -268,7 +284,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Вид" Binding="{Binding TaskView}" Width="170"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Вид" Binding="{Binding TaskView}" Width="160"/>
                             <DataGridTextColumn  IsReadOnly="True" Header="Описание задания" Binding="{Binding  TaskDescription}" Width="280">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -276,7 +292,7 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="160"/>
+                            <DataGridTextColumn  IsReadOnly="True" Header="Дата создания" Binding="{Binding TaskDate}" Width="150"/>
                             <DataGridTextColumn IsReadOnly="True" Header="Крайний срок" Binding="{Binding TaskDeadline}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>

@@ -73,7 +73,7 @@ namespace TasksETM.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string TaskDeadlineFilter {
             get {
                 return ((string)(this["TaskDeadlineFilter"]));

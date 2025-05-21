@@ -8,13 +8,55 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using Notify.Models;
-using TasksETMCommon;    
+using TasksETMCommon;
+using System.Configuration;
+
 
 namespace Notify.NotificationService
 {
     public class TaskService : ITaskService
     {
-        public readonly string connectionString = "Server=192.168.0.171; Port=5432; User Id=User; Password=123; Database=postgres";
+        private readonly string connectionString;
+
+        public TaskService()
+        {
+            connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        }
+
+        public async Task<Dictionary<string, bool>> GetNotifyStatusFromProjectsAsync()
+        {
+            var result = new Dictionary<string, bool>();
+
+            try
+            {
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+
+                    string query = @"SELECT ""ProjectNameNotify"", ""isNotify"" FROM public.""ProjectsNotify""";
+
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                string projectName = reader["ProjectNameNotify"]?.ToString() ?? "Неизвестный проект";
+                                bool isNotify = reader["isNotify"] != DBNull.Value && (bool)reader["isNotify"];
+
+                                result[projectName] = isNotify;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Что-то пошло не так: {ex.Message}");
+            }
+
+            return result;
+        }
 
         public async Task<List<TaskModel>> GetTasksByUserAsync(string departmentName)
         {
@@ -106,6 +148,9 @@ namespace Notify.NotificationService
 
             return tasks;
         }
+
+
+
     }
 }
 
