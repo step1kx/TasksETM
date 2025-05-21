@@ -56,9 +56,11 @@ namespace Notify
             while (!_cts.Token.IsCancellationRequested)
             {
                 await CheckTasksForNotificationsAsync();
-                await Task.Delay(TimeSpan.FromMinutes(5), _cts.Token); // каждые 3 минуты (тест)
+                await Task.Delay(TimeSpan.FromSeconds(2), _cts.Token); // каждые 3 минуты (тест)
             }
         }
+
+        //FromMinutes(5)
 
         private void CreateStartMenuShortcut()
         {
@@ -96,7 +98,7 @@ namespace Notify
 
         private void SetupNotificationTimer()
         {
-            _notificationTimer = new System.Timers.Timer(600000);
+            _notificationTimer = new System.Timers.Timer(8000);
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
