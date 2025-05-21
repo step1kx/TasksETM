@@ -13,6 +13,9 @@ using TasksETMCommon.Helpers;
 using TasksETMCommon.Models;
 using Windows.Services.TargetedContent;
 using Windows.ApplicationModel.UserDataTasks;
+using System.Runtime.InteropServices;
+using System.IO;
+using IWshRuntimeLibrary;
 
 namespace Notify
 {
@@ -23,15 +26,62 @@ namespace Notify
 
         private static int _notificationCounter = 0;
 
+        private const string AppId = "com.tasks.notify";
+        private const string ShortcutName = "Notify.lnk";
+
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int SetCurrentProcessExplicitAppUserModelID(string appID);
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            _taskService = new TaskService(); 
+            _taskService = new TaskService();
 
-           
+
+            SetCurrentProcessExplicitAppUserModelID(AppId);
+            CreateStartMenuShortcut();
+
+            //MessageBox.Show("TasksETM", "Уведомления готовы!");
+
+            
 
             SetupNotificationTimer();
+        }
+
+        private void CreateStartMenuShortcut()
+        {
+            string shortcutPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.StartMenu),
+                "Programs",
+                ShortcutName);
+
+            if (System.IO.File.Exists(shortcutPath))
+                return; // ярлык уже есть
+
+            string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            var shell = new WshShell();
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);
+            shortcut.TargetPath = exePath;
+            shortcut.WorkingDirectory = Path.GetDirectoryName(exePath);
+            shortcut.Arguments = "";
+            shortcut.WindowStyle = 1;
+            shortcut.Description = "Уведомления от TasksETM";
+            shortcut.IconLocation = exePath;
+            shortcut.Save();
+
+            // Присваиваем AppUserModelID
+            try
+            {
+                dynamic shortcutObject = shell.CreateShortcut(shortcutPath);
+                shortcutObject.AppUserModelID = AppId;
+                shortcutObject.Save();
+            }
+            catch
+            {
+                // не критично, если не получится
+            }
         }
 
         private void SetupNotificationTimer()
@@ -53,9 +103,11 @@ namespace Notify
                 if (!string.IsNullOrWhiteSpace(savedLogin))
                 {
                     UserSessionForNotify.Login = savedLogin;
+                    //MessageBox.Show($"Логин: {savedLogin}");
                 }
                 else
                 {
+                    //MessageBox.Show($"Логин: {savedLogin}");
                     return;
                 }
 

@@ -22,8 +22,7 @@ namespace TasksETM
         {
             try
             {
-                // Получаем путь к ярлыку приложения в меню "Пуск"
-                string appName = "TasksETM"; // Имя вашего приложения
+                string appName = "TasksETM"; 
                 string shortcutPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.Programs),
                     "TasksETM", 
@@ -31,17 +30,15 @@ namespace TasksETM
 
                 if (File.Exists(shortcutPath))
                 {
-                    // Открываем раздел реестра для автозагрузки
                     using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
                         pathToAutoLoading, true))
                     {
-                        // Добавляем приложение в автозагрузку
                         key.SetValue(appName, $"\"{shortcutPath}\"");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Ярлык приложения не найден. Убедитесь, что приложение установлено.");
+                    //MessageBox.Show("Ярлык приложения не найден. Убедитесь, что приложение установлено.");
                 }
             }
             catch (Exception ex)
@@ -72,13 +69,38 @@ namespace TasksETM
         //}
 
 
+        private static void StartNotifyProcess()
+        {
+            try
+            {
+                string exePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "External\\NotifyApp", "Notify.exe");
+                if (File.Exists(exePath))
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        UseShellExecute = true
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось найти файл External\\Notify.exe");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при запуске Notify.exe: {ex.Message}");
+            }
+        }
+
+
 
 
         [STAThread]
         public static void Main()
         {
             AddToStartup();
-
+            StartNotifyProcess();
 
             var app = new Application();
             var dbConnection = new DatabaseConnection();

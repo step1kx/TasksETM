@@ -39,6 +39,26 @@
     </Compile>
   </ItemGroup>
 
+	<ItemGroup>
+		<COMReference Include="IWshRuntimeLibrary">
+			<Guid>{F935DC22-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+			<VersionMajor>1</VersionMajor>
+			<VersionMinor>0</VersionMinor>
+			<Lcid>0</Lcid>
+			<WrapperTool>tlbimp</WrapperTool>
+			<Isolated>false</Isolated>
+		</COMReference>
+		<COMReference Include="IWshRuntimeLibrary">
+		  <WrapperTool>tlbimp</WrapperTool>
+		  <VersionMinor>0</VersionMinor>
+		  <VersionMajor>1</VersionMajor>
+		  <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
+		  <Lcid>0</Lcid>
+		  <Isolated>false</Isolated>
+		  <EmbedInteropTypes>true</EmbedInteropTypes>
+		</COMReference>
+	</ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

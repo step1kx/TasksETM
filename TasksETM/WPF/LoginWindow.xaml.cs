@@ -45,6 +45,10 @@ namespace IssuingTasksETM.WPF
 
             CheckSavedLoginAsync();
 
+            SharedLoginStorage.SaveLogin(loginForNotify);
+
+            UserSessionForNotify.Login = string.Empty;
+
             FillComboBoxAsync();
 
             
