@@ -2,6 +2,7 @@
 using IssuingTasksETM.WPF;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using TasksETM.Interfaces;
 using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
@@ -131,6 +132,14 @@ namespace TasksETM.WPF
         private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        public void MovingWin(object sender, EventArgs e)
+        {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 }

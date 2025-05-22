@@ -8,6 +8,7 @@
         Title="ChooseProjectWindow" 
         Height="450"
         Width="500"
+        MouseDown="MovingWin"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="NoResize"

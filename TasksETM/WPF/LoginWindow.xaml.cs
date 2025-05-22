@@ -11,6 +11,7 @@ using TasksETM.Interfaces.ITasks;
 using TasksETMCommon.Models;
 using TasksETMCommon.Helpers;
 using Windows.Devices.Sensors;
+using TasksETM.WPF.HelpingWindow;
 
 namespace IssuingTasksETM.WPF
 {
@@ -248,6 +249,13 @@ namespace IssuingTasksETM.WPF
             {
                 MessageBox.Show($"Ошибка при авторизации: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void HelpLoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            var helpLoginWindow = new HelpLoginWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+            helpLoginWindow.Show();
+            this.Close();
         }
 
 

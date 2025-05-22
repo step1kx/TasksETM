@@ -100,6 +100,23 @@
                                             />
                         </Button.Effect>
                     </Button>
+                    <Button x:Name="HelpLoginButton"
+                           Content="Вспомогательная информация"
+                           Height="40"
+                           Background="#3A3A55"
+                           Foreground="Wheat"
+                           BorderThickness="0"
+                           Margin="0,100,0,10"
+                           Style="{StaticResource CustomButtonStyle}"
+                           Cursor="Hand"
+                           Click="HelpLoginButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                                            Color="Black"
+                                            Opacity="0.3"
+                                            />
+                        </Button.Effect>
+                    </Button>
                 </StackPanel>
 
                 <!-- Login Panel -->

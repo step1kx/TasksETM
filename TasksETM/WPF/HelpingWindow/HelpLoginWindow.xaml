@@ -1,0 +1,129 @@
+﻿<Window x:Class="TasksETM.WPF.HelpingWindow.HelpLoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TasksETM.WPF.HelpingWindow"
+        mc:Ignorable="d"
+        Title="HelpLoginWindow" 
+        Height="500" 
+        Width="550" 
+        MouseDown="MovingWin"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="\WPF\Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Background="#272537"
+        CornerRadius="20">
+        <Grid>
+            <Grid Height="50" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ETM"
+                     FontSize="22"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Center"
+                     Foreground="Wheat"
+                     Margin="10,0,0,0"/>
+
+
+                <Button Content="X" Grid.Column="1" Click="MinimizeWindow_Click"
+                  Style="{StaticResource CustomButtonStyle}"
+                  Background="#3A3A55"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" 
+                  FontWeight="Bold" 
+                  Width="30" 
+                  Height="30"
+                  Foreground="Wheat"
+                  FontSize="20" Cursor="Hand" Margin="20, 0, 20, 0"/>
+                          <Button Content="&lt;-" Grid.Column="1" Click="ToPrevWindow_Click"
+                  Style="{StaticResource CustomButtonStyle}"
+                  Background="#3A3A55"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" 
+                  Width="50" 
+                  Height="30"
+                  Foreground="Wheat"
+                  FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
+            </Grid>
+            <FlowDocumentScrollViewer Margin="0,45,0,10" Foreground="Wheat">
+                <FlowDocument>
+                    <Paragraph TextAlignment="Center">
+                        <Bold>Памятка для входа в программу</Bold>
+                    </Paragraph>
+                    <List MarkerStyle="Decimal">
+                        <ListItem>
+                            <Paragraph>
+                                У каждого отдела есть свой логин и свой пароль, ниже представлен их список:
+                            </Paragraph>
+                            <List>
+                                <ListItem>
+                                    <Paragraph>AR — AR</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>VK — VK</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>ES — ES</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>SS — SS</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>OV — OV</Paragraph>
+                                </ListItem>
+                            </List>
+                        </ListItem>
+                        <ListItem>
+                            <Paragraph>
+                                Для главных инженеров предусмотрен отдельный экран, ниже представлен их логин и пароль:
+                            </Paragraph>
+                            <List>
+                                <ListItem>
+                                    <Paragraph>GIP — GIP</Paragraph>
+                                </ListItem>
+                            </List>
+                        </ListItem>
+                        <ListItem>
+                            <Paragraph>
+                                Если сотрудник не нажмёт кнопку
+                                <Bold>"Запомнить меня"</Bold> , то при следующем входе в программу она запросит у него логин и пароль.
+                            </Paragraph>
+                        </ListItem>
+                    </List>
+                    <Paragraph TextAlignment="Center" Margin="0,50,0,0">
+                        <Bold>Памятка об интерфейсе программы</Bold>
+                    </Paragraph>
+                    <List MarkerStyle="Decimal">
+                        <ListItem>
+                            <Paragraph>
+                                Ниже представлены виды кнопок и их функционал
+                            </Paragraph>
+                            <List>
+                                <ListItem>
+                                    <Paragraph>Кнопка с "&lt;-" - Возвращает на предыдущий экран</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>Кнопка с "X" — Сворачивает программу (она по-прежнему будет работать)</Paragraph>
+                                </ListItem>
+                            </List>
+                        </ListItem>
+                    </List>
+                </FlowDocument>
+            </FlowDocumentScrollViewer>
+
+        </Grid>
+    </Border>
+</Window>

@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Icons\taskSoftwareIcon.ico" />
+    <None Remove="Icons\notifyIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +57,12 @@
 		  <Isolated>false</Isolated>
 		  <EmbedInteropTypes>true</EmbedInteropTypes>
 		</COMReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Icons\notifyIcon.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
   <ItemGroup>

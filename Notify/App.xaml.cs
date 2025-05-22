@@ -16,6 +16,7 @@ using Windows.ApplicationModel.UserDataTasks;
 using System.Runtime.InteropServices;
 using System.IO;
 using IWshRuntimeLibrary;
+using Windows.UI.Notifications;
 
 namespace Notify
 {
@@ -42,25 +43,10 @@ namespace Notify
 
 
             SetCurrentProcessExplicitAppUserModelID(AppId);
-            CreateStartMenuShortcut();
 
-
-
-            StartPeriodicNotificationCheck();
             SetupNotificationTimer();
             
         }
-
-        private async void StartPeriodicNotificationCheck()
-        {
-            while (!_cts.Token.IsCancellationRequested)
-            {
-                await CheckTasksForNotificationsAsync();
-                await Task.Delay(TimeSpan.FromMinutes(1), _cts.Token); 
-            }
-        }
-
-        //FromMinutes(5)
 
         private void CreateStartMenuShortcut()
         {
@@ -70,7 +56,7 @@ namespace Notify
                 ShortcutName);
 
             if (System.IO.File.Exists(shortcutPath))
-                return; 
+                return;
 
             string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
@@ -101,7 +87,6 @@ namespace Notify
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
-            //MessageBox.Show("Таймер уведомлений запущен.", "Отладка");
         }
 
 
@@ -170,16 +155,13 @@ namespace Notify
 
         private static void ShowNotification(string title, string message)
         {
-            string tag = $"taskNotification{_notificationCounter++}"; 
-
-            new ToastContentBuilder()
+            string tag = $"taskNotification{_notificationCounter++}";
+            var toastContent = new ToastContentBuilder()
                 .AddText(title)
                 .AddText(message)
-                .Show(toast =>
-                {
-                    toast.Tag = tag;
-                    toast.Group = "tasksGroup";
-                });
+                .GetToastContent();
+            var toast = new ToastNotification(toastContent.GetXml()) { Tag = tag, Group = "tasksGroup" };
+            ToastNotificationManager.CreateToastNotifier(AppId).Show(toast);
         }
 
         private bool IsTaskAccepted(TaskModel task, string section)
