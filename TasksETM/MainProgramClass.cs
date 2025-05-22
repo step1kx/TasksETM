@@ -18,34 +18,34 @@ namespace TasksETM
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int SetCurrentProcessExplicitAppUserModelID(string appID);
 
-        private static void AddToStartup()
-        {
-            try
-            {
-                string appName = "TasksETM"; 
-                string shortcutPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Programs),
-                    "TasksETM", 
-                    $"{appName}.appref-ms"); 
+        //private static void AddToStartup()
+        //{
+        //    try
+        //    {
+        //        string appName = "TasksETM"; 
+        //        string shortcutPath = Path.Combine(
+        //            Environment.GetFolderPath(Environment.SpecialFolder.Programs),
+        //            "TasksETM", 
+        //            $"{appName}.appref-ms"); 
 
-                if (File.Exists(shortcutPath))
-                {
-                    using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
-                        pathToAutoLoading, true))
-                    {
-                        key.SetValue(appName, $"\"{shortcutPath}\"");
-                    }
-                }
-                else
-                {
-                    //MessageBox.Show("Ярлык приложения не найден. Убедитесь, что приложение установлено.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при добавлении в автозагрузку: {ex.Message}");
-            }
-        }
+        //        if (File.Exists(shortcutPath))
+        //        {
+        //            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
+        //                pathToAutoLoading, true))
+        //            {
+        //                key.SetValue(appName, $"\"{shortcutPath}\"");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Ярлык приложения не найден. Убедитесь, что приложение установлено.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка при добавлении в автозагрузку: {ex.Message}");
+        //    }
+        //}
 
         //private static void RemoveFromStartup()
         //{
@@ -99,8 +99,8 @@ namespace TasksETM
         [STAThread]
         public static void Main()
         {
-            AddToStartup();
-            StartNotifyProcess();
+            //AddToStartup();
+            //StartNotifyProcess();
 
             var app = new Application();
             var dbConnection = new DatabaseConnection();

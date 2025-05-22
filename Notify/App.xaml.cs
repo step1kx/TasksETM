@@ -56,7 +56,7 @@ namespace Notify
             while (!_cts.Token.IsCancellationRequested)
             {
                 await CheckTasksForNotificationsAsync();
-                await Task.Delay(TimeSpan.FromSeconds(2), _cts.Token); // каждые 3 минуты (тест)
+                await Task.Delay(TimeSpan.FromMinutes(1), _cts.Token); 
             }
         }
 
@@ -92,83 +92,18 @@ namespace Notify
             }
             catch
             {
-                // не критично, если не получится
             }
         }
 
         private void SetupNotificationTimer()
         {
-            _notificationTimer = new System.Timers.Timer(8000);
+            _notificationTimer = new System.Timers.Timer(600000);
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
-            MessageBox.Show("Таймер уведомлений запущен.", "Отладка");
+            //MessageBox.Show("Таймер уведомлений запущен.", "Отладка");
         }
 
-        //private async Task CheckTasksForNotificationsAsync()
-        //{
-        //    try
-        //    {
-
-        //        string savedLogin = SharedLoginStorage.LoadLogin();
-
-        //        if (!string.IsNullOrWhiteSpace(savedLogin))
-        //        {
-        //            UserSessionForNotify.Login = savedLogin;
-        //            //MessageBox.Show($"Логин: {savedLogin}");
-        //        }
-        //        else
-        //        {
-        //            //MessageBox.Show($"Логин: {savedLogin}");
-        //            return;
-        //        }
-
-        //        var tasks = await _taskService.GetTasksByUserAsync(savedLogin);
-        //        if (tasks == null || !tasks.Any())
-        //        {
-        //            MessageBox.Show("Задания не найдены или список пуст.", "Отладка");
-        //            return;
-        //        }
-
-        //        foreach (var task in tasks)
-        //        {
-        //            string userSection = task.ToDepart;
-
-        //            // Непринято
-        //            if (!IsTaskAccepted(task, userSection))
-        //            {
-        //                ShowNotification(
-        //                    $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
-        //                    $"Вы не приняли задание №{task.TaskNumber} от раздела {task.FromDepart}" +
-        //                    $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
-        //            }
-        //            // Принято, но не завершено
-        //            else if (IsTaskAccepted(task, userSection) && !IsTaskCompleted(task, userSection))
-        //            {
-        //                // Просрочено
-        //                if (IsTaskOverdue(task.TaskDeadline))
-        //                {
-        //                    ShowNotification(
-        //                        $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
-        //                        $"Вы не выполнили задание №{task.TaskNumber} от раздела {task.FromDepart}" + 
-        //                        $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
-        //                }
-        //                // Напоминание за 2 дня
-        //                else if (IsDaysLeft(task.TaskDeadline, 2))
-        //                {
-        //                    ShowNotification(
-        //                        $"Напоминание! Объект {task.ProjectName}",
-        //                        $"Осталось 2 дня до дедлайна для задания №{task.TaskNumber} от раздела  {task.FromDepart}" +
-        //                        $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Ошибка при проверке заданий: {ex.Message}", "Отладка: Ошибка");
-        //    }
-        //}
 
         private async Task CheckTasksForNotificationsAsync()
         {
@@ -178,9 +113,14 @@ namespace Notify
 
                 string savedLogin = SharedLoginStorage.LoadLogin();
                 if (string.IsNullOrWhiteSpace(savedLogin))
+                {
+                    //MessageBox.Show($"Логин       хранимый в памяти: {savedLogin}");
                     return;
+                }
+                    
 
-                UserSessionForNotify.Login = savedLogin;
+                //MessageBox.Show($"Логин, хранимый в памяти: {savedLogin}");
+
                 var tasks = await _taskService.GetTasksByUserAsync(savedLogin);
                 if (tasks == null || !tasks.Any())
                     return;
