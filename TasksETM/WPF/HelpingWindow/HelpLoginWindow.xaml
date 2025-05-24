@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="HelpLoginWindow" 
         Height="500" 
-        Width="550" 
+        Width="600" 
         MouseDown="MovingWin"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
@@ -65,7 +65,7 @@
                     </Paragraph>
                     <List MarkerStyle="Decimal">
                         <ListItem>
-                            <Paragraph>
+                            <Paragraph  LineHeight="24">
                                 У каждого отдела есть свой логин и свой пароль, ниже представлен их список:
                             </Paragraph>
                             <List>
@@ -87,7 +87,7 @@
                             </List>
                         </ListItem>
                         <ListItem>
-                            <Paragraph>
+                            <Paragraph  LineHeight="24">
                                 Для главных инженеров предусмотрен отдельный экран, ниже представлен их логин и пароль:
                             </Paragraph>
                             <List>
@@ -97,7 +97,7 @@
                             </List>
                         </ListItem>
                         <ListItem>
-                            <Paragraph>
+                            <Paragraph LineHeight="24">
                                 Если сотрудник не нажмёт кнопку
                                 <Bold>"Запомнить меня"</Bold> , то при следующем входе в программу она запросит у него логин и пароль.
                             </Paragraph>
@@ -108,15 +108,15 @@
                     </Paragraph>
                     <List MarkerStyle="Decimal">
                         <ListItem>
-                            <Paragraph>
+                            <Paragraph LineHeight="24">
                                 Ниже представлены виды кнопок и их функционал
                             </Paragraph>
                             <List>
                                 <ListItem>
-                                    <Paragraph>Кнопка с "&lt;-" - Возвращает на предыдущий экран</Paragraph>
+                                    <Paragraph LineHeight="24">Кнопка с "&lt;-" - Возвращает на предыдущий экран</Paragraph>
                                 </ListItem>
                                 <ListItem>
-                                    <Paragraph>Кнопка с "X" — Сворачивает программу (она по-прежнему будет работать)</Paragraph>
+                                    <Paragraph LineHeight="24">Кнопка с "X" — Сворачивает программу (она по-прежнему будет работать)</Paragraph>
                                 </ListItem>
                             </List>
                         </ListItem>

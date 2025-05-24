@@ -13,6 +13,7 @@ using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
 using TasksETM.WPF;
+using TasksETM.WPF.HelpingWindow;
 
 namespace IssuingTasksETM.WPF
 {
@@ -30,7 +31,7 @@ namespace IssuingTasksETM.WPF
         private readonly IAuthService _authService;
         private readonly IFilterTasksService _filterTasksService;
         private bool _isFiltered;
-        private System.Timers.Timer _notificationTimer;
+        //private System.Timers.Timer _notificationTimer;
         private string _currentUserSection;
         private readonly NotifyModel _notifyModel;
 
@@ -283,19 +284,10 @@ namespace IssuingTasksETM.WPF
             }
         }
 
-        private void StopNotificationTimer()
-        {
-            if (_notificationTimer != null)
-            {
-                _notificationTimer.Stop();
-                _notificationTimer.Dispose();
-                _notificationTimer = null;
-            }
-        }
+        
 
         private void CreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {
-            StopNotificationTimer();
             var createTaskWindow = new CreateTaskWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             createTaskWindow.Show();
             Close();
@@ -303,7 +295,6 @@ namespace IssuingTasksETM.WPF
 
         private void FilterWindow_Click(object sender, RoutedEventArgs e)
         {
-            StopNotificationTimer();
             var filterTaskWindow = new FilterWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _taskService, _filterTasksService);
             filterTaskWindow.Show();
             Close();
@@ -313,7 +304,6 @@ namespace IssuingTasksETM.WPF
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
-            StopNotificationTimer();
             ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
             chooseProjectWindow.Show();
             Close();
@@ -321,7 +311,6 @@ namespace IssuingTasksETM.WPF
 
         private async void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            StopNotificationTimer();
             var closeWindow = new CloseSoftwareWindow();
             closeWindow.Show();
             this.Close(); 
@@ -349,6 +338,18 @@ namespace IssuingTasksETM.WPF
             imageWindow.SetImageSource(imageSource);
             imageWindow.ShowDialog();
         }
+
+        private void HelpTasksButton_Click(object sender, RoutedEventArgs e)
+        {
+            HelpTasksWindow helpTasksWindow = new HelpTasksWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+            helpTasksWindow.Show();
+            this.Close();
+
+        }
+
+
+
+
 
         private void tasksDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

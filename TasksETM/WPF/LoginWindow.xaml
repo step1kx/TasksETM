@@ -101,7 +101,7 @@
                         </Button.Effect>
                     </Button>
                     <Button x:Name="HelpLoginButton"
-                           Content="Вспомогательная информация"
+                           Content="❔ Справка"
                            Height="40"
                            Background="#3A3A55"
                            Foreground="Wheat"

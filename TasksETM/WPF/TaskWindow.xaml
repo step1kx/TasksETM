@@ -135,7 +135,24 @@
                                 />
                             </Button.Effect>
                         </Button>
-                    </StackPanel>
+                    <Button x:Name="HelpTasksButton"
+                                Content="❔ Справка"
+                                Height="40"
+                                Background="#3A3A55"
+                                Foreground="Wheat"
+                                Margin="0,50,0,0"
+                                BorderThickness="0"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Cursor="Hand"
+                                Click="HelpTasksButton_Click">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
+                                Color="Black"
+                                Opacity="0.3"
+                                />
+                        </Button.Effect>
+                    </Button>
+                </StackPanel>
                 <Border Grid.Column="1"
                     CornerRadius="40"
                     Background="#272537"
