@@ -25,9 +25,15 @@
 
 ## Скриншоты работы программы
 
-| Начальное окно | Окно выбора проекта | Окно отображения задания | Окно создания заданий | Окно фильтрации заданий |   
-|--------------|------------------------|  
-| ![main](screenshots/main.png) | ![create](screenshots/create.png) |
+| Начальное окно (и его вариации) |     
+![mainFirst](https://github.com/step1kx/TasksETM/tree/master/screenshots/startWindowDepartment.png)  
+![mainSecond](https://github.com/step1kx/TasksETM/tree/master/screenshots/startWindowGIP.png)    
+![mainSecond](https://github.com/step1kx/TasksETM/tree/master/screenshots/startWindowComboBox.png)   
+| Окно выбора проекта |     
+| Окно отображения задания |     
+| Окно создания заданий |     
+| Окно фильтрации заданий |        
+
 
 ---
 
