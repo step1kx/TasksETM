@@ -33,10 +33,25 @@
 
 ![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowComboBox.png)     
 
-| Окно выбора проекта |     
-| Окно отображения задания |     
-| Окно создания заданий |     
-| Окно фильтрации заданий |        
+| Окно выбора проекта |    
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/chooseProjectsWindow.png)   
+
+| Окно отображения задания |
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskWindow.png)
+
+| Окно создания заданий |
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskCreateWindowFirst.png)  
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskCreateWindowSecond.png)
+
+| Окно фильтрации заданий |
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskFilteredWindow.png)  
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskFilteredWindowSecond.png)
 
 
 ---
