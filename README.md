@@ -25,34 +25,45 @@
 
 ## Скриншоты работы программы
 
-| Начальное окно (и его вариации) |       
+## Скриншоты работы программы
 
-![mainFirst](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowDepartment.png)    
+<h3 align="center">Начальное окно (и его вариации)</h3>
 
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowGIP.png)      
+<p align="center">
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowDepartment.png" width="600"/>
+  <br/>
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowGIP.png" width="600"/>
+  <br/>
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowComboBox.png" width="600"/>
+</p>
 
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowComboBox.png)     
+<h3 align="center">Окно выбора проекта</h3>
 
-| Окно выбора проекта |    
+<p align="center">
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/chooseProjectsWindow.png" width="600"/>
+</p>
 
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/chooseProjectsWindow.png)   
+<h3 align="center">Окно отображения задания</h3>
 
-| Окно отображения задания |
+<p align="center">
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/taskWindow.png" width="600"/>
+</p>
 
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskWindow.png)
+<h3 align="center">Окно создания заданий</h3>
 
-| Окно создания заданий |
+<p align="center">
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/taskCreateWindowFirst.png" width="600"/>
+  <br/>
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/taskCreateWindowSecond.png" width="600"/>
+</p>
 
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskCreateWindowFirst.png)  
+<h3 align="center">Окно фильтрации заданий</h3>
 
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskCreateWindowSecond.png)
-
-| Окно фильтрации заданий |
-
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskFilteredWindow.png)  
-
-![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/taskFilteredWindowSecond.png)
-
+<p align="center">
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/taskFilteredWindow.png" width="600"/>
+  <br/>
+  <img src="https://github.com/step1kx/TasksETM/raw/master/screenshots/taskFilteredWindowSecond.png" width="600"/>
+</p>
 
 ---
 
