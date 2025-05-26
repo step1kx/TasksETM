@@ -25,10 +25,14 @@
 
 ## Скриншоты работы программы
 
-| Начальное окно (и его вариации) |     
-![mainFirst](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowDepartment.png)  
-![mainSecond](https://github.com/step1kx/TasksETM/tree/master/screenshots/startWindowGIP.png)    
-![mainSecond](https://github.com/step1kx/TasksETM/tree/master/screenshots/startWindowComboBox.png)   
+| Начальное окно (и его вариации) |       
+
+![mainFirst](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowDepartment.png)    
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowGIP.png)      
+
+![mainSecond](https://github.com/step1kx/TasksETM/raw/master/screenshots/startWindowComboBox.png)     
+
 | Окно выбора проекта |     
 | Окно отображения задания |     
 | Окно создания заданий |     
