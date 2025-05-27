@@ -136,7 +136,7 @@
                             </Button.Effect>
                         </Button>
                     <Button x:Name="HelpTasksButton"
-                                Content="❔ Справка"
+                                Content="❔ Справка об фильтрации заданий"
                                 Height="40"
                                 Background="#3A3A55"
                                 Foreground="Wheat"

@@ -109,6 +109,23 @@
                             />
                         </Button.Effect>
                     </Button>
+                    <Button x:Name="HelpCreateTaskWindow"
+                    Content="❔  Алгоритм создания задания"
+                    Height="40"
+                    Margin="0,50,0,0"
+                    Background="#3A3A55"
+                    Foreground="Wheat"
+                    BorderThickness="0"
+                    Style="{StaticResource CustomButtonStyle}"
+                    Cursor="Hand"
+                    Click="HelpCreateTaskWindow_Click">
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="2"
+                    Color="Black"
+                    Opacity="0.3"
+                    />
+                        </Button.Effect>
+                    </Button>
                     <Button x:Name="CreateTaskButton"
                          Content="Создать задание"
                          Height="40"
@@ -188,7 +205,7 @@
                                 Margin="0,235,0,0"/>
                             <TextBox
                             Width="200px"
-                            Height="25px"
+                            Height="22px"
                             Margin="50,272,50,0"
                             VerticalAlignment="Top"
                             Background="#3A3A55"

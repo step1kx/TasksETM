@@ -12,6 +12,7 @@ using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
 using TasksETM.WPF;
+using TasksETM.WPF.HelpingWindow;
 
 namespace IssuingTasksETM.WPF
 {
@@ -29,6 +30,8 @@ namespace IssuingTasksETM.WPF
         private readonly IProjectService _projectService;
         private readonly IAuthService _authService;
         private readonly IFilterTasksService _filterTasksService;
+
+        private readonly HelpCreateTaskWindow _helpCreateTaskWindow;
 
         public static string loggedInUser = UserSession.Login;
         public CreateTaskWindow(string selectedProject, 
@@ -240,6 +243,13 @@ namespace IssuingTasksETM.WPF
             Close();
         }
 
+        private void HelpCreateTaskWindow_Click(object sender, RoutedEventArgs e)
+        {
+            HelpCreateTaskWindow helpCreateTaskWindow = new HelpCreateTaskWindow(_selectedProject, _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+            helpCreateTaskWindow.Show();
+            this.Close();
+        }
+
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
@@ -249,8 +259,7 @@ namespace IssuingTasksETM.WPF
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            _taskWindow.Show();
-            Close();
+            this.WindowState = WindowState.Minimized;
         }
     }
 }

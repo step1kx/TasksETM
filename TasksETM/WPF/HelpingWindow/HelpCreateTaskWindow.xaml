@@ -1,12 +1,12 @@
-﻿<Window x:Class="TasksETM.WPF.HelpingWindow.HelpTasksWindow"
+﻿<Window x:Class="TasksETM.WPF.HelpingWindow.HelpCreateTaskWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TasksETM.WPF.HelpingWindow"
         mc:Ignorable="d"
-        Title="HelpTasksWindow" 
-        Height="500" 
+        Title="HelpCreateTaskWindow" 
+        Height="460" 
         Width="600" 
         MouseDown="MovingWin"
         WindowStartupLocation="CenterScreen"
@@ -60,48 +60,63 @@
             </Grid>
             <FlowDocumentScrollViewer Margin="0,45,0,10" Foreground="Wheat">
                 <FlowDocument>
-                    <Paragraph TextAlignment="Center" Margin="0,50,0,0"  FontSize="20" FontWeight="Bold" LineHeight="40">
-                        Фильтрация заданий
+                    <Paragraph TextAlignment="Center" Margin="0,50,0,0" FontSize="20" FontWeight="Bold" LineHeight="40">
+                        Алгоритм создания задания
                     </Paragraph>
                     <List MarkerStyle="Decimal">
                         <ListItem>
                             <Paragraph Margin="0 0 0 30" LineHeight="24">
-                                Фильтры находятся на двух экранах. Для их переключения существует меню с 2 кнопками: 
+                                На стартовом экране "Общая информация" заполнить следущие параметры:
                             </Paragraph>
                             <List MarkerStyle="LowerLatin" LineHeight="25">
                                 <ListItem>
-                                    <Paragraph>
-                                        По разделам
-                                    </Paragraph>
+                                    <Paragraph>От кого отдела задание</Paragraph>
                                 </ListItem>
                                 <ListItem>
-                                    <Paragraph>
-                                        По выполнению / дате
-                                    </Paragraph>
+                                    <Paragraph>Какому разделу задание</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>Дату сдачи </Paragraph>
+                                </ListItem>
+                            </List>
+                            <Paragraph Margin="0 0 0 30" LineHeight="24">
+                                Дата не должна указывать на прошлые дни и не быть сегодняшним числом.
+                                <LineBreak></LineBreak>
+                                Дата записывается в формате ДД.ММ.ГГГГ (пр. 27.05.2025)
+                            </Paragraph>
+                        </ListItem>
+                        
+                        <ListItem>
+                            <Paragraph Margin="0 0 0 30" LineHeight="24">
+                                Нажать на кнопку "Описание, вид, скриншот", заполнить параметры:
+                            </Paragraph>
+                            <List MarkerStyle="LowerLatin" LineHeight="25">
+                                <ListItem>
+                                    <Paragraph>Вид</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>Описание</Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>Скриншот</Paragraph>
                                 </ListItem>
                             </List>
                         </ListItem>
                         <ListItem>
                             <Paragraph Margin="0 0 0 30" LineHeight="24">
-                                Фильтрация происходит по всем возможным пунктам в заданииях. Проверяйте правильность заполнения, 
-                                чтобы задания корректно отобразились после применения фильтров.
-                                <LineBreak>
-                                </LineBreak>
-                                Если после применения фильтров задания не отображаются, значит, что заданий, соотвествующие данным в фильтре, нет
+                                Проверить корректность заполнения. Между экранам можно переключаться нажатием на кнопки в меню слева от экрана заполнения.
                             </Paragraph>
                         </ListItem>
                         <ListItem>
                             <Paragraph Margin="0 0 0 30" LineHeight="24">
-                                Важно! После выбора всех параметров, которые вам нужны для фильтрации, следует нажимать на кнопку "Применить фильтры." 
-                                В противном случае фильтры не применятся к заданиям.
+                                Если вы нажали кнопку назад ( "&lt;-" ), то данные, которые вы заполняли, не сохранятся. 
                             </Paragraph>
-                            
                         </ListItem>
                         <ListItem>
                             <Paragraph Margin="0 0 0 30" LineHeight="24">
-                                Фильтры сохраняются после применения и выхода из окна фильтрации, если вы что-то выбрали.
-                                Кнопка "Сброс фильтров" осуществляет сброс всех текущих фильтров и отображения окна задания
-                                в первоначальном виде.
+                                После заполнения всех параметров и их проверки на корректность, вы можете нажимать на кнопку "Создать задание"
+                                <LineBreak></LineBreak>
+                                После небольшого загрузачного экрана, вам отобразиться экран с заданиями, где вы сможете увидеть созданное вами задание.
                             </Paragraph>
                         </ListItem>
                     </List>

@@ -487,8 +487,7 @@ namespace IssuingTasksETM.WPF
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            _taskWindow.Show();
-            Close();
+            this.WindowState = WindowState.Minimized;
         }
     }
 

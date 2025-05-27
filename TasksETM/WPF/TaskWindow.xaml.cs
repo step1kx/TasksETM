@@ -106,11 +106,10 @@ namespace IssuingTasksETM.WPF
                     tasksDataGrid.ItemsSource = _tasks;
                     tasksDataGrid.Items.Refresh();
                 }
-                _isFiltered = false; // Сбрасываем флаг фильтрации
+                _isFiltered = false; 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Пока что никто не добавил заданий в этот проект.");
             }
         }
 
@@ -309,16 +308,16 @@ namespace IssuingTasksETM.WPF
             Close();
         }
 
-        private async void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            var closeWindow = new CloseSoftwareWindow();
-            closeWindow.Show();
-            this.Close(); 
+        //private async void CancelButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var closeWindow = new CloseSoftwareWindow();
+        //    closeWindow.Show();
+        //    this.Close(); 
 
-            await closeWindow.UpdateProgressBarAsync(); 
-            Application.Current.Shutdown();
+        //    await closeWindow.UpdateProgressBarAsync(); 
+        //    Application.Current.Shutdown();
 
-        }
+        //}
 
         private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
