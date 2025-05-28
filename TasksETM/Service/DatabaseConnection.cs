@@ -1,6 +1,7 @@
 ﻿using IssuingTasksETM.Interfaces;
 using Npgsql;
 using System;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,8 +10,14 @@ namespace TasksETM.Service
 {
     public class DatabaseConnection : IDatabaseConnection
     {
-        public static string connString = "Server=192.168.0.171; Port=5432; User Id=User; Password=123; Database=postgres";
+        public static string connString;
         private NpgsqlConnection connection;
+
+        public DatabaseConnection()
+        {
+            connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        }
+
 
         public bool Connected()
         {

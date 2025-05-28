@@ -16,7 +16,7 @@ namespace Notify.NotificationService
 {
     public class TaskService : ITaskService
     {
-        private readonly string connectionString;
+        public readonly string connectionString;
 
         public TaskService()
         {
