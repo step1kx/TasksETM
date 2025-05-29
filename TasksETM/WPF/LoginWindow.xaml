@@ -122,7 +122,7 @@
                 <!-- Login Panel -->
                 <Border Grid.Column="1"
                        CornerRadius="20"
-                       Height="300"
+                       Height="360"
                        Width="300"
                        Background="#272537"
                        Margin="0,0,50,30">
@@ -200,21 +200,39 @@
                                       Foreground="Wheat"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Top"
-                                      Margin="0,20,0,0"/>
+                                      Margin="0,0,0,0"/>
                             <TextBlock
-                                      Text="Логин"
+                                      Text="Логин отдела"
                                       FontSize="16"
                                       Foreground="Wheat"
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Top"
-                                      Margin="50,70,0,0"
+                                      Margin="50,50,0,0"
                                       />
                             <ComboBox
                                     x:Name="LoginComboBox"
                                     Width="200"
                                     Height="25px"
                                     VerticalAlignment="Top"
-                                    Margin="0,100,0,0"
+                                    Margin="0,80,0,0"
+                                    Background="#4A4A65"
+                                    Foreground="Wheat"
+                                    BorderBrush="#4A4A65"
+                                Style="{StaticResource CustomComboBoxStyle}"/>
+                            <TextBlock
+                                      Text="Логин сотрудника"
+                                      FontSize="16"
+                                      Foreground="Wheat"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
+                                      Margin="50,130,0,0"
+                                      />
+                            <ComboBox
+                                    x:Name="LoginEmployeeComboBox"
+                                    Width="200"
+                                    Height="25px"
+                                    VerticalAlignment="Top"
+                                    Margin="0,160,0,0"
                                     Background="#4A4A65"
                                     Foreground="Wheat"
                                     BorderBrush="#4A4A65"
@@ -225,13 +243,13 @@
                                       Foreground="Wheat"
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Top"
-                                      Margin="50,150,0,0"/>
+                                      Margin="50,200,0,0"/>
                             <PasswordBox
                                         x:Name="PasswordBox"
                                         Width="200"
                                         Height="20"
                                         VerticalAlignment="Top"
-                                        Margin="0,180,0,0"
+                                        Margin="0,230,0,0"
                                         Background="#3A3A55"
                                         Foreground="Wheat"
                                         BorderBrush="#4A4A65"/>
@@ -245,10 +263,10 @@
                                 Content="Запомнить меня"
                                 VerticalAlignment="Bottom"
                                 HorizontalAlignment="Left"
-                                Margin="50,0,0,60"/>
+                                Margin="50,0,0,70"/>
                             <Button
                                    Width="150px"
-                                   Height="25px"
+                                   Height="30px"
                                    Content="Вход"
                                    VerticalAlignment="Bottom"
                                    Margin="30px"
