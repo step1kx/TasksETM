@@ -104,7 +104,6 @@ namespace Notify
                 }
                     
 
-                //MessageBox.Show($"Логин, хранимый в памяти: {savedLogin}");
 
                 var tasks = await _taskService.GetTasksByUserAsync(savedLogin);
                 if (tasks == null || !tasks.Any())
