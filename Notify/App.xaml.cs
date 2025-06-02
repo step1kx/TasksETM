@@ -83,7 +83,8 @@ namespace Notify
 
         private void SetupNotificationTimer()
         {
-            _notificationTimer = new System.Timers.Timer(600000);
+            //_notificationTimer = new System.Timers.Timer(600000);
+            _notificationTimer = new System.Timers.Timer(10000);
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
@@ -94,20 +95,32 @@ namespace Notify
         {
             try
             {
-                var notifyProjects = await _taskService.GetNotifyStatusFromProjectsAsync();
-
                 string savedLogin = SharedLoginStorage.LoadLogin();
+
+                string departmentLogin = SharedLoginStorage.LoadDepartmentLogin();
+
+                MessageBox.Show($"лОГИН Отдела: {departmentLogin}");
+
                 if (string.IsNullOrWhiteSpace(savedLogin))
                 {
-                    //MessageBox.Show($"Логин       хранимый в памяти: {savedLogin}");
+                    MessageBox.Show($"Логина неть: {savedLogin}");
                     return;
                 }
-                    
+
+                var notifyProjects = await _taskService.GetNotifyStatusFromProjectsAsync(savedLogin);
+
+                MessageBox.Show($"Логин хранимый в памяти: {savedLogin}");
 
 
-                var tasks = await _taskService.GetTasksByUserAsync(savedLogin);
+
+                var tasks = await _taskService.GetTasksByUserAsync(departmentLogin);
                 if (tasks == null || !tasks.Any())
+                {
+                    //MessageBox.Show("Какашке");
                     return;
+                    
+                }
+                    
 
                 foreach (var task in tasks)
                 {

@@ -130,5 +130,17 @@ namespace TasksETM.Properties {
                 this["SectionFilter"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        public string SavedDepartmentLogin {
+            get {
+                return ((string)(this["SavedDepartmentLogin"]));
+            }
+            set {
+                this["SavedDepartmentLogin"] = value;
+            }
+        }
     }
 }

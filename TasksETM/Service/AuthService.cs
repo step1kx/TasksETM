@@ -26,7 +26,7 @@ namespace TasksETM.Service
                 using var conn = new NpgsqlConnection(DatabaseConnection.connString);
                 await conn.OpenAsync();
 
-                string query = "SELECT COUNT(*) FROM public.\"Users\" WHERE \"departmentName\" = @departmentName AND \"password\" = @password";
+                string query = "SELECT COUNT(*) FROM public.\"Departments\" WHERE \"departmentName\" = @departmentName AND \"password\" = @password";
                 using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@departmentName", departmentName);
                 cmd.Parameters.AddWithValue("@password", password);
@@ -42,16 +42,16 @@ namespace TasksETM.Service
             }
         }
 
-        public async Task<bool> CheckSavedLoginAsync(string departmentName)
+        public async Task<bool> CheckSavedLoginAsync(string surname)
         {
             try
             {
                 using var conn = new NpgsqlConnection(DatabaseConnection.connString);
                 await conn.OpenAsync();
 
-                string query = "SELECT COUNT(1) FROM public.\"Users\" WHERE \"departmentName\" = @departmentName";
+                string query = "SELECT COUNT(1) FROM public.\"Users\" WHERE \"userName\" = @userName";
                 using var command = new NpgsqlCommand(query, conn);
-                command.Parameters.AddWithValue("@departmentName", departmentName);
+                command.Parameters.AddWithValue("@userName", surname);
                 var count = await command.ExecuteScalarAsync();
                 return Convert.ToInt32(count) > 0;
             }

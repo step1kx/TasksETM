@@ -174,7 +174,7 @@
                     BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="TasksPanel">
-                        <Grid x:Name="DepartInfoGrid" Visibility="Visible">
+                        <Grid x:Name="DepartInfoGrid" Visibility="Collapsed">
                             <TextBlock Text="Фильтр разделов"
                             FontSize="20"
                             Foreground="Wheat"
@@ -334,7 +334,7 @@
                                 </Button.Effect>
                             </Button>
                         </Grid>-->
-                        <Grid x:Name="CompletedInfoGrid" Visibility="Collapsed">
+                        <Grid x:Name="CompletedInfoGrid" Visibility="Visible">
                             <TextBlock Text="Фильтры"
                             FontSize="20"
                             Foreground="Wheat"
@@ -388,7 +388,7 @@
                                     <ComboBoxItem>Не готово</ComboBoxItem>-->
                                 </ComboBox>
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                    <TextBlock Text="Раздел" FontSize="16" Foreground="Wheat" VerticalAlignment="Center" Margin="51,0,10,10"/>
+                                    <TextBlock Text="Отдел" FontSize="16" Foreground="Wheat" VerticalAlignment="Center" Margin="51,0,10,10"/>
                                     <ComboBox x:Name="SectionComboBox" 
                   Width="139" Height="25" 
                   VerticalAlignment="Top" 
