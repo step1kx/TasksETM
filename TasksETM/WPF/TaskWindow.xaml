@@ -169,7 +169,6 @@
                            Background="#272537"
                            Foreground="Wheat"
                            RowHeight="100"
-                           SelectionChanged="tasksDataGrid_SelectionChanged"
                            Style="{StaticResource CustomDataGridStyle}">
                         <DataGrid.Columns >
                             <DataGridTextColumn   IsReadOnly="True" Header="№" Binding="{Binding TaskNumber}" Width="40"/>
