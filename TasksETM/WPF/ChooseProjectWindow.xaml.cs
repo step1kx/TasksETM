@@ -9,6 +9,7 @@ using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
 using TasksETMCommon.Helpers;
+using TasksETMCommon.Models;
 
 
 namespace TasksETM.WPF
@@ -45,7 +46,7 @@ namespace TasksETM.WPF
 
         private void UpdateWelcomeMessage()
         {
-            string login = UserSession.Login;
+            string login = UserSessionForNotify.Login;
             if (string.IsNullOrEmpty(login))
             {
                 WelcomeTextBlock.Text = "Добро пожаловать, сотрудник";
@@ -56,9 +57,9 @@ namespace TasksETM.WPF
             }
             else
             {
-                WelcomeTextBlock.Text = $"Добро пожаловать, сотрудник отдела {login}";
+                WelcomeTextBlock.Text = $"Добро пожаловать, сотрудник {login}";
             }
-        }
+        }   
 
 
         private async void FillComboBoxAsync()

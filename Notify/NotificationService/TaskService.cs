@@ -23,7 +23,42 @@ namespace Notify.NotificationService
             connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         }
 
-        public async Task<Dictionary<string, bool>> GetNotifyStatusFromProjectsAsync()
+        //public async Task<Dictionary<string, bool>> GetNotifyStatusFromProjectsAsync()
+        //{
+        //    var result = new Dictionary<string, bool>();
+
+        //    try
+        //    {
+        //        using (var conn = new NpgsqlConnection(connectionString))
+        //        {
+        //            await conn.OpenAsync();
+
+        //            string query = @"SELECT ""ProjectNameNotify"", ""isNotify"" FROM public.""ProjectsNotify""";
+
+        //            using (var cmd = new NpgsqlCommand(query, conn))
+        //            {
+        //                using (var reader = await cmd.ExecuteReaderAsync())
+        //                {
+        //                    while (await reader.ReadAsync())
+        //                    {
+        //                        string projectName = reader["ProjectNameNotify"]?.ToString() ?? "Неизвестный проект";
+        //                        bool isNotify = reader["isNotify"] != DBNull.Value && (bool)reader["isNotify"];
+
+        //                        result[projectName] = isNotify;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Что-то пошло не так: {ex.Message}");
+        //    }
+
+        //    return result;
+        //}
+
+        public async Task<Dictionary<string, bool>> GetNotifyStatusFromProjectsAsync(string username)
         {
             var result = new Dictionary<string, bool>();
 
@@ -33,10 +68,14 @@ namespace Notify.NotificationService
                 {
                     await conn.OpenAsync();
 
-                    string query = @"SELECT ""ProjectNameNotify"", ""isNotify"" FROM public.""ProjectsNotify""";
+                    string query = @"SELECT ""ProjectNameNotify"", ""isNotify"" 
+                             FROM public.""ProjectsNotify""
+                             WHERE ""UserLoginNameNotify"" = @username";
 
                     using (var cmd = new NpgsqlCommand(query, conn))
                     {
+                        cmd.Parameters.AddWithValue("@username", username);
+
                         using (var reader = await cmd.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())
@@ -94,7 +133,7 @@ namespace Notify.NotificationService
                 FROM public.""Tasks"" t
                 JOIN public.""Projects"" p ON p.""ProjectNumber"" = t.""PK_ProjectNumber""
                 WHERE t.""ToDepart"" IN (
-                        SELECT ""departmentName"" FROM public.""Users"" WHERE ""departmentName"" = @departmentName
+                        SELECT ""departmentName"" FROM public.""Departments"" WHERE ""departmentName"" = @departmentName
                 )
                 AND t.""FromDepart"" IS NOT NULL 
                 AND t.""ToDepart"" IS NOT NULL 
@@ -148,6 +187,7 @@ namespace Notify.NotificationService
 
             return tasks;
         }
+
 
 
 

@@ -182,28 +182,7 @@ namespace TasksETM.Service.Tasks
             }
         }
 
-        //public async Task UpdateTaskCompletedAsync(int taskNumber, bool isCompleted)
-        //{
-        //    try
-        //    {
-        //        using (var conn = new NpgsqlConnection(DatabaseConnection.connString))
-        //        {
-        //            await conn.OpenAsync();
 
-        //            var updateCommand = new NpgsqlCommand(
-        //                "UPDATE public.\"Tasks\" " +
-        //                "SET \"TaskCompleted\" = @IsCompleted " +
-        //                "WHERE \"TaskNumber\" = @TaskNumber", conn);
-        //            updateCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
-        //            updateCommand.Parameters.AddWithValue("@IsCompleted", isCompleted ? 1 : 0); // В базе 1 = true, 0 = false
-        //            await updateCommand.ExecuteNonQueryAsync();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Ошибка при обновлении статуса задания: {ex.Message}");
-        //    }
-        //}
 
     }
 }

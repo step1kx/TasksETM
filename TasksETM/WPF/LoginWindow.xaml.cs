@@ -27,6 +27,7 @@ namespace IssuingTasksETM.WPF
         private readonly IFilterTasksService _filterTasksService;
         private bool _isHipLogin;
         public string loginForNotify = string.Empty;
+        public string loginForDeaprtments = string.Empty;
 
         public LoginWindow(
             IDatabaseConnection dbConnection,
@@ -72,11 +73,13 @@ namespace IssuingTasksETM.WPF
                     bool isValid = await _authService.CheckSavedLoginAsync(TasksETM.Properties.Settings.Default.SavedLogin);
                     if (isValid)
                     {
-                        UserSession.Login = TasksETM.Properties.Settings.Default.SavedLogin;
+                        UserSessionForNotify.Login = TasksETM.Properties.Settings.Default.SavedLogin;
 
-                        UserSessionForNotify.Login = UserSession.Login;
+                        UserSession.Login = TasksETM.Properties.Settings.Default.SavedDepartmentLogin;
 
-                        SharedLoginStorage.SaveLogin(UserSession.Login);
+                        SharedLoginStorage.SaveDepartmentLogin(UserSession.Login);
+
+                        SharedLoginStorage.SaveLogin(UserSessionForNotify.Login);
 
 
                         System.Diagnostics.Debug.WriteLine($"Логин валиден, открываем ChooseProjectWindow для {UserSession.Login}");
@@ -92,6 +95,7 @@ namespace IssuingTasksETM.WPF
                     else
                     {
                         System.Diagnostics.Debug.WriteLine("Сохранённый логин невалиден, сбрасываем настройки");
+                        TasksETM.Properties.Settings.Default.SavedDepartmentLogin = string.Empty;
                         TasksETM.Properties.Settings.Default.SavedLogin = string.Empty;
                         TasksETM.Properties.Settings.Default.RememberMe = false;
                         TasksETM.Properties.Settings.Default.Save();
@@ -99,6 +103,9 @@ namespace IssuingTasksETM.WPF
                         UserSessionForNotify.Login = string.Empty;
 
                         SharedLoginStorage.SaveLogin(loginForNotify);
+
+                        //SharedLoginStorage.SaveDepartmentLogin(null);
+
                         MessageBox.Show("Сохранённая сессия недействительна. Пожалуйста, войдите заново.");
                     }
                 }
@@ -121,8 +128,13 @@ namespace IssuingTasksETM.WPF
                     LoginComboBox.Items.Clear();
                     foreach (var dep in departments)
                     {
-                        if (dep == "Все отделы" || dep == "GIP")
+                        if (dep == "Все отделы")
                         {
+                            continue;
+                        }
+                        else if (dep == "GIP")
+                        {
+                            LoginHipComboBox.Items.Add(dep);
                             continue;
                         }
                         else
@@ -132,7 +144,20 @@ namespace IssuingTasksETM.WPF
                     }
 
                     if (LoginComboBox.Items.Count > 0)
-                        LoginComboBox.SelectedIndex = 0;
+                    {
+                        LoginComboBox.SelectedIndex = -1;
+                        LoginEmployeeComboBox.SelectedIndex = -1;
+                        LoginEmployeeComboBox.IsEnabled = false;
+                    }
+                    else if (LoginHipComboBox.Items.Count > 0) {
+                        LoginHipComboBox.SelectedIndex = -1;
+                        LoginHipSurnamesComboBox.SelectedIndex = -1;
+                        LoginEmployeeComboBox.IsEnabled = false;
+
+                    }
+
+                        
+                       
                 });
             }
             catch (Exception ex)
@@ -179,25 +204,28 @@ namespace IssuingTasksETM.WPF
         private async void ToChooseProjectButton_Click(object sender, RoutedEventArgs e)
         {
             string login;
+            string surname;
             string password;
             CheckBox rememberMeCheckbox;
 
             if (_isHipLogin)
             {
-                login = HipLoginTextBox.Text.Trim(); 
+                login = LoginHipComboBox.Text.Trim(); 
+                surname = LoginHipSurnamesComboBox.Text.Trim();
                 password = PasswordBoxHip.Password;
                 rememberMeCheckbox = SaveCurrentHipCheckbox;
             }
             else
             {
                 login = LoginComboBox.Text.Trim();
+                surname = LoginEmployeeComboBox.Text.Trim();
                 password = PasswordBox.Password;
                 rememberMeCheckbox = SaveCurrentUserCheckbox; 
             }
 
             if (string.IsNullOrEmpty(login))
             {
-                MessageBox.Show("Пожалуйста, введите логин.", "Пустое поле", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пожалуйста, введите логин отдела.", "Пустое поле", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -213,20 +241,27 @@ namespace IssuingTasksETM.WPF
                  
                 if (success)
                 {
-                    UserSession.Login = login;
+                    UserSession.Login = surname;
                    
 
                     if (SaveCurrentUserCheckbox.IsChecked == true || SaveCurrentHipCheckbox.IsChecked == true)
                     {
-                        TasksETM.Properties.Settings.Default.SavedLogin = login;
+                        TasksETM.Properties.Settings.Default.SavedDepartmentLogin = login;
+                        TasksETM.Properties.Settings.Default.SavedLogin = surname;
                         TasksETM.Properties.Settings.Default.RememberMe = true;
                         TasksETM.Properties.Settings.Default.Save();
 
-                        UserSessionForNotify.Login = login;
-                        SharedLoginStorage.SaveLogin(login);
+                        UserSessionForNotify.Login = surname;
+
+                        UserSession.Login = login;
+
+                        SharedLoginStorage.SaveLogin(surname);
+
+                        SharedLoginStorage.SaveDepartmentLogin(login);
                     }
                     else
                     {
+                        TasksETM.Properties.Settings.Default.SavedDepartmentLogin = string.Empty;
                         TasksETM.Properties.Settings.Default.SavedLogin = string.Empty;
                         TasksETM.Properties.Settings.Default.RememberMe = false;
                         TasksETM.Properties.Settings.Default.Save();
@@ -234,6 +269,8 @@ namespace IssuingTasksETM.WPF
                         UserSessionForNotify.Login = string.Empty;
 
                         SharedLoginStorage.SaveLogin(loginForNotify);
+
+                        SharedLoginStorage.SaveDepartmentLogin(loginForDeaprtments);
                     }
 
                     var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
@@ -259,6 +296,65 @@ namespace IssuingTasksETM.WPF
         }
 
 
+        private async void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LoginComboBox.SelectedItem == null)
+            {
+                LoginEmployeeComboBox.Items.Clear();
+                LoginEmployeeComboBox.IsEnabled = false;
+                return;
+            }
+
+            string selectedDepartment = LoginComboBox.SelectedItem.ToString();
+
+            // Загружаем пользователей выбранного отдела
+            var users = await _departmentService.GetUsersSurnamesByDepartmentAsync(selectedDepartment);
+
+            Dispatcher.Invoke(() =>
+            {
+                LoginEmployeeComboBox.Items.Clear();
+
+                foreach (var user in users)
+                {
+                    LoginEmployeeComboBox.Items.Add(user);
+                }
+
+                LoginEmployeeComboBox.IsEnabled = users.Any();
+                if (users.Any())
+                    LoginEmployeeComboBox.SelectedIndex = 0;
+            });
+        }
+
+        private async void StatusHipComboBox_SelectionChacnged(object sender, SelectionChangedEventArgs e)
+        {
+
+            if (LoginHipComboBox.SelectedItem == null)
+            {
+                LoginHipSurnamesComboBox.Items.Clear();
+                LoginHipSurnamesComboBox.IsEnabled = false;
+                return;
+            }
+
+            string selectedDepartment = LoginHipComboBox.SelectedItem.ToString();
+
+            // Загружаем пользователей выбранного отдела
+            var users = await _departmentService.GetUsersSurnamesByDepartmentAsync(selectedDepartment);
+
+            Dispatcher.Invoke(() =>
+            {
+                LoginHipSurnamesComboBox.Items.Clear();
+
+                foreach (var user in users)
+                {
+                    LoginHipSurnamesComboBox.Items.Add(user);
+                }
+
+                LoginHipSurnamesComboBox.IsEnabled = users.Any();
+                if (users.Any())
+                    LoginHipSurnamesComboBox.SelectedIndex = 0;
+            });
+        }
+
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -277,7 +373,6 @@ namespace IssuingTasksETM.WPF
         {
             this.WindowState = WindowState.Minimized;
         }
-
 
     }
 }

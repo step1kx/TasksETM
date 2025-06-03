@@ -9,8 +9,8 @@ namespace Notify.Interfaces
 {
     public interface ITaskService
     {
-        public Task<List<TaskModel>> GetTasksByUserAsync(string departmentName);
+        public Task<List<TaskModel>> GetTasksByUserAsync(string userName);
 
-        public Task<Dictionary<string, bool>> GetNotifyStatusFromProjectsAsync();
+        public Task<Dictionary<string, bool>> GetNotifyStatusFromProjectsAsync(string username);
     }
 }

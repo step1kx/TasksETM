@@ -29,5 +29,8 @@
     <Setting Name="SectionFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="SavedDepartmentLogin" Type="System.String" Scope="User">
+      <Value Profile="(Default)">null</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

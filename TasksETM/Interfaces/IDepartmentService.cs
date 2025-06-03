@@ -11,5 +11,7 @@ namespace TasksETM.Interfaces
         Task<IEnumerable<string>> GetDepartmentNamesAsync();
 
         Task<IEnumerable<string>> GetTaskStatusAsync();
+
+        Task<IEnumerable<string>> GetUsersSurnamesByDepartmentAsync(string departmentName);
     }
 }
