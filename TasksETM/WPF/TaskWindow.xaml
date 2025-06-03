@@ -181,6 +181,7 @@
                                             <!-- Чекбокс и подпись для АР -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsAR, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsAREnabled}"
                                                         Checked="CheckBox_Changed" 
                                                         Unchecked="CheckBox_Changed" 
                                                         VerticalAlignment="Center"/>
@@ -188,7 +189,8 @@
                                             </StackPanel>
                                             <!-- Чекбокс и подпись для ВК -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <CheckBox IsChecked="{Binding Path=IsVK, UpdateSourceTrigger=PropertyChanged}" 
+                                            <CheckBox IsChecked="{Binding Path=IsVK, UpdateSourceTrigger=PropertyChanged}"
+                                                      IsEnabled="{Binding Path=IsVKEnabled}"
                                                     Checked="CheckBox_Changed" 
                                                     Unchecked="CheckBox_Changed" 
                                                     VerticalAlignment="Center"/>
@@ -197,6 +199,7 @@
                                             <!-- Чекбокс и подпись для ОВ -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsOV, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsOVEnabled}"
                                                         Checked="CheckBox_Changed" 
                                                         Unchecked="CheckBox_Changed" 
                                                         VerticalAlignment="Center"/>
@@ -204,7 +207,8 @@
                                             </StackPanel>
                                             <!-- Чекбокс и подпись для СС -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=IsSS, UpdateSourceTrigger=PropertyChanged}" 
+                                                <CheckBox IsChecked="{Binding Path=IsSS, UpdateSourceTrigger=PropertyChanged}"
+                                                          IsEnabled="{Binding Path=IsSSEnabled}"
                                                         Checked="CheckBox_Changed" 
                                                         Unchecked="CheckBox_Changed" 
                                                         VerticalAlignment="Center"/>
@@ -212,7 +216,8 @@
                                             </StackPanel>
                                             <!-- Чекбокс и подпись для ЕС -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=IsES, UpdateSourceTrigger=PropertyChanged}" 
+                                                <CheckBox IsChecked="{Binding Path=IsES, UpdateSourceTrigger=PropertyChanged}"
+                                                          IsEnabled="{Binding Path=IsESEnabled}"
                                                           Checked="CheckBox_Changed" 
                                                           Unchecked="CheckBox_Changed" 
                                                           VerticalAlignment="Center"/>
@@ -221,6 +226,7 @@
                                             <!-- Чекбокс и подпись для ГИП -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsGIP, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsGIPEnabled}"
                                                           Checked="CheckBox_Changed" 
                                                           Unchecked="CheckBox_Changed" 
                                                           VerticalAlignment="Center"
@@ -240,6 +246,7 @@
                                             <!-- Чекбокс и подпись для АР -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsARCompl, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsARComplEnabled}"
                 Checked="CheckBox_Changed" 
                 Unchecked="CheckBox_Changed" 
                 VerticalAlignment="Center"/>
@@ -248,6 +255,7 @@
                                             <!-- Чекбокс и подпись для ВК -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsVKCompl, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsVKComplEnabled}"
             Checked="CheckBox_Changed" 
             Unchecked="CheckBox_Changed" 
             VerticalAlignment="Center"/>
@@ -256,6 +264,7 @@
                                             <!-- Чекбокс и подпись для ОВ -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsOVCompl, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsOVComplEnabled}"
                 Checked="CheckBox_Changed" 
                 Unchecked="CheckBox_Changed" 
                 VerticalAlignment="Center"/>
@@ -264,6 +273,7 @@
                                             <!-- Чекбокс и подпись для СС -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsSSCompl, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsSSComplEnabled}"
                 Checked="CheckBox_Changed" 
                 Unchecked="CheckBox_Changed" 
                 VerticalAlignment="Center"/>
@@ -272,6 +282,7 @@
                                             <!-- Чекбокс и подпись для ЕС -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsESCompl, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsESComplEnabled}"
                   Checked="CheckBox_Changed" 
                   Unchecked="CheckBox_Changed" 
                   VerticalAlignment="Center"/>
@@ -280,6 +291,7 @@
                                             <!-- Чекбокс и подпись для ГИП -->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding Path=IsGIPCompl, UpdateSourceTrigger=PropertyChanged}" 
+                                                          IsEnabled="{Binding Path=IsGIPComplEnabled}"
                   Checked="CheckBox_Changed" 
                   Unchecked="CheckBox_Changed" 
                   VerticalAlignment="Center"

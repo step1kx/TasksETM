@@ -50,8 +50,36 @@ namespace TasksETM.Service.Tasks
 
                     var taskNumber = Convert.ToInt32(await createCommand.ExecuteScalarAsync());
 
+                    var sections = new[] { "AR", "VK", "OV", "SS", "ES", "GIP" };
+                    foreach (var section in sections)
+                    {
+                        var insertAssignmentCommand = new NpgsqlCommand(
+                            "INSERT INTO public.\"TaskAssignments\" (\"TaskNumber\", \"Section\", \"IsAssigned\") " +
+                            "VALUES (@TaskNumber, @Section, @IsAssigned)", conn);
+                        insertAssignmentCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+                        insertAssignmentCommand.Parameters.AddWithValue("@Section", section);
+                        insertAssignmentCommand.Parameters.AddWithValue("@IsAssigned", false);
+                        await insertAssignmentCommand.ExecuteNonQueryAsync();
+                    }
+                    foreach (var section in sections)
+                    {
+                        var insertCompletedCommand = new NpgsqlCommand(
+                            "INSERT INTO public.\"TaskCompleted\" (\"TaskNumber\", \"Section\", \"IsCompleted\") " +
+                            "VALUES (@TaskNumber, @Section, @IsCompleted)", conn);
+                        insertCompletedCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+                        insertCompletedCommand.Parameters.AddWithValue("@Section", section);
+                        insertCompletedCommand.Parameters.AddWithValue("@IsCompleted", false);
+                        await insertCompletedCommand.ExecuteNonQueryAsync();
+                    }
+
                     //var sections = new[] { "AR", "VK", "OV", "SS", "ES", "GIP" };
-                    //foreach (var section in sections)
+
+                    //// если выбраны "Все отделы" — добавляем всем
+                    //var targetSections = taskModel.ToDepart == "Все отделы"
+                    //    ? sections
+                    //    : new[] { taskModel.ToDepart };
+
+                    //foreach (var section in targetSections)
                     //{
                     //    var insertAssignmentCommand = new NpgsqlCommand(
                     //        "INSERT INTO public.\"TaskAssignments\" (\"TaskNumber\", \"Section\", \"IsAssigned\") " +
@@ -61,7 +89,8 @@ namespace TasksETM.Service.Tasks
                     //    insertAssignmentCommand.Parameters.AddWithValue("@IsAssigned", false);
                     //    await insertAssignmentCommand.ExecuteNonQueryAsync();
                     //}
-                    //foreach (var section in sections)
+
+                    //foreach (var section in targetSections)
                     //{
                     //    var insertCompletedCommand = new NpgsqlCommand(
                     //        "INSERT INTO public.\"TaskCompleted\" (\"TaskNumber\", \"Section\", \"IsCompleted\") " +
@@ -72,34 +101,21 @@ namespace TasksETM.Service.Tasks
                     //    await insertCompletedCommand.ExecuteNonQueryAsync();
                     //}
 
-                    var sections = new[] { "AR", "VK", "OV", "SS", "ES", "GIP" };
+                    //bool isAll = taskModel.ToDepart == "Все отделы";
 
-                    // если выбраны "Все отделы" — добавляем всем
-                    var targetSections = taskModel.ToDepart == "Все отделы"
-                        ? sections
-                        : new[] { taskModel.ToDepart };
+                    //taskModel.IsAREnabled = isAll || taskModel.ToDepart == "AR";
+                    //taskModel.IsVKEnabled = isAll || taskModel.ToDepart == "VK";
+                    //taskModel.IsOVEnabled = isAll || taskModel.ToDepart == "OV";
+                    //taskModel.IsSSEnabled = isAll || taskModel.ToDepart == "SS";
+                    //taskModel.IsESEnabled = isAll || taskModel.ToDepart == "ES";
+                    //taskModel.IsGIPEnabled = isAll || taskModel.ToDepart == "GIP";
 
-                    foreach (var section in targetSections)
-                    {
-                        var insertAssignmentCommand = new NpgsqlCommand(
-                            "INSERT INTO public.\"TaskAssignments\" (\"TaskNumber\", \"Section\", \"IsAssigned\") " +
-                            "VALUES (@TaskNumber, @Section, @IsAssigned)", conn);
-                        insertAssignmentCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
-                        insertAssignmentCommand.Parameters.AddWithValue("@Section", section);
-                        insertAssignmentCommand.Parameters.AddWithValue("@IsAssigned", false);
-                        await insertAssignmentCommand.ExecuteNonQueryAsync();
-                    }
-
-                    foreach (var section in targetSections)
-                    {
-                        var insertCompletedCommand = new NpgsqlCommand(
-                            "INSERT INTO public.\"TaskCompleted\" (\"TaskNumber\", \"Section\", \"IsCompleted\") " +
-                            "VALUES (@TaskNumber, @Section, @IsCompleted)", conn);
-                        insertCompletedCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
-                        insertCompletedCommand.Parameters.AddWithValue("@Section", section);
-                        insertCompletedCommand.Parameters.AddWithValue("@IsCompleted", false);
-                        await insertCompletedCommand.ExecuteNonQueryAsync();
-                    }
+                    //taskModel.IsARComplEnabled = taskModel.IsAREnabled;
+                    //taskModel.IsVKComplEnabled = taskModel.IsVKEnabled;
+                    //taskModel.IsOVComplEnabled = taskModel.IsOVEnabled;
+                    //taskModel.IsSSComplEnabled = taskModel.IsSSEnabled;
+                    //taskModel.IsESComplEnabled = taskModel.IsESEnabled;
+                    //taskModel.IsGIPComplEnabled = taskModel.IsGIPEnabled;
 
                     var selectCommand = new NpgsqlCommand(
                         "SELECT t.*, " +

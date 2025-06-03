@@ -77,6 +77,7 @@ namespace IssuingTasksETM.WPF
                     ToDepartComboBox.Items.Clear();
                     foreach (var dep in departmentNames)
                     {
+                        if (dep == "Все отделы") continue;
                         ToDepartComboBox.Items.Add(dep);
                     }
                     if (ToDepartComboBox.Items.Count > 0)

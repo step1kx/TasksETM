@@ -40,19 +40,19 @@ namespace TasksETM.Models
         private bool? _isESCompl;
         private bool? _isGIPCompl;
 
-        private bool? _isAREnabled;
-        private bool? _isVKEnabled;
-        private bool? _isOVEnabled;
-        private bool? _isSSEnabled;
-        private bool? _isESEnabled;
-        private bool? _isGIPEnabled;
+        private bool _isAREnabled;
+        private bool _isVKEnabled;
+        private bool _isOVEnabled;
+        private bool _isSSEnabled;
+        private bool _isESEnabled;
+        private bool _isGIPEnabled;
 
-        private bool? _isARComplEnabled;
-        private bool? _isVKComplEnabled;
-        private bool? _isOVComplEnabled;
-        private bool? _isSSComplEnabled;
-        private bool? _isESComplEnabled;
-        private bool? _isGIPComplEnabled;
+        private bool _isARComplEnabled;
+        private bool _isVKComplEnabled;
+        private bool _isOVComplEnabled;
+        private bool _isSSComplEnabled;
+        private bool _isESComplEnabled;
+        private bool _isGIPComplEnabled;
 
         public int TaskNumber
         {
@@ -186,5 +186,82 @@ namespace TasksETM.Models
             get => _isGIPCompl;
             set { _isGIPCompl = value; OnPropertyChanged(nameof(IsGIPCompl)); }
         }
+
+
+
+        //public bool IsAREnabled
+        //{
+        //    get => _isAREnabled;
+        //    set { _isAREnabled = value; OnPropertyChanged(nameof(IsAREnabled)); }
+        //}
+
+        //public bool IsVKEnabled
+        //{
+        //    get => _isVKEnabled;
+        //    set { _isVKEnabled = value; OnPropertyChanged(nameof(IsVKEnabled)); }
+        //}
+
+        //public bool IsOVEnabled
+        //{
+        //    get => _isOVEnabled;
+        //    set { _isOVEnabled = value; OnPropertyChanged(nameof(IsOVEnabled)); }
+        //}
+
+        //public bool IsSSEnabled
+        //{
+        //    get => _isSSEnabled;
+        //    set { _isSSEnabled = value; OnPropertyChanged(nameof(IsSSEnabled)); }
+        //}
+
+        //public bool IsESEnabled
+        //{
+        //    get => _isESEnabled;
+        //    set { _isESEnabled = value; OnPropertyChanged(nameof(IsESEnabled)); }
+        //}
+
+        //public bool IsGIPEnabled
+        //{
+        //    get => _isGIPEnabled;
+        //    set { _isGIPEnabled = value; OnPropertyChanged(nameof(IsGIPEnabled)); }
+        //}
+
+        //public bool IsARComplEnabled
+        //{
+        //    get => _isARComplEnabled;
+        //    set { _isARComplEnabled = value; OnPropertyChanged(nameof(IsARComplEnabled)); }
+        //}
+
+        //public bool IsVKComplEnabled
+        //{
+        //    get => _isVKComplEnabled;
+        //    set { _isVKComplEnabled = value; OnPropertyChanged(nameof(IsVKComplEnabled)); }
+        //}
+
+        //public bool IsOVComplEnabled
+        //{
+        //    get => _isOVComplEnabled;
+        //    set { _isOVComplEnabled = value; OnPropertyChanged(nameof(IsOVComplEnabled)); }
+        //}
+
+        //public bool IsSSComplEnabled
+        //{
+        //    get => _isSSComplEnabled;
+        //    set { _isSSComplEnabled = value; OnPropertyChanged(nameof(IsSSComplEnabled)); }
+        //}
+
+        //public bool IsESComplEnabled
+        //{
+        //    get => _isESComplEnabled;
+        //    set { _isESComplEnabled = value; OnPropertyChanged(nameof(IsESComplEnabled)); }
+        //}
+
+        //public bool IsGIPComplEnabled
+        //{
+        //    get => _isGIPComplEnabled;
+        //    set { _isGIPComplEnabled = value; OnPropertyChanged(nameof(IsGIPComplEnabled)); }
+        //}
+
+
+
     }
 }
