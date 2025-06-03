@@ -32,12 +32,27 @@ namespace TasksETM.Models
         private bool? _isSS;
         private bool? _isES;
         private bool? _isGIP;
+
         private bool? _isARCompl;
         private bool? _isVKCompl;
         private bool? _isOVCompl;
         private bool? _isSSCompl;
         private bool? _isESCompl;
         private bool? _isGIPCompl;
+
+        private bool? _isAREnabled;
+        private bool? _isVKEnabled;
+        private bool? _isOVEnabled;
+        private bool? _isSSEnabled;
+        private bool? _isESEnabled;
+        private bool? _isGIPEnabled;
+
+        private bool? _isARComplEnabled;
+        private bool? _isVKComplEnabled;
+        private bool? _isOVComplEnabled;
+        private bool? _isSSComplEnabled;
+        private bool? _isESComplEnabled;
+        private bool? _isGIPComplEnabled;
 
         public int TaskNumber
         {

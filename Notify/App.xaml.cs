@@ -83,8 +83,8 @@ namespace Notify
 
         private void SetupNotificationTimer()
         {
-            //_notificationTimer = new System.Timers.Timer(600000);
-            _notificationTimer = new System.Timers.Timer(10000);
+            _notificationTimer = new System.Timers.Timer(600000);
+            //_notificationTimer = new System.Timers.Timer(10000);
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();
@@ -99,17 +99,17 @@ namespace Notify
 
                 string departmentLogin = SharedLoginStorage.LoadDepartmentLogin();
 
-                MessageBox.Show($"лОГИН Отдела: {departmentLogin}");
+                //MessageBox.Show($"лОГИН Отдела: {departmentLogin}");
 
                 if (string.IsNullOrWhiteSpace(savedLogin))
                 {
-                    MessageBox.Show($"Логина неть: {savedLogin}");
+                    //MessageBox.Show($"Логина неть: {savedLogin}");
                     return;
                 }
 
                 var notifyProjects = await _taskService.GetNotifyStatusFromProjectsAsync(savedLogin);
 
-                MessageBox.Show($"Логин хранимый в памяти: {savedLogin}");
+                //MessageBox.Show($"Логин хранимый в памяти: {savedLogin}");
 
 
 

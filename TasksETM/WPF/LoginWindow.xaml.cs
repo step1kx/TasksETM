@@ -252,6 +252,9 @@ namespace IssuingTasksETM.WPF
                         TasksETM.Properties.Settings.Default.Save();
 
                         UserSessionForNotify.Login = surname;
+
+                        UserSession.Login = login;
+
                         SharedLoginStorage.SaveLogin(surname);
 
                         SharedLoginStorage.SaveDepartmentLogin(login);
