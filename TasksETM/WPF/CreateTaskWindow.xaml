@@ -119,8 +119,8 @@
                     Style="{StaticResource CustomButtonStyle}"
                     Cursor="Hand"
                     Click="HelpCreateTaskWindow_Click">
-                    <Button.Effect>
-                        <DropShadowEffect ShadowDepth="2"
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"
                     Color="Black"
                     Opacity="0.3"
                     />
@@ -187,7 +187,7 @@
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
                               Margin="50,150,0,0"/>
-                            <ComboBox
+                            <!--<ComboBox
                                 x:Name="ToDepartComboBox"
                                 Width="200"
                                 Height="25"
@@ -196,7 +196,31 @@
                                 Background="#3A3A55"
                                 Foreground="Wheat"
                                 BorderBrush="#4A4A65"
-                                Style="{StaticResource CustomComboBoxStyle}"/>
+                                Style="{StaticResource CustomComboBoxStyle}"/>-->
+                            <CheckBox  x:Name="CheckBoxAR" 
+                                       HorizontalAlignment="Left"
+                                        Style="{StaticResource CustomCheckBoxStyle}"
+                                       VerticalAlignment="Top" Margin="51,176,0,0" Tag="AR" Content="АР"></CheckBox>
+                            <CheckBox  x:Name="CheckBoxVK" 
+                                       Style="{StaticResource CustomCheckBoxStyle}"
+                                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="134,176,0,0" Tag="VK" Content="ВК"></CheckBox>
+                            <CheckBox  x:Name="CheckBoxOV" 
+                                       Style="{StaticResource CustomCheckBoxStyle}"
+                                       HorizontalAlignment="Left" 
+                                       VerticalAlignment="Top" Margin="213,175,0,0" Tag="OV" Content="ОВ"></CheckBox>
+
+                            <CheckBox  x:Name="CheckBoxSS" 
+                                       Style="{StaticResource CustomCheckBoxStyle}"
+                                       HorizontalAlignment="Left" 
+                                       VerticalAlignment="Top" Margin="213,201,0,0" Tag="SS" Content="СС" Width="37"></CheckBox>
+                            <CheckBox  x:Name="CheckBoxES" 
+                                       Style="{StaticResource CustomCheckBoxStyle}"
+                                       HorizontalAlignment="Left" 
+                                       VerticalAlignment="Top" Margin="51,201,0,0" Tag="ES" Content="EC"></CheckBox>
+                            <CheckBox  x:Name="CheckBoxGIP" 
+                                       Style="{StaticResource CustomCheckBoxStyle}"
+                                       HorizontalAlignment="Left" 
+                                       VerticalAlignment="Top" Margin="134,201,0,0" Tag="GIP" Content="ГИП"></CheckBox>
                             <TextBlock Text="Крайний срок выполнения"
                                 FontSize="16"
                                 Foreground="Wheat"
