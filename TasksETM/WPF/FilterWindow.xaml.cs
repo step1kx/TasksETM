@@ -279,60 +279,6 @@ namespace IssuingTasksETM.WPF
                 MessageBox.Show($"АХТУНГ: {ex.Message}");
             }
         }
-        //private async void ApplyFilters()
-        //{
-        //    _filteredTasks = _tasks.ToList();
-        //    try
-        //    {
-        //        // FromDepart
-        //        if (FromDepartComboBox.SelectedItem != null)
-        //        {
-        //            string fromDepart = FromDepartComboBox.SelectedItem.ToString();
-        //            _filteredTasks = _filteredTasks
-        //                .Where(t => t.FromDepart == fromDepart)
-        //                .ToList();
-        //            TasksETM.Properties.Settings.Default.FromDepartFilter = fromDepart;
-        //        }
-
-        //        // ToDepart
-        //        if (ToDepartComboBox.SelectedItem != null)
-        //        {
-        //            string toDepart = ToDepartComboBox.SelectedItem.ToString();
-        //            _filteredTasks = _filteredTasks
-        //                .Where(t => t.ToDepart == toDepart)
-        //                .ToList();
-        //            TasksETM.Properties.Settings.Default.ToDepartFilter = toDepart;
-        //        }
-
-        //        //TaskCompleted
-
-
-        //        // TaskDate
-        //        if (!string.IsNullOrEmpty(TaskDateTextBox.Text))
-        //        {
-        //            _filteredTasks = _filteredTasks
-        //                .Where(t => t.TaskDate == TaskDateTextBox.Text)
-        //                .ToList();
-        //            TasksETM.Properties.Settings.Default.TaskDateFilter = TaskDateTextBox.Text;
-        //        }
-
-        //        if (!string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
-        //        {
-        //            _filteredTasks = _filteredTasks
-        //                .Where(t => t.TaskDeadline == TaskDeadLineTextBox.Text)
-        //                .ToList();
-        //            TasksETM.Properties.Settings.Default.TaskDeadlineFilter = TaskDeadLineTextBox.Text;
-        //        }
-
-        //        await _filterTasksService.SaveFilterSettingsAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"АХТУНГ: {ex.Message}");
-        //    }
-
-
-        //}
 
         private async void FilterSettingsButton_Click(object sender, RoutedEventArgs e)
         {
@@ -373,33 +319,6 @@ namespace IssuingTasksETM.WPF
             }
             ApplyFilters();
         }
-
-
-        //private async Task InitializeFiltersAsync()
-        //{
-        //    await _filterTasksService.LoadFilterSettingsAsync();
-
-        //    // Восстанавливаем ComboBox
-        //    if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.FromDepartFilter))
-        //    {
-        //        FromDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.FromDepartFilter;
-        //    }
-
-        //    if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.ToDepartFilter))
-        //    {
-        //        ToDepartComboBox.SelectedItem = TasksETM.Properties.Settings.Default.ToDepartFilter;
-        //    }
-
-        //    if (!string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.TaskCompletedFilter))
-        //    {
-        //        TaskCompletedComboBox.SelectedItem = TasksETM.Properties.Settings.Default.TaskCompletedFilter;
-        //    }
-
-        //    // Восстанавливаем TextBox
-        //    TaskDateTextBox.Text = TasksETM.Properties.Settings.Default.TaskDateFilter;
-        //    TaskDeadLineTextBox.Text = TasksETM.Properties.Settings.Default.TaskDeadlineFilter;
-
-        //}
 
         private async Task InitializeFiltersAsync()
         {

@@ -36,6 +36,7 @@ namespace TasksETM.Service.Tasks
                     t.""TaskDescription"", 
                     t.""TaskDate"", 
                     t.""TaskDeadLine"",
+                    t.""TaskComment"",
                     (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'AR') AS ""IsAR"",
                     (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'VK') AS ""IsVK"",
                     (SELECT ""IsAssigned"" FROM public.""TaskAssignments"" WHERE ""TaskNumber"" = t.""TaskNumber"" AND ""Section"" = 'OV') AS ""IsOV"",
@@ -76,6 +77,7 @@ namespace TasksETM.Service.Tasks
                                     TaskDescription = reader["TaskDescription"] is DBNull ? string.Empty : reader["TaskDescription"]!.ToString()!,
                                     TaskDate = reader["TaskDate"] is DBNull ? string.Empty : reader["TaskDate"]!.ToString()!,
                                     TaskDeadline = reader["TaskDeadLine"] is DBNull ? string.Empty : reader["TaskDeadLine"]!.ToString()!,
+                                    TaskComment = reader["TaskComment"] is DBNull ? string.Empty : reader["TaskComment"]!.ToString()!,
                                     IsAR = reader["IsAR"] is DBNull ? null : (bool)reader["IsAR"],
                                     IsVK = reader["IsVK"] is DBNull ? null : (bool)reader["IsVK"],
                                     IsOV = reader["IsOV"] is DBNull ? null : (bool)reader["IsOV"],
@@ -182,7 +184,36 @@ namespace TasksETM.Service.Tasks
             }
         }
 
+        public async Task UpdateTaskCommentAsync(int taskNumber, string comment)
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(DatabaseConnection.connString))
+                {
+                    await conn.OpenAsync();
 
+                    var updateCommand = new NpgsqlCommand(
+                        "UPDATE public.\"Tasks\" " +
+                        "SET \"TaskComment\" = @Comment " +
+                        "WHERE \"TaskNumber\" = @TaskNumber", conn);
+
+                    updateCommand.Parameters.AddWithValue("@Comment", comment ?? string.Empty);
+                    updateCommand.Parameters.AddWithValue("@TaskNumber", taskNumber);
+
+                    int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
+
+                    if (rowsAffected == 0)
+                    {
+                        MessageBox.Show($"Задание с номером {taskNumber} не найдено для обновления комментария.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"При обновлении комментария произошла ошибка: {ex.Message}");
+            }
+
+        }
 
     }
 }

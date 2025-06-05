@@ -94,11 +94,11 @@ namespace TasksETM.Service.Tasks
                     INSERT INTO public.""Tasks"" (
                         ""FromDepart"", ""ToDepart"", ""AcceptedDepart"", ""TaskCompleted"",
                         ""ScreenShot"", ""TaskView"", ""TaskDescription"",
-                        ""PK_ProjectNumber"", ""TaskDate"", ""TaskDeadLine"")
+                        ""PK_ProjectNumber"", ""TaskDate"", ""TaskDeadLine"", ""TaskComment"")
                     VALUES (
                         @FromDepart, @ToDepart, 0, 0,
                         @ScreenShot, @TaskView, @TaskDescription,
-                        @ProjectNumber, @TaskDate, @TaskDeadline)
+                        @ProjectNumber, @TaskDate, @TaskDeadline, NULL)
                     RETURNING ""TaskNumber""", conn))
                     {
                         createCommand.Parameters.AddWithValue("@FromDepart", taskModel.FromDepart);

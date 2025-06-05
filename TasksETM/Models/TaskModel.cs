@@ -42,7 +42,7 @@ namespace TasksETM.Models
         private bool? _isESCompl;
         private bool? _isGIPCompl;
 
-
+        // отображение задания на DataGrid, основная информация о зааданиях
         public int TaskNumber
         {
             get => _taskNumber;
@@ -105,11 +105,11 @@ namespace TasksETM.Models
 
         public string TaskComment
         {
-            get => _taskComment;
+            get => _taskComment ?? string.Empty;
             set { _taskComment = value; OnPropertyChanged(nameof(TaskComment)); }
         }
 
-        //чекбоксики
+        //чекбоксики принятых/выполненых заданий
 
         public bool? IsAR
         {

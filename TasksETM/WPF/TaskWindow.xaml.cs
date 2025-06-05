@@ -215,5 +215,33 @@ namespace IssuingTasksETM.WPF
         {
             this.WindowState = WindowState.Minimized;
         }
+
+        private async void RefreshGrid()
+        {
+            tasksDataGrid.Items.Refresh(); 
+        }
+
+
+        private async void TasksDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            try
+            {
+                if (e.EditAction == DataGridEditAction.Commit)
+                {
+                    var dataGrid = sender as DataGrid;
+                    dataGrid?.CommitEdit(DataGridEditingUnit.Row, true); // Завершаем редактирование строки
+
+                    if (e.Row.Item is TaskModel task)
+                    {
+                        await _taskService.UpdateTaskCommentAsync(task.TaskNumber, task.TaskComment);
+                        RefreshGrid(); // Обновляем таблицу, если нужно
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении комментария: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

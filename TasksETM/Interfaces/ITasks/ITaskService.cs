@@ -17,5 +17,7 @@ namespace TasksETM.Interfaces.ITasks
         //public Task UpdateTaskCompletedAsync(int taskNumber, bool isCompleted);
 
         public Task UpdateTaskCompletedAsync(int taskNumber, bool isAR, bool isVK, bool isOV, bool isSS, bool isES, bool isGIP);
+
+        public Task UpdateTaskCommentAsync(int taskNumber, string comment);
     }
 }
