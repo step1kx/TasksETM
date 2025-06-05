@@ -84,7 +84,7 @@ namespace Notify
         private void SetupNotificationTimer()
         {
             _notificationTimer = new System.Timers.Timer(600000);
-            //_notificationTimer = new System.Timers.Timer(10000);
+            //_notificationTimer = new System.Timers.Timer(12000);
             _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
             _notificationTimer.AutoReset = true;
             _notificationTimer.Start();

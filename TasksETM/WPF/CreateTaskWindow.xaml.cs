@@ -31,6 +31,8 @@ namespace IssuingTasksETM.WPF
         private readonly IAuthService _authService;
         private readonly IFilterTasksService _filterTasksService;
 
+        public static List<CheckBox> checkBoxes;
+
         private readonly HelpCreateTaskWindow _helpCreateTaskWindow;
 
         public static string loggedInUser = UserSession.Login;
@@ -52,6 +54,8 @@ namespace IssuingTasksETM.WPF
             _authService = new AuthService(DatabaseConnection.connString);
             _imageService = new ImageService();
             FillComboBoxAsync();
+
+            checkBoxes = new List<CheckBox> { CheckBoxAR, CheckBoxVK, CheckBoxOV, CheckBoxSS, CheckBoxES, CheckBoxGIP };
         }
 
         private async Task FillComboBoxAsync()
@@ -74,19 +78,20 @@ namespace IssuingTasksETM.WPF
 
                 Dispatcher.Invoke(() =>
                 {
-                    ToDepartComboBox.Items.Clear();
-                    foreach (var dep in departmentNames)
-                    {
-                        ToDepartComboBox.Items.Add(dep);
-                    }
-                    if (ToDepartComboBox.Items.Count > 0)
-                    {
-                        ToDepartComboBox.SelectedIndex = 0;
-                    }
-                    else
-                    {
-                        MessageBox.Show("ToDepartComboBox не заполнен: список отделов пуст.");
-                    }
+                    //ToDepartComboBox.Items.Clear();
+                    //foreach (var dep in departmentNames)
+                    //{
+                    //    if (dep == "Все отделы") continue;
+                    //    ToDepartComboBox.Items.Add(dep);
+                    //}
+                    //if (ToDepartComboBox.Items.Count > 0)
+                    //{
+                    //    ToDepartComboBox.SelectedIndex = 0;
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show("ToDepartComboBox не заполнен: список отделов пуст.");
+                    //}
 
                     FromDepartComboBox.Items.Clear();
                     foreach (var dep in departmentNames)
@@ -191,20 +196,11 @@ namespace IssuingTasksETM.WPF
 
         private async void CreateTaskButton_Click(object sender, RoutedEventArgs e)
         {
-            var taskModel = new TaskModel
-            {
-                FromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty,
-                ToDepart = ToDepartComboBox.SelectedItem?.ToString() ?? string.Empty,
-                TaskDescription = TaskDescriptionTextBox.Text, 
-                TaskView = TaskViewTextBox.Text,
-                ScreenshotPath = _imageService.ConvertImageToBytes(ImagePath), 
-                TaskDate = DateTime.Now.ToString("d"),
-                TaskDeadline = TaskDeadLineTextBox.Text
-            };
+            var fromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty;
 
-            if (string.IsNullOrEmpty(taskModel.FromDepart) || string.IsNullOrEmpty(taskModel.ToDepart))
+            if (string.IsNullOrEmpty(fromDepart))
             {
-                MessageBox.Show("Пожалуйста, выберите отделы 'От кого' и 'Кому'.");
+                MessageBox.Show("Пожалуйста, выберите отдел 'От кого'.");
                 return;
             }
 
@@ -214,26 +210,56 @@ namespace IssuingTasksETM.WPF
                 return;
             }
 
-            if (string.IsNullOrEmpty(taskModel.TaskDescription) || string.IsNullOrEmpty(taskModel.TaskView))
+            if (string.IsNullOrEmpty(TaskDescriptionTextBox.Text) || string.IsNullOrEmpty(TaskViewTextBox.Text))
             {
-                MessageBox.Show("Пожалуйста, заполните Вид и Описание");
+                MessageBox.Show("Пожалуйста, заполните Вид и Описание.");
                 return;
             }
 
             if (!DateTime.TryParse(TaskDeadLineTextBox.Text, out DateTime deadline))
             {
-                MessageBox.Show("Некорректный формат даты. Пожалуйста, введите дату в формате ДД.ММ.ГГГГ или ГГГГ-ММ-ДД.");
+                MessageBox.Show("Некорректный формат даты. Введите дату в формате ДД.ММ.ГГГГ или ГГГГ-ММ-ДД.");
                 return;
             }
 
             if (deadline < DateTime.Now.Date)
             {
-                MessageBox.Show("Дата дедлайна не может быть раньше текущей даты.");
+                MessageBox.Show("Дата дедлайна не может быть раньше текущей.");
                 return;
             }
 
-            var createTaskService = new CreateTasksService(_selectedProject); 
-            await createTaskService.CreateTaskAsync(taskModel);
+            var selectedToDeparts = checkBoxes
+                .Where(cb => cb.IsChecked == true)
+                .Select(cb => cb.Content.ToString())
+                .ToList();
+
+            if (selectedToDeparts.Count == 0)
+            {
+                MessageBox.Show("Пожалуйста, выберите хотя бы один чекбокс 'Кому'.");
+                return;
+            }
+
+            var imageBytes = _imageService.ConvertImageToBytes(ImagePath);
+            var taskDate = DateTime.Now.ToString("d");
+
+            var createTaskService = new CreateTasksService(_selectedProject);
+
+            foreach (var section in checkBoxes.Where(cb => cb.IsChecked == true))
+            {
+                var taskModel = new TaskModel
+                {
+                    FromDepart = fromDepart,
+                    ToDepart = section.Tag.ToString(),
+                    TaskDescription = TaskDescriptionTextBox.Text,
+                    TaskView = TaskViewTextBox.Text,
+                    ScreenshotPath = imageBytes,
+                    TaskDate = taskDate,
+                    TaskDeadline = TaskDeadLineTextBox.Text
+                };
+
+                await createTaskService.CreateTaskAsync(taskModel, section);
+            }
+            
 
             var taskCreatedSuccessful = new TaskCreatSuccessfulWindow();
             taskCreatedSuccessful.Show();
@@ -242,6 +268,61 @@ namespace IssuingTasksETM.WPF
             _taskWindow.Show();
             Close();
         }
+
+
+        //private async void CreateTaskButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var taskModel = new TaskModel
+        //    {
+        //        FromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty,
+        //        ToDepart = 
+        //        TaskDescription = TaskDescriptionTextBox.Text,
+        //        TaskView = TaskViewTextBox.Text,
+        //        ScreenshotPath = _imageService.ConvertImageToBytes(ImagePath),
+        //        TaskDate = DateTime.Now.ToString("d"),
+        //        TaskDeadline = TaskDeadLineTextBox.Text
+        //    };
+
+        //    if (string.IsNullOrEmpty(taskModel.FromDepart) || string.IsNullOrEmpty(taskModel.ToDepart))
+        //    {
+        //        MessageBox.Show("Пожалуйста, выберите отделы 'От кого' и 'Кому'.");
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
+        //    {
+        //        MessageBox.Show("Пожалуйста, укажите крайний срок выполнения.");
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrEmpty(taskModel.TaskDescription) || string.IsNullOrEmpty(taskModel.TaskView))
+        //    {
+        //        MessageBox.Show("Пожалуйста, заполните Вид и Описание");
+        //        return;
+        //    }
+
+        //    if (!DateTime.TryParse(TaskDeadLineTextBox.Text, out DateTime deadline))
+        //    {
+        //        MessageBox.Show("Некорректный формат даты. Пожалуйста, введите дату в формате ДД.ММ.ГГГГ или ГГГГ-ММ-ДД.");
+        //        return;
+        //    }
+
+        //    if (deadline < DateTime.Now.Date)
+        //    {
+        //        MessageBox.Show("Дата дедлайна не может быть раньше текущей даты.");
+        //        return;
+        //    }
+
+        //    var createTaskService = new CreateTasksService(_selectedProject); 
+        //    await createTaskService.CreateTaskAsync(taskModel, checkBoxes);
+
+        //    var taskCreatedSuccessful = new TaskCreatSuccessfulWindow();
+        //    taskCreatedSuccessful.Show();
+        //    await taskCreatedSuccessful.UpdateProgressBarAsync();
+
+        //    _taskWindow.Show();
+        //    Close();
+        //}
 
         private void HelpCreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {

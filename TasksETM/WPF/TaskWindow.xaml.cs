@@ -31,7 +31,6 @@ namespace IssuingTasksETM.WPF
         private readonly IAuthService _authService;
         private readonly IFilterTasksService _filterTasksService;
         private bool _isFiltered;
-        //private System.Timers.Timer _notificationTimer;
         private string _currentUserSection;
         private readonly NotifyModel _notifyModel;
 
@@ -76,19 +75,9 @@ namespace IssuingTasksETM.WPF
             if (!_isFiltered)
             {
                 await LoadAsync();
-                //SetupNotificationTimer();
             }
 
         }
-
-        //private void SetupNotificationTimer()
-        //{
-        //    _notificationTimer = new System.Timers.Timer(10000); // Проверка каждые 60 секунд
-        //    _notificationTimer.Elapsed += async (s, e) => await CheckTasksForNotificationsAsync();
-        //    _notificationTimer.Start();
-
-
-        //}
 
         public async Task LoadAsync()
         {

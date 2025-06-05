@@ -165,6 +165,12 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="CustomCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="Background" Value="#4A4A65"/>
+        <Setter Property="Foreground" Value="Wheat"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
 
 
 
