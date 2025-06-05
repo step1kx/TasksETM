@@ -26,6 +26,8 @@ namespace TasksETM.Models
         private string _taskDescription = string.Empty;
         private string _taskDate = string.Empty;
         private string _taskDeadline;
+        private string _taskComment;
+
         private bool? _isAR;
         private bool? _isVK;
         private bool? _isOV;
@@ -100,6 +102,14 @@ namespace TasksETM.Models
             get => _taskDeadline;
             set { _taskDeadline = value; OnPropertyChanged(nameof(TaskDeadline)); }
         }
+
+        public string TaskComment
+        {
+            get => _taskComment;
+            set { _taskComment = value; OnPropertyChanged(nameof(TaskComment)); }
+        }
+
+        //чекбоксики
 
         public bool? IsAR
         {
