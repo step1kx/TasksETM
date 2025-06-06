@@ -12,6 +12,7 @@ using TasksETMCommon.Models;
 using TasksETMCommon.Helpers;
 using Windows.Devices.Sensors;
 using TasksETM.WPF.HelpingWindow;
+using TasksETM.WPF.ProjectsWindow;
 
 namespace IssuingTasksETM.WPF
 {
@@ -25,7 +26,7 @@ namespace IssuingTasksETM.WPF
         private readonly IDepartmentService _departmentService;
         private readonly IDatabaseConnection _dbConnection;
         private readonly IFilterTasksService _filterTasksService;
-        private bool _isHipLogin;
+        public static bool _isHipLogin;
         public string loginForNotify = string.Empty;
         public string loginForDeaprtments = string.Empty;
 
@@ -60,12 +61,12 @@ namespace IssuingTasksETM.WPF
         {
             try
             {
-                //if (_authService == null || _dbConnection == null || _departmentService == null ||
-                //    _projectService == null || _filterTasksService == null)
-                //{
-                //    MessageBox.Show("Одна или несколько служб не инициализированы. Перезапустите приложение.");
-                //    return;
-                //}
+                if (_authService == null || _dbConnection == null || _departmentService == null ||
+                    _projectService == null || _filterTasksService == null)
+                {
+                    MessageBox.Show("Одна или несколько служб не инициализированы. Перезапустите приложение.");
+                    return;
+                }
 
                 if (TasksETM.Properties.Settings.Default.RememberMe && !string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.SavedLogin))
                 {
@@ -84,13 +85,29 @@ namespace IssuingTasksETM.WPF
 
                         System.Diagnostics.Debug.WriteLine($"Логин валиден, открываем ChooseProjectWindow для {UserSession.Login}");
 
-                        Dispatcher.Invoke(() =>
+                        if(_isHipLogin || TasksETM.Properties.Settings.Default.SavedDepartmentLogin.Equals("GIP", StringComparison.OrdinalIgnoreCase))
                         {
-                            var chooseProjectWindow = new ChooseProjectWindow(
-                                _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
-                            chooseProjectWindow.Show();
-                            Close();
-                        });
+                            Dispatcher.Invoke(() =>
+                            {
+                                var chooseProjectGIPWindow = new ChooseProjectGIPWindow(
+                                    _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                                chooseProjectGIPWindow.Show();
+                                Close();
+                            });
+                        }
+
+                        else
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                var chooseProjectWindow = new ChooseProjectWindow(
+                                    _dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                                chooseProjectWindow.Show();
+                                Close();
+                            });
+                        }
+
+
                     }
                     else
                     {
@@ -273,9 +290,20 @@ namespace IssuingTasksETM.WPF
                         SharedLoginStorage.SaveDepartmentLogin(loginForDeaprtments);
                     }
 
-                    var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
-                    chooseProjectWindow.Show();
-                    this.Close();
+
+                    if(login.Equals("GIP", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var chooseProjectGIPWindow = new ChooseProjectGIPWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                        chooseProjectGIPWindow.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        var chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                        chooseProjectWindow.Show();
+                        this.Close();
+                    }
+                        
                 }
                 else
                 {
