@@ -78,21 +78,6 @@ namespace IssuingTasksETM.WPF
 
                 Dispatcher.Invoke(() =>
                 {
-                    //ToDepartComboBox.Items.Clear();
-                    //foreach (var dep in departmentNames)
-                    //{
-                    //    if (dep == "Все отделы") continue;
-                    //    ToDepartComboBox.Items.Add(dep);
-                    //}
-                    //if (ToDepartComboBox.Items.Count > 0)
-                    //{
-                    //    ToDepartComboBox.SelectedIndex = 0;
-                    //}
-                    //else
-                    //{
-                    //    MessageBox.Show("ToDepartComboBox не заполнен: список отделов пуст.");
-                    //}
-
                     FromDepartComboBox.Items.Clear();
                     foreach (var dep in departmentNames)
                     {
@@ -270,59 +255,7 @@ namespace IssuingTasksETM.WPF
         }
 
 
-        //private async void CreateTaskButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var taskModel = new TaskModel
-        //    {
-        //        FromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty,
-        //        ToDepart = 
-        //        TaskDescription = TaskDescriptionTextBox.Text,
-        //        TaskView = TaskViewTextBox.Text,
-        //        ScreenshotPath = _imageService.ConvertImageToBytes(ImagePath),
-        //        TaskDate = DateTime.Now.ToString("d"),
-        //        TaskDeadline = TaskDeadLineTextBox.Text
-        //    };
-
-        //    if (string.IsNullOrEmpty(taskModel.FromDepart) || string.IsNullOrEmpty(taskModel.ToDepart))
-        //    {
-        //        MessageBox.Show("Пожалуйста, выберите отделы 'От кого' и 'Кому'.");
-        //        return;
-        //    }
-
-        //    if (string.IsNullOrEmpty(TaskDeadLineTextBox.Text))
-        //    {
-        //        MessageBox.Show("Пожалуйста, укажите крайний срок выполнения.");
-        //        return;
-        //    }
-
-        //    if (string.IsNullOrEmpty(taskModel.TaskDescription) || string.IsNullOrEmpty(taskModel.TaskView))
-        //    {
-        //        MessageBox.Show("Пожалуйста, заполните Вид и Описание");
-        //        return;
-        //    }
-
-        //    if (!DateTime.TryParse(TaskDeadLineTextBox.Text, out DateTime deadline))
-        //    {
-        //        MessageBox.Show("Некорректный формат даты. Пожалуйста, введите дату в формате ДД.ММ.ГГГГ или ГГГГ-ММ-ДД.");
-        //        return;
-        //    }
-
-        //    if (deadline < DateTime.Now.Date)
-        //    {
-        //        MessageBox.Show("Дата дедлайна не может быть раньше текущей даты.");
-        //        return;
-        //    }
-
-        //    var createTaskService = new CreateTasksService(_selectedProject); 
-        //    await createTaskService.CreateTaskAsync(taskModel, checkBoxes);
-
-        //    var taskCreatedSuccessful = new TaskCreatSuccessfulWindow();
-        //    taskCreatedSuccessful.Show();
-        //    await taskCreatedSuccessful.UpdateProgressBarAsync();
-
-        //    _taskWindow.Show();
-        //    Close();
-        //}
+     
 
         private void HelpCreateTaskWindow_Click(object sender, RoutedEventArgs e)
         {

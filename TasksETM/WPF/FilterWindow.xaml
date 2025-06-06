@@ -174,7 +174,7 @@
                     BlurRadius="10"/>
                     </Border.Effect>
                     <Grid x:Name="TasksPanel">
-                        <Grid x:Name="DepartInfoGrid" Visibility="Collapsed">
+                        <Grid x:Name="DepartInfoGrid" Visibility="Visible">
                             <TextBlock Text="Фильтр разделов"
                             FontSize="20"
                             Foreground="Wheat"
@@ -334,7 +334,7 @@
                                 </Button.Effect>
                             </Button>
                         </Grid>-->
-                        <Grid x:Name="CompletedInfoGrid" Visibility="Visible">
+                        <Grid x:Name="CompletedInfoGrid" Visibility="Collapsed">
                             <TextBlock Text="Фильтры"
                             FontSize="20"
                             Foreground="Wheat"

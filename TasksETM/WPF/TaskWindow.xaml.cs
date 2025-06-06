@@ -226,15 +226,12 @@ namespace IssuingTasksETM.WPF
         {
             try
             {
-                if (e.EditAction == DataGridEditAction.Commit)
+                if (e.EditAction == DataGridEditAction.Commit && e.Column.Header.ToString() == "Комментарий")
                 {
-                    var dataGrid = sender as DataGrid;
-                    dataGrid?.CommitEdit(DataGridEditingUnit.Row, true); // Завершаем редактирование строки
-
-                    if (e.Row.Item is TaskModel task)
+                    var task = e.Row.Item as TaskModel;
+                    if (task != null)
                     {
-                        await _taskService.UpdateTaskCommentAsync(task.TaskNumber, task.TaskComment);
-                        RefreshGrid(); // Обновляем таблицу, если нужно
+                        await _taskService.UpdateTaskCommentAsync(task.TaskNumber, task.TaskComment); 
                     }
                 }
             }
@@ -243,5 +240,12 @@ namespace IssuingTasksETM.WPF
                 MessageBox.Show($"Ошибка при обновлении комментария: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+
+        private void TasksDataGrid_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tasksDataGrid.UnselectAllCells();
+        }
+
     }
 }

@@ -106,6 +106,11 @@ namespace IssuingTasksETM.WPF
                     return;
                 }
 
+                foreach( var departmentName in departmentNames )
+                {
+                    if (departmentName == "Все отделы") continue;
+                }
+
                 if (taskStatus == null || !taskStatus.Any())
                 {
                     MessageBox.Show("Не удалось загрузить список статусов.");
@@ -114,6 +119,7 @@ namespace IssuingTasksETM.WPF
 
                 Dispatcher.Invoke(() =>
                 {
+
                     ToDepartComboBox.ItemsSource = departmentNames;
 
                     FromDepartComboBox.ItemsSource = departmentNames;

@@ -60,12 +60,12 @@ namespace IssuingTasksETM.WPF
         {
             try
             {
-                if (_authService == null || _dbConnection == null || _departmentService == null ||
-                    _projectService == null || _filterTasksService == null)
-                {
-                    MessageBox.Show("Одна или несколько служб не инициализированы. Перезапустите приложение.");
-                    return;
-                }
+                //if (_authService == null || _dbConnection == null || _departmentService == null ||
+                //    _projectService == null || _filterTasksService == null)
+                //{
+                //    MessageBox.Show("Одна или несколько служб не инициализированы. Перезапустите приложение.");
+                //    return;
+                //}
 
                 if (TasksETM.Properties.Settings.Default.RememberMe && !string.IsNullOrEmpty(TasksETM.Properties.Settings.Default.SavedLogin))
                 {
