@@ -111,5 +111,73 @@ namespace TasksETM.Service
             }
         }
 
+        public async Task UpdateNotifyStatusForCreatedProjectAsync(string projectName, bool isNotify)
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(DatabaseConnection.connString))
+                {
+                    await conn.OpenAsync();
+
+                    // Сначала получаем всех пользователей
+                    var getUsersCmd = new NpgsqlCommand("SELECT \"userName\" FROM public.\"Users\"", conn);
+                    var userLogins = new List<string>();
+
+                    using (var reader = await getUsersCmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            userLogins.Add(reader.GetString(0));
+                        }
+                    }
+
+                    // Затем добавляем запись для каждого пользователя
+                    foreach (var userLogin in userLogins)
+                    {
+                        var insertCmd = new NpgsqlCommand(
+                            "INSERT INTO public.\"ProjectsNotify\" " +
+                            "(\"isNotify\", \"ProjectNameNotify\", \"UserLoginNameNotify\") " +
+                            "VALUES (@isNotify, @ProjectName, @UserLogin)", conn);
+
+                        insertCmd.Parameters.AddWithValue("@isNotify", isNotify);
+                        insertCmd.Parameters.AddWithValue("@ProjectName", projectName);
+                        insertCmd.Parameters.AddWithValue("@UserLogin", userLogin);
+
+                        await insertCmd.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении статуса уведомлений: {ex.Message}");
+            }
+        }
+
+        public async Task CreateProjectAsync(string projectName, bool notifyStatus)
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(DatabaseConnection.connString))
+                {
+                    await conn.OpenAsync();
+
+                    var insertCmd = new NpgsqlCommand(
+                        "INSERT INTO public.\"Projects\" " +
+                        "(\"ProjectName\", \"isNotify\") " +
+                        "VALUES (@ProjectName, @isNotify)", conn);
+
+                    insertCmd.Parameters.AddWithValue("ProjectName", projectName);
+                    insertCmd.Parameters.AddWithValue("isNotify", notifyStatus);
+
+                    await insertCmd.ExecuteNonQueryAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"При создании проекта что-то пошло не так: {ex.Message}");
+            }
+
+        }
+
     }
 }

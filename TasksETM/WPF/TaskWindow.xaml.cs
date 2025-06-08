@@ -14,6 +14,7 @@ using TasksETM.Service;
 using TasksETM.Service.Tasks;
 using TasksETM.WPF;
 using TasksETM.WPF.HelpingWindow;
+using TasksETM.WPF.ProjectsWindow;
 
 namespace IssuingTasksETM.WPF
 {
@@ -179,9 +180,21 @@ namespace IssuingTasksETM.WPF
       
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
-            ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
-            chooseProjectWindow.Show();
-            Close();
+            string login = TasksETM.Properties.Settings.Default.SavedDepartmentLogin;
+
+            if (login.Equals("GIP", StringComparison.OrdinalIgnoreCase))
+            {
+                ChooseProjectGIPWindow chooseProjectGIPWindow = new ChooseProjectGIPWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                chooseProjectGIPWindow.Show();
+                Close();
+            }
+            else
+            {
+                ChooseProjectWindow chooseProjectWindow = new ChooseProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                chooseProjectWindow.Show();
+                Close();
+            }
+
         }
 
         private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

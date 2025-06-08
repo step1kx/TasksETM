@@ -11,7 +11,7 @@ using TasksETM.Interfaces.ITasks;
 using TasksETM.Models;
 using TasksETM.Service;
 using TasksETM.Service.Tasks;
-using TasksETM.WPF;
+using TasksETM.WPF.LoadingWindow;
 using TasksETM.WPF.HelpingWindow;
 
 namespace IssuingTasksETM.WPF
@@ -183,6 +183,8 @@ namespace IssuingTasksETM.WPF
         {
             var fromDepart = FromDepartComboBox.SelectedItem?.ToString() ?? string.Empty;
 
+            bool projectOrTask = false;
+
             if (string.IsNullOrEmpty(fromDepart))
             {
                 MessageBox.Show("Пожалуйста, выберите отдел 'От кого'.");
@@ -244,11 +246,12 @@ namespace IssuingTasksETM.WPF
 
                 await createTaskService.CreateTaskAsync(taskModel, section);
             }
-            
 
-            var taskCreatedSuccessful = new TaskCreatSuccessfulWindow();
+
+
+            var taskCreatedSuccessful = new CreateSuccessfulWindow();
             taskCreatedSuccessful.Show();
-            await taskCreatedSuccessful.UpdateProgressBarAsync();
+            await taskCreatedSuccessful.UpdateProgressBarAsync(projectOrTask);
 
             _taskWindow.Show();
             Close();

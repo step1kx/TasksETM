@@ -17,7 +17,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles.xaml"/>
+                <ResourceDictionary Source="/WPF/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -56,6 +56,59 @@
                     Foreground="Wheat"
                     FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
             </Grid>
+            <Border
+                CornerRadius="20"
+                Height="300"
+                Width="400"
+                Background="#272537"
+                Margin="50,74,50,46">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="5"
+                        Color="Black"
+                        Opacity="0.5"
+                        BlurRadius="10"/>
+                </Border.Effect>
+                <Grid x:Name="ChooseProjectPanel">
+                    <TextBlock x:Name="WelcomeTextBlock"
+                        Text="Создание проекта"
+                        FontSize="20"
+                        TextWrapping="Wrap"
+                        TextAlignment="Center"
+                        TextTrimming="CharacterEllipsis"
+                        Foreground="Wheat"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Margin="0,20,0,0" 
+                        Width="250" 
+                        Height="85"
+                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                    <TextBlock Text="Название проекта"
+                        FontSize="16"
+                        Foreground="Wheat"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="75,88,0,0"/>
+                    <TextBox
+                         x:Name="CreateProjectTextBox"
+                         Height="22"
+                         VerticalAlignment="Top"
+                         Margin="75,125,75,0"
+                         Background="#3A3A55"
+                         Foreground="Wheat"
+                         BorderBrush="#4A4A65"/>
+                    <Button
+                        Width="150px"
+                        Height="40px"
+                        Content="Создать проект"
+                        VerticalAlignment="Top"
+                        Margin="125,237,125,0"
+                        BorderThickness="0"
+                        FontSize="14"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Cursor="Hand"
+                        Click="CreateProject_Click"/>
+                </Grid>
+            </Border>
         </Grid>
     </Border>
 </Window>

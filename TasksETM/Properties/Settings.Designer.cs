@@ -142,5 +142,17 @@ namespace TasksETM.Properties {
                 this["SavedDepartmentLogin"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isGIPLogin {
+            get {
+                return ((bool)(this["isGIPLogin"]));
+            }
+            set {
+                this["isGIPLogin"] = value;
+            }
+        }
     }
 }

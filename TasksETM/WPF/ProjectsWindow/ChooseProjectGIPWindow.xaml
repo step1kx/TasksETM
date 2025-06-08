@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TasksETM.WPF.ProjectsWindow"
         mc:Ignorable="d"
-        Title="ChooseProjectGIPWindow"     Height="450"
+        Title="ChooseProjectGIPWindow"     Height="420"
     Width="500"
     MouseDown="MovingWin"
     WindowStartupLocation="CenterScreen"
@@ -57,12 +57,12 @@
                 Foreground="Wheat"
                 FontSize="20" Cursor="Hand" Margin="20, 0, 60, 0"/>
             </Grid>
-            <Border Grid.Column="1"
+            <Border
                 CornerRadius="20"
                 Height="300"
                 Width="400"
                 Background="#272537"
-                Margin="20,0,0,10">
+                Margin="50,74,50,46">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="5"
                     Color="Black"

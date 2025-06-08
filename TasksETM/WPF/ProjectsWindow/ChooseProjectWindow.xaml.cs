@@ -51,10 +51,6 @@ namespace TasksETM.WPF
             {
                 WelcomeTextBlock.Text = "Добро пожаловать, сотрудник";
             }
-            else if (login.Equals("GIP", StringComparison.OrdinalIgnoreCase) || login.StartsWith("gip", StringComparison.OrdinalIgnoreCase))
-            {
-                WelcomeTextBlock.Text = "Добро пожаловать, ГИП";
-            }
             else
             {
                 WelcomeTextBlock.Text = $"Добро пожаловать, сотрудник {login}";

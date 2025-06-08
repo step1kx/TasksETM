@@ -15,5 +15,9 @@ namespace TasksETM.Interfaces
 
         public Task UpdateNotifyStatusForUserAndProject(string projectName, string userLogin, bool isNotify);
 
+        public Task CreateProjectAsync(string projectName, bool notifyStatus);
+
+        public Task UpdateNotifyStatusForCreatedProjectAsync(string projectName, bool isNotify);
+
     }
 }

@@ -18,6 +18,8 @@ using TasksETM.Interfaces;
 using TasksETMCommon.Helpers;
 using TasksETM.Service.Tasks;
 using TasksETM.Service;
+using TasksETM.WPF.ProjectsWindow;
+using TasksETM.WPF.LoadingWindow;
 
 namespace TasksETM.WPF
 {
@@ -50,14 +52,42 @@ namespace TasksETM.WPF
 
         private void ToPrevWindow_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.SavedLogin = string.Empty;
-            Properties.Settings.Default.RememberMe = false;
-            Properties.Settings.Default.Save();
-            SharedLoginStorage.SaveLogin(Properties.Settings.Default.SavedLogin);
-            LoginWindow loginWindow = new LoginWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
-            loginWindow.Show();
+            ChooseProjectGIPWindow chooseProjectGIPWindow = new ChooseProjectGIPWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+            chooseProjectGIPWindow.Show();
             Close();
         }
+
+        private async void CreateProject_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string projectName = CreateProjectTextBox.Text.Trim();
+                bool notifyStatus = true;
+                bool projectOrTask = true;
+
+                if (string.IsNullOrEmpty(projectName))
+                {
+                    MessageBox.Show("Пожалуйста, напишите название проекта");
+                    return;
+                }
+
+                await _projectService.CreateProjectAsync(projectName, notifyStatus);
+                await _projectService.UpdateNotifyStatusForCreatedProjectAsync(projectName, notifyStatus);
+
+                var projectCreatedSucceful = new CreateSuccessfulWindow();
+                projectCreatedSucceful.Show();
+                await projectCreatedSucceful.UpdateProgressBarAsync(projectOrTask);
+
+                ChooseProjectGIPWindow chooseProjectGIPWindow = new ChooseProjectGIPWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+                chooseProjectGIPWindow.Show();
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"При создании проекта что-то пошло не так: {ex.Message}");
+            }
+        }
+
 
 
 

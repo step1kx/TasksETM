@@ -19,6 +19,7 @@ using TasksETM.Service;
 using IssuingTasksETM.WPF;
 using TasksETMCommon.Helpers;
 using TasksETMCommon.Models;
+using TasksETM.Models;
 
 namespace TasksETM.WPF.ProjectsWindow
 {
@@ -54,7 +55,7 @@ namespace TasksETM.WPF.ProjectsWindow
 
         private void UpdateWelcomeMessage()
         {
-            WelcomeTextBlock.Text = "Добро пожаловать, ГИП";
+            WelcomeTextBlock.Text = $"Добро пожаловать, ГИП {UserSessionForNotify.Login}";
         }
 
 
@@ -121,7 +122,9 @@ namespace TasksETM.WPF.ProjectsWindow
 
         private void ToCreateProjectWindow_Click( object sender, RoutedEventArgs e)
         {
-
+            var creatProjectWindow = new CreateProjectWindow(_dbConnection, _departmentService, _projectService, _authService, _filterTasksService);
+            creatProjectWindow.Show();
+            Close();
         }
 
         private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
