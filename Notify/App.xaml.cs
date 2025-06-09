@@ -146,7 +146,7 @@ namespace Notify
                             ShowNotification(
                                 $"Сотрудник отдела {task.ToDepart}. Объект {task.ProjectName}",
                                 $"Вы не выполнили задание №{task.TaskNumber} от раздела {task.FromDepart}" +
-                                $"\nКрайний срок сдачи задания - {task.TaskDeadline}");
+                                $"\nКрайний срок сдачи задания прошёл - {task.TaskDeadline}");
                         }
                         else if (IsDaysLeft(task.TaskDeadline, 2))
                         {
