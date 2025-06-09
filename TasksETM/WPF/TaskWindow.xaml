@@ -340,7 +340,8 @@
                                                 Text="{Binding TaskComment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 TextWrapping="Wrap"
                                                 BorderThickness="1"
-                                                Padding="2"/>
+                                                Padding="2"
+                                                PreviewKeyDown="MyTb_PreviewKeyDown" />
                                         <DataTemplate.Triggers>
                                             <Trigger SourceName="MyTb" Property="IsVisible" Value="True">
                                                 <Setter TargetName="MyTb" Property="FocusManager.FocusedElement" Value="{Binding ElementName=MyTb}"/>

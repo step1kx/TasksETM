@@ -254,10 +254,23 @@ namespace IssuingTasksETM.WPF
             }
         }
 
-
         private void TasksDataGrid_LostFocus(object sender, RoutedEventArgs e)
         {
             tasksDataGrid.UnselectAllCells();
+        }
+
+        private void MyTb_PreviewKeyDown(object sender,  KeyEventArgs e)
+        {
+            var tb = sender as TextBox;
+
+            if (e.Key == Key.Tab)
+            {
+                e.Handled = true;
+
+                int caretIndex = tb.CaretIndex;
+                tb.Text = tb.Text.Insert(caretIndex, Environment.NewLine); 
+                tb.CaretIndex = caretIndex + Environment.NewLine.Length;
+            }
         }
 
     }
