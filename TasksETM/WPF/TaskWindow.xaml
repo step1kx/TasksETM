@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:TasksETM.Converters"
         mc:Ignorable="d"
         Title="TaskWindow" 
-        Height="700" Width="1700"
+        Height="700" Width="1600"
         MouseDown="MovingWin"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
