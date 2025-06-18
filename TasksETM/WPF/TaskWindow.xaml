@@ -160,6 +160,7 @@
                     <DataGrid  SelectionMode="Single"
                            CellEditEnding="TasksDataGrid_CellEditEnding"
                            Grid.Column="1" 
+                           ClipboardCopyMode="ExcludeHeader"
                            SelectionUnit="CellOrRowHeader"
                            x:Name="tasksDataGrid"  
                            AutoGenerateColumns="False"  
